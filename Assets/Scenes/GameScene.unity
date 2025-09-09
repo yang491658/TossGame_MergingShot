@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 551529782}
   m_Layer: 0
-  m_Name: =====Managers=====
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,11 +291,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8166794966985416557, guid: 20a65fb9e1d9eb149b410c64862f3256, type: 3}
-  spawnTrans: {fileID: 4936520173943828161}
+  spawn: {fileID: 4936520173943828161}
+  inGame: {fileID: 1336853628}
   unitDatas:
   - {fileID: 11400000, guid: fc6f0135f4f76bb468ef232781844928, type: 2}
   - {fileID: 11400000, guid: 21f4bdd28c37a1b448bbfb87ac05ce37, type: 2}
   - {fileID: 11400000, guid: b033de6ece1422d429ae3f5fa47bdc4b, type: 2}
+  - {fileID: 11400000, guid: 4376a8c2c8589f444978c29dff309049, type: 2}
+  - {fileID: 11400000, guid: 796a39cdf292a1e4a86b3b629309c8c6, type: 2}
+  - {fileID: 11400000, guid: f598d61973d28c74fa3cdaf2be2f793d, type: 2}
+  - {fileID: 11400000, guid: 3e3b7273f336132449b6f2950323a555, type: 2}
+  - {fileID: 11400000, guid: 9d67479c14907b44ab4e0683e34d0d6a, type: 2}
+  - {fileID: 11400000, guid: 1949355830d3c964aa721be879382519, type: 2}
+  - {fileID: 11400000, guid: abd2bd2b4f4c0304e898de22f3b2b397, type: 2}
 --- !u!1 &872845352
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +336,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1030031173}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1336853628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &872845354
 CircleCollider2D:
@@ -593,7 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1336853628}
   m_Layer: 0
-  m_Name: ======InGame======
+  m_Name: InGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,7 +619,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 872845353}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &953657503875273841
@@ -639,7 +648,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4936520173943828161}
   m_Layer: 0
-  m_Name: SpawnTrans
+  m_Name: SpawnPos
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -851,4 +860,3 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 551529782}
   - {fileID: 1336853628}
-  - {fileID: 872845353}

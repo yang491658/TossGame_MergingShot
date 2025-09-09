@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private GameObject prefab;
-    [SerializeField] private Transform spawnTrans;
+    [SerializeField] private Transform spawn;
+    [SerializeField] private Transform inGame;
 
     public UnitData[] unitDatas;
     private readonly List<GameObject> units = new List<GameObject>();
@@ -22,8 +23,8 @@ public class GameManager : MonoBehaviour
         if (prefab == null)
             prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
 
-        if (spawnTrans == null)
-            spawnTrans = transform.Find("SpawnTrans");
+        if (spawn == null)
+            spawn = transform.Find("SpawnTrans");
 
         string[] guids = AssetDatabase.FindAssets("t:UnitData", new[] { "Assets/Scripts/ScriptableObjects" });
         var list = new List<UnitData>(guids.Length);
@@ -54,16 +55,17 @@ public class GameManager : MonoBehaviour
     #region 소환 및 제거
     public GameObject SpawnRandom(int _num = 0, Vector2? _spawnPos = null)
     {
-        if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawnTrans == null) return null;
+        if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
 
         UnitData data = (_num == 0)
             ? unitDatas[Random.Range(0, unitDatas.Length)]
             : unitDatas[Mathf.Clamp(_num - 1, 0, unitDatas.Length - 1)];
 
-        Vector2 spawnPos = _spawnPos ?? (Vector2)spawnTrans.position;
+        Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
 
         GameObject go = Instantiate(prefab, spawnPos, Quaternion.identity);
         go.GetComponent<UnitSystem>().SetData(data.Clone());
+        go.transform.SetParent(inGame);
         units.Add(go);
 
         return go;
@@ -71,15 +73,16 @@ public class GameManager : MonoBehaviour
 
     public GameObject SpawnById(int _id, Vector2? _spawnPos = null)
     {
-        if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawnTrans == null) return null;
+        if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
 
         UnitData data = unitDatas.FirstOrDefault(d => d.unitID == _id);
         if (data == null) return null;
 
-        Vector2 spawnPos = _spawnPos ?? (Vector2)spawnTrans.position;
+        Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
 
         GameObject go = Instantiate(prefab, spawnPos, Quaternion.identity);
         go.GetComponent<UnitSystem>().SetData(data.Clone());
+        go.transform.SetParent(inGame);
         units.Add(go);
 
         return go;
