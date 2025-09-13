@@ -1,67 +1,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
 public class HoleSystem : MonoBehaviour
 {
-    private Collider2D col;
-
-    private LayerMask unitLayer => LayerMask.GetMask("Unit");
-    [Space]
     [SerializeField] private float pullPower = 15f;
-    [SerializeField] private float powerLimit = 50f;
-    [SerializeField]
-    private AnimationCurve falloff =
-        new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
-    private readonly HashSet<Rigidbody2D> targets = new HashSet<Rigidbody2D>();
+    private readonly HashSet<UnitSystem> units = new HashSet<UnitSystem>();
 
-    private void Awake()
+    public void Register(UnitSystem _unit)
     {
-        col = GetComponent<Collider2D>();
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if ((unitLayer.value & (1 << other.gameObject.layer)) == 0) return;
-        if (other.attachedRigidbody != null)
-            targets.Add(other.attachedRigidbody);
+        if (_unit != null) units.Add(_unit);
     }
 
     private void FixedUpdate()
     {
-        if (targets.Count == 0) return;
+        if (units.Count == 0) return;
 
-        Vector2 center = col.bounds.center;
-        float radius = Mathf.Max(col.bounds.extents.x, col.bounds.extents.y);
+        Vector2 center = transform.position;
 
-        List<Rigidbody2D> toRemove = null;
-
-        foreach (var rb in targets)
+        foreach (var unit in units)
         {
-            if (rb == null)
-            {
-                if (toRemove == null) toRemove = new List<Rigidbody2D>();
-                toRemove.Add(rb);
-                continue;
-            }
-
-            var unit = rb.GetComponent<UnitSystem>();
             if (unit == null || !unit.fired) continue;
 
-            Vector2 dir = center - rb.position;
-            float dist = dir.magnitude;
-            if (dist > powerLimit) continue;
+            var rb = unit.GetComponent<Rigidbody2D>();
+            if (rb == null) continue;
 
-            float t = Mathf.Clamp01(dist / radius);
-            float force = pullPower * falloff.Evaluate(1f - t);
+            Vector2 from = rb.worldCenterOfMass;
+            Vector2 dir = center - from;
+            float dist = dir.magnitude;
+
+            float safeDist = Mathf.Max(dist, 0.001f);
+            float invSq = 1f / (safeDist * safeDist);
+
+            float force = pullPower * invSq * rb.mass;
+
             rb.AddForce(dir.normalized * force, ForceMode2D.Force);
         }
 
-        if (toRemove != null)
-        {
-            for (int i = 0; i < toRemove.Count; i++)
-                targets.Remove(toRemove[i]);
-        }
+        units.RemoveWhere(x => x == null);
     }
 }

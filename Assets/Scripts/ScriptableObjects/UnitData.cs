@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Unit", menuName = "UnitData", order = 1)]
@@ -23,8 +24,13 @@ public class UnitData : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        unitName = unitImage.name;
-        unitMass = 1f + unitID / 10f;
+        if (unitImage != null)
+        {
+            string rawName = unitImage.name;
+            unitName = Regex.Replace(rawName, @"^\d+\.", "");
+        }
+
+        unitMass = 0.5f + (unitID - 1) / 2f;
     }
 #endif
 }

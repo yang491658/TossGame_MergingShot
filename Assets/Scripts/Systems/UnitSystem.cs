@@ -29,7 +29,6 @@ public class UnitSystem : MonoBehaviour
     private void OnValidate()
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();
-
         SetMass();
     }
 #endif
@@ -37,7 +36,6 @@ public class UnitSystem : MonoBehaviour
     public void Shoot(Vector2 _impulse)
     {
         rb.linearVelocity = _impulse;
-
         fired = true;
         SetSelected(false);
     }
@@ -55,18 +53,18 @@ public class UnitSystem : MonoBehaviour
         otherUS.merging = true;
 
         Vector2 pA = rb != null ? rb.position : (Vector2)transform.position;
-        
+
         var otherRb = collision.rigidbody;
         Vector2 pB = otherRb != null ? otherRb.position : (Vector2)otherUS.transform.position;
-        
+
         Vector2 mid = (pA + pB) * 0.5f;
 
         Destroy(otherUS.gameObject);
         Destroy(gameObject);
-        GameObject go =  GameManager.Instance.SpawnById(GetID() + 1, mid);
-        go.GetComponent<UnitSystem>().fired = true;
+        GameObject go = GameManager.Instance.Spawn(GetID() + 1, mid);
+        var us = go.GetComponent<UnitSystem>();
+        us.fired = true;
     }
-
     #region GET
     public int GetID() => data.unitID;
     public bool IsFinal() => GetID() == GameManager.Instance.GetFinal();

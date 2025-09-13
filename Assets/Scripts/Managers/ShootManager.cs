@@ -8,7 +8,6 @@ public class ShootManager : MonoBehaviour
     private LineRenderer aimLine => GetComponent<LineRenderer>();
 
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
-    [SerializeField] private Transform hole;
     [Space]
     [SerializeField] private float powerCoef = 5f;
     [SerializeField] private float maxPower = 3f;
@@ -146,6 +145,6 @@ public class ShootManager : MonoBehaviour
     private IEnumerator Respawn()
     {
         yield return new WaitForSeconds(1f);
-        GameManager.Instance.SpawnById(1);
+        GameManager.Instance.Spawn();
     }
 }

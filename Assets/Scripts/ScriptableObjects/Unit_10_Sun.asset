@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d6ddb5dd5df21242b4eb1e04a70a669, type: 3}
-  m_Name: Unit_09_Circle
+  m_Name: Unit_10_Sun
   m_EditorClassIdentifier: 
-  unitID: 9
-  unitName: 9
-  unitImage: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  unitMass: 1.9
+  unitID: 10
+  unitName: Sun
+  unitImage: {fileID: 21300000, guid: d78b5ecf59912d44dbdbf12d4c75ff93, type: 3}
+  unitMass: 2

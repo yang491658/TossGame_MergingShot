@@ -293,17 +293,18 @@ MonoBehaviour:
   prefab: {fileID: 8166794966985416557, guid: 20a65fb9e1d9eb149b410c64862f3256, type: 3}
   spawn: {fileID: 4936520173943828161}
   inGame: {fileID: 1336853628}
+  hole: {fileID: 872845355}
   unitDatas:
   - {fileID: 11400000, guid: fc6f0135f4f76bb468ef232781844928, type: 2}
   - {fileID: 11400000, guid: 21f4bdd28c37a1b448bbfb87ac05ce37, type: 2}
-  - {fileID: 11400000, guid: b033de6ece1422d429ae3f5fa47bdc4b, type: 2}
-  - {fileID: 11400000, guid: 4376a8c2c8589f444978c29dff309049, type: 2}
-  - {fileID: 11400000, guid: 796a39cdf292a1e4a86b3b629309c8c6, type: 2}
-  - {fileID: 11400000, guid: f598d61973d28c74fa3cdaf2be2f793d, type: 2}
-  - {fileID: 11400000, guid: 3e3b7273f336132449b6f2950323a555, type: 2}
-  - {fileID: 11400000, guid: 9d67479c14907b44ab4e0683e34d0d6a, type: 2}
-  - {fileID: 11400000, guid: 1949355830d3c964aa721be879382519, type: 2}
-  - {fileID: 11400000, guid: abd2bd2b4f4c0304e898de22f3b2b397, type: 2}
+  - {fileID: 11400000, guid: c967c93a280c3804daccfd55acf66f6e, type: 2}
+  - {fileID: 11400000, guid: e4a88bbd754a3c343bbd1fdb3ebd8e64, type: 2}
+  - {fileID: 11400000, guid: c7f17c5980b3b9149a49f77404882bcc, type: 2}
+  - {fileID: 11400000, guid: 9244bf2a820ed404bb8b76a1aac2f146, type: 2}
+  - {fileID: 11400000, guid: 55c48b5f2cde7184b90fe6f04de640d8, type: 2}
+  - {fileID: 11400000, guid: 0afd0ba6be3a9c14e8d5ff9402d1d760, type: 2}
+  - {fileID: 11400000, guid: b32c0626096fbdf4aa8d7d7cf76a4f39, type: 2}
+  - {fileID: 11400000, guid: ab7be87288d5ca849a6ec6b9b9a34e25, type: 2}
 --- !u!1 &872845352
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,32 +387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a8d97399ec0144aa552fe0110536e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pullPower: 15
-  powerLimit: 50
-  falloff:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  pullPower: 100
 --- !u!1 &1030031172
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +561,7 @@ HingeJoint2D:
   m_UseConnectedAnchor: 1
   m_UseMotor: 1
   m_Motor:
-    m_MotorSpeed: 120
+    m_MotorSpeed: 30
     m_MaximumMotorForce: 10000
   m_UseLimits: 0
   m_AngleLimits:
@@ -850,7 +826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a97bfe777a238d4469e30c7b4ee5ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hole: {fileID: 872845353}
   powerCoef: 5
   maxPower: 3
 --- !u!1660057539 &9223372036854775807

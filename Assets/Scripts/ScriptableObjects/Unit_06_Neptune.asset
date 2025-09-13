@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d6ddb5dd5df21242b4eb1e04a70a669, type: 3}
-  m_Name: Unit_05_Circle
+  m_Name: Unit_06_Neptune
   m_EditorClassIdentifier: 
-  unitID: 5
-  unitName: 5
-  unitImage: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  unitMass: 1.5
+  unitID: 6
+  unitName: Neptune
+  unitImage: {fileID: 21300000, guid: c38d5406fc881594891e51e17577494e, type: 3}
+  unitMass: 1.6

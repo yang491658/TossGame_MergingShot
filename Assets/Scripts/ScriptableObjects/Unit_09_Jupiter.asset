@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d6ddb5dd5df21242b4eb1e04a70a669, type: 3}
-  m_Name: Unit_02_Circle
+  m_Name: Unit_09_Jupiter
   m_EditorClassIdentifier: 
-  unitID: 2
-  unitName: 2
-  unitImage: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  unitMass: 1.2
+  unitID: 9
+  unitName: Jupiter
+  unitImage: {fileID: 21300000, guid: 8f66374e057a4454da5287d80bdae369, type: 3}
+  unitMass: 1.9
