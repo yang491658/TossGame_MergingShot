@@ -66,6 +66,7 @@ public class UnitSystem : MonoBehaviour
         var us = go.GetComponent<UnitSystem>();
         us.fired = true;
     }
+
     #region GET
     public int GetID() => data.unitID;
     public bool IsFinal() => GetID() == GameManager.Instance.GetFinal();
