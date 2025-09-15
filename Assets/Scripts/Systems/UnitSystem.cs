@@ -28,6 +28,7 @@ public class UnitSystem : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        if (sr == null) sr = GetComponent<SpriteRenderer>();
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         SetMass();
     }
@@ -82,11 +83,12 @@ public class UnitSystem : MonoBehaviour
             sr.sprite = data.unitImage;
 
         mass = data.unitMass;
+        SetMass();
     }
 
     private void SetMass()
     {
-        rb.mass = mass;
+        if (rb != null) rb.mass = mass;
         transform.localScale = Vector3.one * mass;
     }
 

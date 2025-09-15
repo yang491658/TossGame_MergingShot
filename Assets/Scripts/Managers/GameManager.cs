@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        Spawn(1);
+    }
+
     #region 소환 및 제거
     public GameObject Spawn(int _id = 0, Vector2? _spawnPos = null)
     {

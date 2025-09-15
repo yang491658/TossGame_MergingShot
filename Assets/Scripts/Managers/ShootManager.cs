@@ -110,7 +110,7 @@ public class ShootManager : MonoBehaviour
             selected.Shoot(impulse);
             selected.SetSelected(false);
 
-            StartCoroutine(Respawn());
+            StartCoroutine(Respawn(1)); // TODO 재소환 로직 변경
 
             selected = null;
         }
@@ -142,9 +142,9 @@ public class ShootManager : MonoBehaviour
     }
     #endregion
 
-    private IEnumerator Respawn()
+    private IEnumerator Respawn(int _id = 0)
     {
         yield return new WaitForSeconds(1f);
-        GameManager.Instance.Spawn();
+        GameManager.Instance.Spawn(_id);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
-    [SerializeField] private float pullPower = 15f;
+    private float gravity = 100f;
 
     private readonly HashSet<UnitSystem> units = new HashSet<UnitSystem>();
 
@@ -32,8 +32,7 @@ public class HoleSystem : MonoBehaviour
             float safeDist = Mathf.Max(dist, 0.001f);
             float invSq = 1f / (safeDist * safeDist);
 
-            float force = pullPower * invSq * rb.mass;
-
+            float force = gravity * invSq * rb.mass;
             rb.AddForce(dir.normalized * force, ForceMode2D.Force);
         }
 

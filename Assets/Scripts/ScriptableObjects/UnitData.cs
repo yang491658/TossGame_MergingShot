@@ -30,7 +30,7 @@ public class UnitData : ScriptableObject
             unitName = Regex.Replace(rawName, @"^\d+\.", "");
         }
 
-        unitMass = 0.5f + (unitID - 1) / 2f;
+        unitMass = 1f + (unitID - 1) / 2f;
     }
 #endif
 }

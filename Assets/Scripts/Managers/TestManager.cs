@@ -5,12 +5,14 @@ public class TestManager : MonoBehaviour
     private float delay = 0.3f;
     private float nextTime = 0;
 
+    public int test = 1;
+
     private void Update()
     {
         if (Input.GetKey(KeyCode.W) && Time.time >= nextTime)
         {
-            GameObject go = GameManager.Instance.Spawn(1);
-            go.GetComponent<UnitSystem>().Shoot(Vector2.up * 20);
+            GameObject go = GameManager.Instance.Spawn(test++);
+            go.GetComponent<UnitSystem>().Shoot(Vector2.zero);
             nextTime = Time.time + delay;
         }
 
@@ -22,9 +24,6 @@ public class TestManager : MonoBehaviour
                 go.GetComponent<UnitSystem>().Shoot(Vector2.zero);
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.T))
-            GameManager.Instance.Spawn();
 
         if (Input.GetKeyDown(KeyCode.D))
             GameManager.Instance.DestroyAll();
