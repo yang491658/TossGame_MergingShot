@@ -11,7 +11,7 @@ public class UnitDataEditor : Editor
         UnitData data = (UnitData)target;
 
         string idStr = data.unitID.ToString("D2");
-        string newName = $"Unit_{idStr}_{data.unitName}";
+        string newName = $"Unit{idStr}_{data.unitName}";
 
         string path = AssetDatabase.GetAssetPath(data);
         string currentName = System.IO.Path.GetFileNameWithoutExtension(path);

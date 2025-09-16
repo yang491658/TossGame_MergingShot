@@ -4,6 +4,7 @@ using UnityEngine;
 public class UnitSystem : MonoBehaviour
 {
     private SpriteRenderer sr;
+    private Collider2D col;
     private Rigidbody2D rb;
     private Color originalColor;
 
@@ -16,8 +17,11 @@ public class UnitSystem : MonoBehaviour
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
+
         originalColor = sr.color;
+        col.isTrigger = true;
     }
 
     private void Update()
@@ -29,7 +33,9 @@ public class UnitSystem : MonoBehaviour
     private void OnValidate()
     {
         if (sr == null) sr = GetComponent<SpriteRenderer>();
+        if (col == null) col = GetComponent<Collider2D>();
         if (rb == null) rb = GetComponent<Rigidbody2D>();
+
         SetMass();
     }
 #endif
@@ -38,38 +44,49 @@ public class UnitSystem : MonoBehaviour
     {
         rb.linearVelocity = _impulse;
         fired = true;
+        col.isTrigger = false;
+
         SetSelected(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var otherUS = collision.gameObject.GetComponent<UnitSystem>();
-        if (otherUS == null) return;
+        var other = collision.gameObject.GetComponent<UnitSystem>();
+
+        if (other == null) return;
         if (!collision.gameObject.CompareTag(gameObject.tag)) return;
-        if (IsFinal() || otherUS.GetID() != GetID()) return;
-        if (merging || otherUS.merging) return;
-        if (GetInstanceID() > otherUS.GetInstanceID()) return;
+        if (IsFinal() || other.GetID() != GetID()) return;
+        if (merging || other.merging) return;
+        if (GetInstanceID() > other.GetInstanceID()) return;
 
         merging = true;
-        otherUS.merging = true;
-
-        Vector2 pA = rb != null ? rb.position : (Vector2)transform.position;
+        other.merging = true;
 
         var otherRb = collision.rigidbody;
-        Vector2 pB = otherRb != null ? otherRb.position : (Vector2)otherUS.transform.position;
 
-        Vector2 mid = (pA + pB) * 0.5f;
+        Vector2 pA = rb != null ? rb.position : (Vector2)transform.position;
+        Vector2 pB = otherRb != null ? otherRb.position : (Vector2)other.transform.position;
+        Vector2 pM = (pA + pB) / 2f;
 
-        Destroy(otherUS.gameObject);
-        Destroy(gameObject);
-        GameObject go = GameManager.Instance.Spawn(GetID() + 1, mid);
-        var us = go.GetComponent<UnitSystem>();
-        us.fired = true;
+        GameManager.Instance.DestroyUnit(other);
+        GameManager.Instance.DestroyUnit(this);
+
+        UnitSystem us = GameManager.Instance.Spawn(GetID() + 1, pM);
+
+        Vector2 vA = GetVelocity();
+        Vector2 vB = other.GetVelocity();
+        Vector2 vM = (vA + vB) / 2f;
+
+        us.Shoot(vM);
     }
 
     #region GET
     public int GetID() => data.unitID;
     public bool IsFinal() => GetID() == GameManager.Instance.GetFinal();
+
+    public int GetScore() => data.unitScore;
+
+    public Vector2 GetVelocity() => rb != null ? rb.linearVelocity : Vector2.zero;
     #endregion
 
     #region SET

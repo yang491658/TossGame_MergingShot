@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d6ddb5dd5df21242b4eb1e04a70a669, type: 3}
-  m_Name: Unit_05_Earth
+  m_Name: Unit08_Saturn
   m_EditorClassIdentifier: 
-  unitID: 5
-  unitName: Earth
-  unitImage: {fileID: 21300000, guid: 14b4081f899079c40a50e0e40d5b54a6, type: 3}
-  unitMass: 1.5
+  unitID: 8
+  unitName: Saturn
+  unitImage: {fileID: 21300000, guid: 6df05bfe3e17f6a4db81ba6d93f07147, type: 3}
+  unitMass: 1.8

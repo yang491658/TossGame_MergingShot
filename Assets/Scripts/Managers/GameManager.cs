@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [Header("Game Info")]
+    public int totalScore = 0;
+
     [Header("Spawn Settings")]
     [SerializeField] private GameObject prefab;
     [SerializeField] private Transform spawn;
@@ -16,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HoleSystem hole;
 
     public UnitData[] unitDatas;
-    private readonly List<GameObject> units = new List<GameObject>();
+    [SerializeField] private List<UnitSystem> units = new List<UnitSystem>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -58,11 +61,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Spawn(1);
+        // TODO 시작하면 유닛 소환
     }
 
-    #region 소환 및 제거
-    public GameObject Spawn(int _id = 0, Vector2? _spawnPos = null)
+    #region 소환
+    public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
         if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
 
@@ -84,25 +87,46 @@ public class GameManager : MonoBehaviour
 
         Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
 
-        GameObject go = Instantiate(prefab, spawnPos, Quaternion.identity);
-        go.GetComponent<UnitSystem>().SetData(data.Clone());
-        go.transform.SetParent(inGame);
-        units.Add(go);
+        UnitSystem unit = Instantiate(prefab, spawnPos, Quaternion.identity)
+            .GetComponent<UnitSystem>();
 
-        RegisterToHole(go);
-        return go;
+        unit.SetData(data.Clone());
+        unit.transform.SetParent(inGame);
+        units.Add(unit);
+
+        RegisterToHole(unit);
+
+        totalScore += unit.GetScore();
+
+        return unit;
     }
 
+    private void RegisterToHole(UnitSystem _unit) => hole.Register(_unit);
+    #endregion
 
-    private void RegisterToHole(GameObject _go) => hole.Register(_go.GetComponent<UnitSystem>());
+    #region 제거
+    public void DestroyUnit(UnitSystem _unit)
+    {
+        if (_unit == null) return;
+
+        units.Remove(_unit);
+        Destroy(_unit.gameObject);
+    }
 
     public void DestroyAll()
     {
-        foreach (var u in units)
-        {
-            if (u != null) Destroy(u);
-        }
+        Reset();
+
+        for (int i = units.Count - 1; i >= 0; i--)
+            DestroyUnit(units[i]);
         units.Clear();
+    }
+    #endregion
+
+    #region 점수
+    public void Reset()
+    {
+        totalScore = 0;
     }
     #endregion
 

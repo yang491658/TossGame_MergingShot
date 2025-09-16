@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d6ddb5dd5df21242b4eb1e04a70a669, type: 3}
-  m_Name: Unit_06_Neptune
+  m_Name: Unit06_Neptune
   m_EditorClassIdentifier: 
   unitID: 6
   unitName: Neptune

@@ -8,6 +8,7 @@ public class UnitData : ScriptableObject
     public string unitName;
     public Sprite unitImage;
     public float unitMass;
+    public int unitScore;
 
     public UnitData Clone()
     {
@@ -17,6 +18,7 @@ public class UnitData : ScriptableObject
         clone.unitName = this.unitName;
         clone.unitImage = this.unitImage;
         clone.unitMass = this.unitMass;
+        clone.unitScore = this.unitScore;
 
         return clone;
     }
@@ -30,7 +32,8 @@ public class UnitData : ScriptableObject
             unitName = Regex.Replace(rawName, @"^\d+\.", "");
         }
 
-        unitMass = 1f + (unitID - 1) / 2.5f;
+        unitMass = 1f + (unitID - 1) / 2f;
+        unitScore = unitID * 10;
     }
 #endif
 }
