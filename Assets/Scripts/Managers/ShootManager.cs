@@ -33,7 +33,7 @@ public class ShootManager : MonoBehaviour
 #endif
     }
 
-    #region 입력
+    #region 클릭
     private void HandleMouse()
     {
         if (Input.GetMouseButtonDown(0)) BeginDrag(Input.mousePosition);

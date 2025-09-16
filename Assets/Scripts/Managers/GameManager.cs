@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using System.Linq;
@@ -9,16 +10,20 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Game Info")]
-    public int totalScore = 0;
-
     [Header("Spawn Settings")]
-    [SerializeField] private GameObject prefab;
-    [SerializeField] private Transform spawn;
-    [SerializeField] private Transform inGame;
-    [SerializeField] private HoleSystem hole;
+    private UnitData[] unitDatas;
+    private GameObject prefab;
+    private Transform spawn;
+    private Transform inGame;
 
-    public UnitData[] unitDatas;
+
+    [Header("Game Info.")]
+    [SerializeField] private int score = 0;
+
+    public event System.Action<int> OnScoreChanged;
+
+    [Header("Unit Info.")]
+    [SerializeField] private HoleSystem hole;
     [SerializeField] private List<UnitSystem> units = new List<UnitSystem>();
 
 #if UNITY_EDITOR
@@ -94,43 +99,48 @@ public class GameManager : MonoBehaviour
         unit.transform.SetParent(inGame);
         units.Add(unit);
 
-        RegisterToHole(unit);
-
-        totalScore += unit.GetScore();
-
         return unit;
     }
-
-    private void RegisterToHole(UnitSystem _unit) => hole.Register(_unit);
     #endregion
 
     #region 제거
     public void DestroyUnit(UnitSystem _unit)
     {
         if (_unit == null) return;
-
         units.Remove(_unit);
         Destroy(_unit.gameObject);
     }
 
     public void DestroyAll()
     {
-        Reset();
-
         for (int i = units.Count - 1; i >= 0; i--)
             DestroyUnit(units[i]);
-        units.Clear();
+
+        ResetScore();
     }
     #endregion
 
     #region 점수
-    public void Reset()
+    public void ResetScore()
     {
-        totalScore = 0;
+        score = 0;
+        OnScoreChanged?.Invoke(score);
+    }
+
+    public void AddScore(int _score)
+    {
+        score += _score;
+        OnScoreChanged?.Invoke(score);
     }
     #endregion
 
     #region GET
-    public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
+    public IReadOnlyList<UnitSystem> GetUnits() => units;
+    public int GetFinal()
+    {
+        if (unitDatas == null || unitDatas.Length == 0) return -1;
+        return unitDatas[unitDatas.Length - 1].unitID;
+    }
+    public int GetScore() => score;
     #endregion
 }

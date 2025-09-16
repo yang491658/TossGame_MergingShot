@@ -1,17 +1,22 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
 public class TestManager : MonoBehaviour
 {
-    private float delay = 0.3f;
-    private float nextTime = 0;
+    private float time = 0;
+    private float delay = 0.1f;
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.W) && Time.time >= nextTime)
+        if (Input.GetKey(KeyCode.W) && Time.time >= time)
         {
             UnitSystem unit = GameManager.Instance.Spawn(1);
-            unit.Shoot(Vector2.up * 20f);
-            nextTime = Time.time + delay;
+            if (unit != null)
+            {
+                Vector2 impulse = Vector2.up * 100f;
+                unit.Shoot(impulse);
+            }
+            time = Time.time + delay;
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -23,3 +28,4 @@ public class TestManager : MonoBehaviour
         }
     }
 }
+#endif

@@ -1,19 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
     private float gravity = 500f;
 
-    private readonly HashSet<UnitSystem> units = new HashSet<UnitSystem>();
-
-    public void Register(UnitSystem _unit)
-    {
-        if (_unit != null) units.Add(_unit);
-    }
-
     private void FixedUpdate()
     {
+        var units = GameManager.Instance.GetUnits();
+
         if (units.Count == 0) return;
 
         Vector2 center = transform.position;
@@ -35,7 +29,5 @@ public class HoleSystem : MonoBehaviour
             float force = gravity * invSq * rb.mass;
             rb.AddForce(dir.normalized * force, ForceMode2D.Force);
         }
-
-        units.RemoveWhere(x => x == null);
     }
 }

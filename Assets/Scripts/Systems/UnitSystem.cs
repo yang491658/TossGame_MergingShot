@@ -24,11 +24,6 @@ public class UnitSystem : MonoBehaviour
         col.isTrigger = true;
     }
 
-    private void Update()
-    {
-        SetMass();
-    }
-
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -42,11 +37,14 @@ public class UnitSystem : MonoBehaviour
 
     public void Shoot(Vector2 _impulse)
     {
-        rb.linearVelocity = _impulse;
+        rb.AddForce(_impulse, ForceMode2D.Impulse);
+
         fired = true;
         col.isTrigger = false;
 
         SetSelected(false);
+
+        GameManager.Instance.AddScore(GetScore());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -68,15 +66,14 @@ public class UnitSystem : MonoBehaviour
         Vector2 pB = otherRb != null ? otherRb.position : (Vector2)other.transform.position;
         Vector2 pM = (pA + pB) / 2f;
 
-        GameManager.Instance.DestroyUnit(other);
-        GameManager.Instance.DestroyUnit(this);
-
-        UnitSystem us = GameManager.Instance.Spawn(GetID() + 1, pM);
-
         Vector2 vA = GetVelocity();
         Vector2 vB = other.GetVelocity();
         Vector2 vM = (vA + vB) / 2f;
 
+        GameManager.Instance.DestroyUnit(other);
+        GameManager.Instance.DestroyUnit(this);
+
+        UnitSystem us = GameManager.Instance.Spawn(GetID() + 1, pM);
         us.Shoot(vM);
     }
 
