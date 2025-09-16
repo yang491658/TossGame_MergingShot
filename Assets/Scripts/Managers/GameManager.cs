@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Game Info.")]
-    [SerializeField] private int score = 0;
+    [SerializeField] private int totalScore = 0;
 
     public event System.Action<int> OnScoreChanged;
 
@@ -123,14 +123,18 @@ public class GameManager : MonoBehaviour
     #region 점수
     public void ResetScore()
     {
-        score = 0;
-        OnScoreChanged?.Invoke(score);
+        Debug.Log("점수 초기화");
+
+        totalScore = 0;
+        OnScoreChanged?.Invoke(totalScore);
     }
 
     public void AddScore(int _score)
     {
-        score += _score;
-        OnScoreChanged?.Invoke(score);
+        Debug.Log("점수 획득 : " + _score);
+
+        totalScore += _score;
+        OnScoreChanged?.Invoke(totalScore);
     }
     #endregion
 
@@ -141,6 +145,6 @@ public class GameManager : MonoBehaviour
         if (unitDatas == null || unitDatas.Length == 0) return -1;
         return unitDatas[unitDatas.Length - 1].unitID;
     }
-    public int GetScore() => score;
+    public int GetScore() => totalScore;
     #endregion
 }

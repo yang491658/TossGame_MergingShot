@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
-    private float gravity = 500f;
+    private float gravity = 100f;
 
     private void FixedUpdate()
     {

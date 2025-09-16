@@ -278,7 +278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00000
+  m_text: 0000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -529,7 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b26fed8f39ad054d921157f1f53d68e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
+  totalScore: 0
   hole: {fileID: 872845355}
   units: []
 --- !u!1 &872845352
@@ -797,7 +797,7 @@ HingeJoint2D:
   m_UseConnectedAnchor: 1
   m_UseMotor: 1
   m_Motor:
-    m_MotorSpeed: 120
+    m_MotorSpeed: 30
     m_MaximumMotorForce: 10000
   m_UseLimits: 0
   m_AngleLimits:

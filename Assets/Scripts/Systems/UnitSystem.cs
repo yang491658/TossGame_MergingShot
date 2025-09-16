@@ -10,7 +10,6 @@ public class UnitSystem : MonoBehaviour
 
     [SerializeField] private UnitData data;
 
-    private float mass;
     public bool fired { get; private set; }
     private bool merging;
 
@@ -30,21 +29,19 @@ public class UnitSystem : MonoBehaviour
         if (sr == null) sr = GetComponent<SpriteRenderer>();
         if (col == null) col = GetComponent<Collider2D>();
         if (rb == null) rb = GetComponent<Rigidbody2D>();
-
-        SetMass();
     }
 #endif
 
     public void Shoot(Vector2 _impulse)
     {
+        Debug.Log(gameObject.name + " น฿ป็ : " + _impulse.magnitude);
+
         rb.AddForce(_impulse, ForceMode2D.Impulse);
 
         fired = true;
         col.isTrigger = false;
 
         SetSelected(false);
-
-        GameManager.Instance.AddScore(GetScore());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -75,6 +72,8 @@ public class UnitSystem : MonoBehaviour
 
         UnitSystem us = GameManager.Instance.Spawn(GetID() + 1, pM);
         us.Shoot(vM);
+
+        GameManager.Instance.AddScore(GetScore());
     }
 
     #region GET
@@ -97,14 +96,8 @@ public class UnitSystem : MonoBehaviour
         if (sr != null && data.unitImage != null)
             sr.sprite = data.unitImage;
 
-        mass = data.unitMass;
-        SetMass();
-    }
-
-    private void SetMass()
-    {
-        if (rb != null) rb.mass = mass;
-        transform.localScale = Vector3.one * mass;
+        if (rb != null) rb.mass = data.unitMass;
+        transform.localScale = Vector3.one * data.unitScale;
     }
 
     public void SetSelected(bool _selected)
