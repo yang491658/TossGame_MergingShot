@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 public class ShootManager : MonoBehaviour
 {
+    public static ShootManager Instance { get; private set; }
+
     private Camera cam => Camera.main;
     private LineRenderer aimLine => GetComponent<LineRenderer>();
 
@@ -17,6 +19,13 @@ public class ShootManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         if (aimLine != null)
         {
             aimLine.positionCount = 2;
@@ -145,6 +154,6 @@ public class ShootManager : MonoBehaviour
     private IEnumerator Respawn(int _id = 0)
     {
         yield return new WaitForSeconds(1f);
-        GameManager.Instance.Spawn(_id);
+        SpawnManager.Instance.Spawn(_id);
     }
 }

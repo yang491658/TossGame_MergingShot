@@ -50,9 +50,9 @@ public class UnitSystem : MonoBehaviour
 
         if (other == null) return;
         if (!collision.gameObject.CompareTag(gameObject.tag)) return;
-        if (IsFinal() || other.GetID() != GetID()) return;
-        if (merging || other.merging) return;
-        if (GetInstanceID() > other.GetInstanceID()) return;
+        if (other.GetID() != GetID()) return;
+        if (other.merging || merging) return;
+        if (other.GetInstanceID() < GetInstanceID()) return;
 
         merging = true;
         other.merging = true;
@@ -67,23 +67,17 @@ public class UnitSystem : MonoBehaviour
         Vector2 vB = other.GetVelocity();
         Vector2 vM = (vA + vB) / 2f;
 
-        GameManager.Instance.DestroyUnit(other);
-        GameManager.Instance.DestroyUnit(this);
+        SpawnManager.Instance.DestroyUnit(other);
+        SpawnManager.Instance.DestroyUnit(this);
 
-        UnitSystem us = GameManager.Instance.Spawn(GetID() + 1, pM);
-        us.Shoot(vM);
+        if (!IsFinal())
+        {
+            UnitSystem us = SpawnManager.Instance.Spawn(GetID() + 1, pM);
+            us.Shoot(vM);
+        }
 
         GameManager.Instance.AddScore(GetScore());
     }
-
-    #region GET
-    public int GetID() => data.unitID;
-    public bool IsFinal() => GetID() == GameManager.Instance.GetFinal();
-
-    public int GetScore() => data.unitScore;
-
-    public Vector2 GetVelocity() => rb != null ? rb.linearVelocity : Vector2.zero;
-    #endregion
 
     #region SET
     public void SetData(UnitData _data)
@@ -105,5 +99,14 @@ public class UnitSystem : MonoBehaviour
         if (sr == null) return;
         sr.color = _selected ? Color.red : originalColor;
     }
+    #endregion
+
+    #region GET
+    public int GetID() => data.unitID;
+    public bool IsFinal() => GetID() == SpawnManager.Instance.GetFinal();
+
+    public int GetScore() => data.unitScore;
+
+    public Vector2 GetVelocity() => rb != null ? rb.linearVelocity : Vector2.zero;
     #endregion
 }

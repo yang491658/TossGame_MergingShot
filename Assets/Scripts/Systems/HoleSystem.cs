@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
-    private float gravity = 100f;
+    [SerializeField] private float gravity = 100f;
 
     private void FixedUpdate()
     {
-        var units = GameManager.Instance.GetUnits();
+        var units = SpawnManager.Instance.GetUnits();
 
         if (units.Count == 0) return;
 
