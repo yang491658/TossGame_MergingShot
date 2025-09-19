@@ -10,9 +10,9 @@ public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager Instance { get; private set; }
 
-    [Header("Spawn Settings")]
+    [Header("Spawn Setting")]
+    [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
-    [SerializeField] private GameObject prefab;
     [SerializeField] private Transform spawn;
     [SerializeField] private Transform inGame;
 
@@ -23,8 +23,8 @@ public class SpawnManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (prefab == null)
-            prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
+        if (unitBase == null)
+            unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
 
         if (spawn == null)
             spawn = transform.Find("SpawnPos");
@@ -65,7 +65,7 @@ public class SpawnManager : MonoBehaviour
     #region º“»Ø
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
-        if (prefab == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
+        if (unitBase == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
 
         UnitData data = null;
 
@@ -85,7 +85,7 @@ public class SpawnManager : MonoBehaviour
 
         Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
 
-        UnitSystem unit = Instantiate(prefab, spawnPos, Quaternion.identity)
+        UnitSystem unit = Instantiate(unitBase, spawnPos, Quaternion.identity)
             .GetComponent<UnitSystem>();
 
         unit.SetData(data.Clone());

@@ -2,17 +2,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ShootManager : MonoBehaviour
+public class ShotManager : MonoBehaviour
 {
-    public static ShootManager Instance { get; private set; }
+    public static ShotManager Instance { get; private set; }
 
     private Camera cam => Camera.main;
     private LineRenderer aimLine => GetComponent<LineRenderer>();
 
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
-    [Space]
-    [SerializeField] private float powerCoef = 5f;
-    [SerializeField] private float maxPower = 3f;
+
+    [Header("Shot Info.")]
+    [SerializeField] private float powerCoef;
+    [SerializeField] private float maxPower;
 
     private UnitSystem selected;
     private Vector2 dragStart;
@@ -35,6 +36,8 @@ public class ShootManager : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsPaused) return;
+
 #if UNITY_EDITOR
         HandleMouse();
 #else
@@ -119,7 +122,7 @@ public class ShootManager : MonoBehaviour
             selected.Shoot(impulse);
             selected.SetSelected(false);
 
-            StartCoroutine(Respawn(1)); // TODO 재소환 로직 변경
+            StartCoroutine(Respawn());
 
             selected = null;
         }
@@ -154,6 +157,6 @@ public class ShootManager : MonoBehaviour
     private IEnumerator Respawn(int _id = 0)
     {
         yield return new WaitForSeconds(1f);
-        SpawnManager.Instance.Spawn(_id);
+        SpawnManager.Instance.Spawn(Random.Range(1, 5));
     }
 }

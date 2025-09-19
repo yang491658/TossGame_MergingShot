@@ -11,7 +11,7 @@ public class UnitSystem : MonoBehaviour
     [SerializeField] private UnitData data;
 
     public bool fired { get; private set; }
-    private bool merging;
+    public bool merging { get; private set; }
 
     private void Awake()
     {
@@ -91,6 +91,7 @@ public class UnitSystem : MonoBehaviour
             sr.sprite = data.unitImage;
 
         if (rb != null) rb.mass = data.unitMass;
+        if (rb != null) rb.mass = 1;
         transform.localScale = Vector3.one * data.unitScale;
     }
 

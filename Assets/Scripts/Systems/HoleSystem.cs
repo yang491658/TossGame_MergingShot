@@ -2,7 +2,28 @@ using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
-    [SerializeField] private float gravity = 100f;
+
+    [Header("Gravity Info.")]
+    [SerializeField] private float gravity;
+
+    [Header("Rotation Info.")]
+    [SerializeField] private float rotateSpeed;
+    private HingeJoint2D hinge;
+
+    private void Awake()
+    {
+        hinge = GetComponentInChildren<HingeJoint2D>();
+    }
+
+    private void Update()
+    {
+        if (hinge != null)
+        {
+            var motor = hinge.motor;
+            motor.motorSpeed = rotateSpeed;
+            hinge.motor = motor;
+        }
+    }
 
     private void FixedUpdate()
     {

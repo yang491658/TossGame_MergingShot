@@ -1,13 +1,16 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [Header("Score Info.")]
+    [SerializeField] private int totalScore = 0;
     public event System.Action<int> OnScoreChanged;
 
-    [Header("Game Info.")]
-    [SerializeField] private int totalScore = 0;
+    public bool IsPaused { get; private set; } = false;
+    public event System.Action<bool> OnPauseChanged;
 
     private void Awake()
     {
@@ -39,6 +42,33 @@ public class GameManager : MonoBehaviour
 
         totalScore += _score;
         OnScoreChanged?.Invoke(totalScore);
+    }
+    #endregion
+
+    #region ม๘วเ
+    public void Pause()
+    {
+        if (IsPaused) return;
+        IsPaused = true;
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+        OnPauseChanged?.Invoke(true);
+    }
+
+    public void Resume()
+    {
+        if (!IsPaused) return;
+        IsPaused = false;
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        OnPauseChanged?.Invoke(false);
+    }
+
+    public void Restart()
+    {
+        Resume();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     #endregion
 
