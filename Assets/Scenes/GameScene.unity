@@ -901,7 +901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a8d97399ec0144aa552fe0110536e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 1000
+  gravity: 500
   rotateSpeed: 30
 --- !u!1 &900096693
 GameObject:
@@ -1683,6 +1683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b12a867e1a8ca24487d8ec4c01c6c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0.3
+  angleRange: 0
 --- !u!4 &4936520173943828161
 Transform:
   m_ObjectHideFlags: 0
