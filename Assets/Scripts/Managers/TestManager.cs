@@ -35,7 +35,7 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W) && Time.time >= time)
         {
-            UnitSystem unit = SpawnManager.Instance.Spawn(1);
+            UnitSystem unit = SpawnManager.Instance.Spawn();
 
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;

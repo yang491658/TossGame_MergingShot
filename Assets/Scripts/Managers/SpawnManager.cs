@@ -57,11 +57,6 @@ public class SpawnManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        // TODO 시작하면 유닛 소환
-    }
-
     #region 소환
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
@@ -70,7 +65,7 @@ public class SpawnManager : MonoBehaviour
         UnitData data = null;
 
         if (_id == 0)
-            data = unitDatas[Random.Range(0, unitDatas.Length)];
+            data = unitDatas[Random.Range(0, unitDatas.Length / 2)];
         else
         {
 #if UNITY_EDITOR
