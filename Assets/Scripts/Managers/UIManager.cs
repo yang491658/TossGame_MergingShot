@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Score UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI menuScoreText;
 
     [Header("Pause UI")]
     [SerializeField] private Button menuBtn;
@@ -31,6 +32,8 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText == null)
             scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
+        if (menuScoreText == null)
+            menuScoreText = GameObject.Find("Box/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (menuBtn == null)
             menuBtn = GameObject.Find("MenuBtn")?.GetComponent<Button>();
@@ -129,6 +132,8 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText != null)
             scoreText.text = _score.ToString("0000");
+        if (menuScoreText != null)
+            menuScoreText.text = "Score : " + _score.ToString("0000");
     }
 
     private void OpenMenu(bool _paused)
