@@ -1243,11 +1243,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c72aa4ddf28cb24ba9c81d5778f1219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBase: {fileID: 0}
-  unitDatas: []
-  spawn: {fileID: 0}
-  inGame: {fileID: 0}
-  hole: {fileID: 0}
+  unitBase: {fileID: 8166794966985416557, guid: 20a65fb9e1d9eb149b410c64862f3256, type: 3}
+  unitDatas:
+  - {fileID: 11400000, guid: fc6f0135f4f76bb468ef232781844928, type: 2}
+  - {fileID: 11400000, guid: 21f4bdd28c37a1b448bbfb87ac05ce37, type: 2}
+  - {fileID: 11400000, guid: c967c93a280c3804daccfd55acf66f6e, type: 2}
+  - {fileID: 11400000, guid: e4a88bbd754a3c343bbd1fdb3ebd8e64, type: 2}
+  - {fileID: 11400000, guid: c7f17c5980b3b9149a49f77404882bcc, type: 2}
+  - {fileID: 11400000, guid: 9244bf2a820ed404bb8b76a1aac2f146, type: 2}
+  - {fileID: 11400000, guid: 55c48b5f2cde7184b90fe6f04de640d8, type: 2}
+  - {fileID: 11400000, guid: 0afd0ba6be3a9c14e8d5ff9402d1d760, type: 2}
+  - {fileID: 11400000, guid: b32c0626096fbdf4aa8d7d7cf76a4f39, type: 2}
+  - {fileID: 11400000, guid: ab7be87288d5ca849a6ec6b9b9a34e25, type: 2}
+  spawn: {fileID: 4936520173943828161}
+  inGame: {fileID: 1336853628}
+  hole: {fileID: 872845355}
   units: []
 --- !u!1 &828578013
 GameObject:
@@ -1717,15 +1727,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab6a7cc085ef1249acbc363024a3083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 0}
-  menuBtn: {fileID: 0}
-  menuUI: {fileID: 0}
-  bgmIcon: {fileID: 0}
-  sfxIcon: {fileID: 0}
-  bgmIcons: []
-  sfxIcons: []
-  bgmSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
+  scoreText: {fileID: 492232917}
+  menuBtn: {fileID: 982617113}
+  menuUI: {fileID: 7717450259356213407}
+  bgmIcon: {fileID: 828578015}
+  sfxIcon: {fileID: 1054147627}
+  bgmIcons:
+  - {fileID: 21300000, guid: 06a16cb520d0f2449a999572cae2cf97, type: 3}
+  - {fileID: 21300000, guid: cabad5b87dec1fd4e8749fa9f8936e63, type: 3}
+  sfxIcons:
+  - {fileID: 21300000, guid: fd30afab859581246b9ba7593ee3c10c, type: 3}
+  - {fileID: 21300000, guid: 2896697aee29fec4eae8809b364feeb0, type: 3}
+  - {fileID: 21300000, guid: d7f4f52e0d03f214b8b9ff47d92ab909, type: 3}
+  bgmSlider: {fileID: 1278883481}
+  sfxSlider: {fileID: 18600568}
 --- !u!1 &982617111
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,7 +2865,7 @@ GameObject:
   - component: {fileID: 1560183141}
   - component: {fileID: 1560183142}
   m_Layer: 0
-  m_Name: SoundManager
+  m_Name: AudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3258,7 +3273,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 132671828}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Replay
+        m_MethodName: Quit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4419,7 +4434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a97bfe777a238d4469e30c7b4ee5ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotPrefab: {fileID: 0}
+  dotPrefab: {fileID: 6269209348273212388, guid: 080c22eb1c2a7784db3d9fe765c43c7c, type: 3}
   dotCount: 10
   dotSpacing: 0.5
   powerCoef: 3
