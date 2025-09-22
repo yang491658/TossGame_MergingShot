@@ -9,8 +9,8 @@ public class UIManager : MonoBehaviour
     [Header("Score UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [Header("Pause UI")]
-    [SerializeField] private Button pauseBtn;
-    [SerializeField] private Image pauseUI;
+    [SerializeField] private Button menuBtn;
+    [SerializeField] private Image menuUI;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -18,10 +18,10 @@ public class UIManager : MonoBehaviour
         if (scoreText == null)
             scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
 
-        if (pauseBtn == null)
-            pauseBtn = GameObject.Find("PauseBtn")?.GetComponent<Button>();
-        if (pauseUI == null)
-            pauseUI = GameObject.Find("PauseUI")?.GetComponent<Image>();
+        if (menuBtn == null)
+            menuBtn = GameObject.Find("MenuBtn")?.GetComponent<Button>();
+        if (menuUI == null)
+            menuUI = GameObject.Find("MenuUI")?.GetComponent<Image>();
     }
 #endif
 
@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText != null) scoreText.gameObject.SetActive(!_paused);
 
-        if (pauseBtn != null) pauseBtn.gameObject.SetActive(!_paused);
-        if (pauseUI != null) pauseUI.gameObject.SetActive(_paused);
+        if (menuBtn != null) menuBtn.gameObject.SetActive(!_paused);
+        if (menuUI != null) menuUI.gameObject.SetActive(_paused);
     }
 }

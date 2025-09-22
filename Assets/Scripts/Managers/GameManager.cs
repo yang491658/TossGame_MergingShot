@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         if (IsPaused) return;
+
+        Debug.Log("게임 일시정지");
+
         IsPaused = true;
         Time.timeScale = 0f;
         AudioListener.pause = true;
@@ -58,17 +61,36 @@ public class GameManager : MonoBehaviour
     public void Resume()
     {
         if (!IsPaused) return;
+
+        Debug.Log("게임 재개");
+
         IsPaused = false;
         Time.timeScale = 1f;
         AudioListener.pause = false;
         OnPauseChanged?.Invoke(false);
     }
 
-    public void Restart()
+    public void Replay()
     {
         Resume();
+        
+        Debug.Log("게임 다시하기");
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Quit()
+    {
+        Debug.Log("게임 종료");
+
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
     }
     #endregion
 

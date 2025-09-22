@@ -17,8 +17,12 @@ public class TestManager : MonoBehaviour
             if (GameManager.Instance.IsPaused) GameManager.Instance.Resume();
             else GameManager.Instance.Pause();
         }
+
         if (Input.GetKeyDown(KeyCode.R))
-            GameManager.Instance.Restart();
+            GameManager.Instance.Replay();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            GameManager.Instance.Quit();
         #endregion
 
         #region 소환 테스트
