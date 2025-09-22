@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public event System.Action<int> OnScoreChanged;
 
     public bool IsPaused { get; private set; } = false;
-    public event System.Action<bool> OnPauseChanged;
+    public event System.Action<bool> OnMenuOpened;
 
     private void Awake()
     {
@@ -30,16 +30,12 @@ public class GameManager : MonoBehaviour
     #region 점수
     public void ResetScore()
     {
-        Debug.Log("점수 초기화");
-
         totalScore = 0;
         OnScoreChanged?.Invoke(totalScore);
     }
 
     public void AddScore(int _score)
     {
-        Debug.Log("점수 획득 : " + _score);
-
         totalScore += _score;
         OnScoreChanged?.Invoke(totalScore);
     }
@@ -50,39 +46,31 @@ public class GameManager : MonoBehaviour
     {
         if (IsPaused) return;
 
-        Debug.Log("게임 일시정지");
-
         IsPaused = true;
         Time.timeScale = 0f;
         AudioListener.pause = true;
-        OnPauseChanged?.Invoke(true);
+        OnMenuOpened?.Invoke(true);
     }
 
     public void Resume()
     {
         if (!IsPaused) return;
 
-        Debug.Log("게임 재개");
-
         IsPaused = false;
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        OnPauseChanged?.Invoke(false);
+        OnMenuOpened?.Invoke(false);
     }
 
     public void Replay()
     {
         Resume();
         
-        Debug.Log("게임 다시하기");
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Quit()
     {
-        Debug.Log("게임 종료");
-
         Time.timeScale = 1f;
         AudioListener.pause = false;
 

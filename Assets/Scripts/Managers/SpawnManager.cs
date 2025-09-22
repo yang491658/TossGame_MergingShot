@@ -87,8 +87,6 @@ public class SpawnManager : MonoBehaviour
         unit.transform.SetParent(inGame);
         units.Add(unit);
 
-        Debug.Log(unit.gameObject.name + " º“»Ø : " + spawnPos);
-
         return unit;
     }
     #endregion

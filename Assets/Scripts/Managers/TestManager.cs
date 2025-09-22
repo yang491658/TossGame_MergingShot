@@ -5,7 +5,7 @@ public class TestManager : MonoBehaviour
 {
     private float time = 0;
 
-    [SerializeField][Range(0f, 3f)] private float delay;
+    [SerializeField][Range(0f, 3f)] private float delay = 0.3f;
 
     [SerializeField][Range(0f, 45f)] float angleRange;
 

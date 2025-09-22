@@ -32,8 +32,6 @@ public class UnitSystem : MonoBehaviour
 
     public void Shoot(Vector2 _impulse)
     {
-        Debug.Log(gameObject.name + " น฿ป็ : " + _impulse.magnitude);
-
         rb.AddForce(_impulse, ForceMode2D.Impulse);
 
         fired = true;
