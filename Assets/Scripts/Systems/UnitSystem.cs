@@ -6,7 +6,6 @@ public class UnitSystem : MonoBehaviour
     private SpriteRenderer sr;
     private Collider2D col;
     private Rigidbody2D rb;
-    private Color originalColor;
 
     [SerializeField] private UnitData data;
 
@@ -19,7 +18,6 @@ public class UnitSystem : MonoBehaviour
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
 
-        originalColor = sr.color;
         col.isTrigger = true;
     }
 
@@ -40,8 +38,6 @@ public class UnitSystem : MonoBehaviour
 
         fired = true;
         col.isTrigger = false;
-
-        SetSelected(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -90,15 +86,8 @@ public class UnitSystem : MonoBehaviour
         if (sr != null && data.unitImage != null)
             sr.sprite = data.unitImage;
 
-        if (rb != null) rb.mass = data.unitMass;
         if (rb != null) rb.mass = 1;
         transform.localScale = Vector3.one * data.unitScale;
-    }
-
-    public void SetSelected(bool _selected)
-    {
-        if (sr == null) return;
-        sr.color = _selected ? Color.red : originalColor;
     }
     #endregion
 

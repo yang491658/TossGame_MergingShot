@@ -1,22 +1,41 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ShotManager : MonoBehaviour
 {
     public static ShotManager Instance { get; private set; }
 
     private Camera cam => Camera.main;
-    private LineRenderer aimLine => GetComponent<LineRenderer>();
 
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
+    private bool isDragging;
+
+    [Header("Aim Info.")]
+    [SerializeField] private GameObject dotPrefab;
+    [SerializeField] private int dotCount = 10;
+    [SerializeField] private float dotSpacing = 0.5f;
+    private readonly List<Transform> dots = new List<Transform>();
 
     [Header("Shot Info.")]
-    [SerializeField] private float powerCoef;
-    [SerializeField] private float maxPower;
+    [SerializeField] private float powerCoef = 3;
+    [SerializeField] private float maxPower = 5;
 
     private UnitSystem selected;
     private Vector2 dragStart;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (dotPrefab == null)
+            dotPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Dot.prefab");
+    }
+#endif
 
     private void Awake()
     {
@@ -27,10 +46,14 @@ public class ShotManager : MonoBehaviour
         }
         Instance = this;
 
-        if (aimLine != null)
+        if (dotPrefab != null && dots.Count == 0)
         {
-            aimLine.positionCount = 2;
-            aimLine.enabled = false;
+            for (int i = 0; i < dotCount; i++)
+            {
+                var dot = Instantiate(dotPrefab, transform);
+                dot.SetActive(false);
+                dots.Add(dot.transform);
+            }
         }
     }
 
@@ -89,25 +112,33 @@ public class ShotManager : MonoBehaviour
 
         if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
         {
-            if (aimLine != null) aimLine.enabled = true;
-
             selected = _unit;
-            selected.SetSelected(true);
-
             dragStart = world;
+            isDragging = true;
+            ShowAim(true);
+        }
+        else
+        {
+            selected = null;
+            isDragging = false;
+            ShowAim(false);
         }
     }
 
     private void DoDrag(Vector2 _screenPos)
     {
-        if (selected == null) return;
-
-        UpdateAimLine();
+        if (!isDragging || selected == null) return;
+        UpdateAim(ScreenToWorld(_screenPos));
     }
 
     private void EndDrag(Vector2 _screenPos)
     {
-        if (aimLine != null) aimLine.enabled = false;
+        if (!isDragging || selected == null)
+        {
+            ShowAim(false);
+            isDragging = false;
+            return;
+        }
 
         Vector2 endWorld = ScreenToWorld(_screenPos);
         Vector2 drag = endWorld - dragStart;
@@ -115,42 +146,53 @@ public class ShotManager : MonoBehaviour
 
         float dist = Mathf.Min(shotDir.magnitude, maxPower);
 
-        if (selected != null)
-        {
-            Vector2 impulse = shotDir.sqrMagnitude > 0f ? shotDir.normalized * dist * powerCoef : Vector2.zero;
+        Vector2 impulse = shotDir.sqrMagnitude > 0f ? shotDir.normalized * dist * powerCoef : Vector2.zero;
+        selected.Shoot(impulse);
+        StartCoroutine(Respawn());
 
-            selected.Shoot(impulse);
-            selected.SetSelected(false);
-
-            StartCoroutine(Respawn());
-
-            selected = null;
-        }
+        ShowAim(false);
+        isDragging = false;
+        selected = null;
     }
     #endregion
 
     #region 조준
-    private void UpdateAimLine()
+    private void ShowAim(bool _on)
     {
-        if (aimLine == null || selected == null) return;
+        for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(_on);
+    }
 
-        Vector3 start;
-        var rb = selected.GetComponent<Rigidbody2D>();
-        if (rb != null) start = rb.worldCenterOfMass;
-        else start = selected.transform.position;
+    private void UpdateAim(Vector3 _pos)
+    {
+        if (selected == null) return;
 
-#if UNITY_EDITOR
-        Vector3 cur = ScreenToWorld(Input.mousePosition);
-#else
-        Vector3 cur = ScreenToWorld(Input.touchCount > 0 ? (Vector3)Input.GetTouch(0).position : (Vector3)Input.mousePosition);
-#endif
+        var rb = selected != null ? selected.GetComponent<Rigidbody2D>() : null;
 
-        Vector3 dir = (start - cur);
+        Vector3 start = rb != null ? (Vector3)rb.worldCenterOfMass : selected.transform.position;
+        Vector3 dir = (start - _pos);
+
         float dist = Mathf.Min(dir.magnitude, maxPower);
-        Vector3 end = start + dir.normalized * dist;
 
-        aimLine.SetPosition(0, start);
-        aimLine.SetPosition(1, end);
+        if (dist <= Mathf.Epsilon)
+        {
+            for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
+            return;
+        }
+
+        Vector3 step = dir.normalized * dotSpacing;
+        int visible = Mathf.Min(Mathf.FloorToInt(dist / dotSpacing), dots.Count);
+
+        Vector3 p = start + step;
+        for (int i = 0; i < dots.Count; i++)
+        {
+            bool on = i < visible;
+            dots[i].gameObject.SetActive(on);
+            if (on)
+            {
+                dots[i].position = p;
+                p += step;
+            }
+        }
     }
     #endregion
 
