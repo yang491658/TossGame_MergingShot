@@ -60,8 +60,6 @@ public class SpawnManager : MonoBehaviour
     #region 소환
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
-        if (unitBase == null || unitDatas == null || unitDatas.Length == 0 || spawn == null) return null;
-
         UnitData data = null;
 
         if (_id == 0)
@@ -94,7 +92,6 @@ public class SpawnManager : MonoBehaviour
     #region 제거
     public void DestroyUnit(UnitSystem _unit)
     {
-        if (_unit == null) return;
         units.Remove(_unit);
         Destroy(_unit.gameObject);
     }
@@ -110,10 +107,6 @@ public class SpawnManager : MonoBehaviour
 
     #region GET
     public IReadOnlyList<UnitSystem> GetUnits() => units;
-    public int GetFinal()
-    {
-        if (unitDatas == null || unitDatas.Length == 0) return -1;
-        return unitDatas[unitDatas.Length - 1].unitID;
-    }
+    public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
     #endregion
 }

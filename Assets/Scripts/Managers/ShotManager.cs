@@ -46,7 +46,7 @@ public class ShotManager : MonoBehaviour
         }
         Instance = this;
 
-        if (dotPrefab != null && dots.Count == 0)
+        if (dots.Count == 0)
         {
             for (int i = 0; i < dotCount; i++)
             {
@@ -95,19 +95,17 @@ public class ShotManager : MonoBehaviour
 
     private bool CanSelect(UnitSystem _unit)
     {
-        if (_unit == null) return false;
-
         var rb = _unit.GetComponent<Rigidbody2D>();
         return rb != null && rb.linearVelocity.sqrMagnitude <= 0.01f;
     }
     #endregion
 
     #region 드래그
-    private void BeginDrag(Vector2 _screenPos, int _fingerId = -1)
+    private void BeginDrag(Vector2 _pos, int _fingerId = -1)
     {
         if (PointerOverUI(_fingerId)) return;
 
-        Vector2 world = ScreenToWorld(_screenPos);
+        Vector2 world = ScreenToWorld(_pos);
         RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero, 0.01f, unitLayer);
 
         if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
@@ -125,13 +123,13 @@ public class ShotManager : MonoBehaviour
         }
     }
 
-    private void DoDrag(Vector2 _screenPos)
+    private void DoDrag(Vector2 _pos)
     {
         if (!isDragging || selected == null) return;
-        UpdateAim(ScreenToWorld(_screenPos));
+        UpdateAim(ScreenToWorld(_pos));
     }
 
-    private void EndDrag(Vector2 _screenPos)
+    private void EndDrag(Vector2 _pos)
     {
         if (!isDragging || selected == null)
         {
@@ -140,7 +138,7 @@ public class ShotManager : MonoBehaviour
             return;
         }
 
-        Vector2 endWorld = ScreenToWorld(_screenPos);
+        Vector2 endWorld = ScreenToWorld(_pos);
         Vector2 drag = endWorld - dragStart;
         Vector2 shotDir = -drag;
 

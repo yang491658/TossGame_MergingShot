@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour
 
         IsPaused = true;
         Time.timeScale = 0f;
-        AudioListener.pause = true;
         OnMenuOpened?.Invoke(true);
     }
 
@@ -58,7 +57,6 @@ public class GameManager : MonoBehaviour
 
         IsPaused = false;
         Time.timeScale = 1f;
-        AudioListener.pause = false;
         OnMenuOpened?.Invoke(false);
     }
 
@@ -72,7 +70,6 @@ public class GameManager : MonoBehaviour
     public void Quit()
     {
         Time.timeScale = 1f;
-        AudioListener.pause = false;
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

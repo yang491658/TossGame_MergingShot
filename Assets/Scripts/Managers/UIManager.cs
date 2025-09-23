@@ -58,9 +58,9 @@ public class UIManager : MonoBehaviour
             sfxSlider = GameObject.Find("SFX/Slider")?.GetComponent<Slider>();
     }
 
-    private static void LoadSprite(List<Sprite> _list, string spriteName)
+    private static void LoadSprite(List<Sprite> _list, string sprite)
     {
-        if (string.IsNullOrEmpty(spriteName)) return;
+        if (string.IsNullOrEmpty(sprite)) return;
         string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { "Assets/Imports/Dark UI/Icons" });
         foreach (var guid in guids)
         {
@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
             foreach (var obj in assets)
             {
                 var s = obj as Sprite;
-                if (s != null && s.name == spriteName)
+                if (s != null && s.name == sprite)
                 {
                     _list.Add(s);
                     return;
@@ -89,21 +89,22 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        UpdateScore(GameManager.Instance.GetTotalScore());
+        OpenMenu(GameManager.Instance.IsPaused);
+        UpdateIcons();
+    }
+
     private void OnEnable()
     {
         GameManager.Instance.OnScoreChanged += UpdateScore;
         GameManager.Instance.OnMenuOpened += OpenMenu;
 
-        if (bgmSlider != null)
-        {
-            bgmSlider.value = AudioManager.Instance.GetBGMVolume();
-            bgmSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
-        }
-        if (sfxSlider != null)
-        {
-            sfxSlider.value = AudioManager.Instance.GetSFXVolume();
-            sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
-        }
+        bgmSlider.value = AudioManager.Instance.GetBGMVolume();
+        bgmSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
+        sfxSlider.value = AudioManager.Instance.GetSFXVolume();
+        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
 
         AudioManager.Instance.OnVolumeChanged += ChangeVolume;
     }
@@ -113,47 +114,36 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnScoreChanged -= UpdateScore;
         GameManager.Instance.OnMenuOpened -= OpenMenu;
 
-        if (bgmSlider != null)
-            bgmSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetBGMVolume);
-        if (sfxSlider != null)
-            sfxSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetSFXVolume);
+        bgmSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetBGMVolume);
+        sfxSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetSFXVolume);
 
         AudioManager.Instance.OnVolumeChanged -= ChangeVolume;
     }
 
-    private void Start()
-    {
-        UpdateScore(GameManager.Instance.GetTotalScore());
-        OpenMenu(GameManager.Instance.IsPaused);
-        UpdateIcons();
-    }
-
     private void UpdateScore(int _score)
     {
-        if (scoreText != null)
-            scoreText.text = _score.ToString("0000");
-        if (menuScoreText != null)
-            menuScoreText.text = "Score : " + _score.ToString("0000");
+        scoreText.text = _score.ToString("0000");
+        menuScoreText.text = "Score : " + _score.ToString("0000");
     }
 
     private void OpenMenu(bool _paused)
     {
-        if (scoreText != null) scoreText.gameObject.SetActive(!_paused);
+        scoreText.gameObject.SetActive(!_paused);
 
-        if (menuBtn != null) menuBtn.gameObject.SetActive(!_paused);
-        if (menuUI != null) menuUI.gameObject.SetActive(_paused);
+        menuBtn.gameObject.SetActive(!_paused);
+        menuUI.gameObject.SetActive(_paused);
     }
 
     private void ChangeVolume(Sound _sound, float _volume)
     {
         if (_sound == Sound.BGM)
         {
-            if (bgmSlider != null && !Mathf.Approximately(bgmSlider.value, _volume))
+            if (!Mathf.Approximately(bgmSlider.value, _volume))
                 bgmSlider.value = _volume;
         }
-        else 
+        else
         {
-            if (sfxSlider != null && !Mathf.Approximately(sfxSlider.value, _volume))
+            if (!Mathf.Approximately(sfxSlider.value, _volume))
                 sfxSlider.value = _volume;
         }
         UpdateIcons();
@@ -161,14 +151,14 @@ public class UIManager : MonoBehaviour
 
     private void UpdateIcons()
     {
-        if (bgmIcon != null && bgmIcons.Count >= 2)
+        if (bgmIcons.Count >= 2)
             bgmIcon.sprite = AudioManager.Instance.IsBGMMuted() ? bgmIcons[1] : bgmIcons[0];
 
-        if (sfxIcon != null && sfxIcons.Count >= 3)
+        if (sfxIcons.Count >= 3)
         {
             if (AudioManager.Instance.IsSFXMuted())
                 sfxIcon.sprite = sfxIcons[2];
-            else if (AudioManager.Instance.GetSFXVolume() <= 0.2f)
+            else if (AudioManager.Instance.GetSFXVolume() < 0.2f)
                 sfxIcon.sprite = sfxIcons[1];
             else
                 sfxIcon.sprite = sfxIcons[0];

@@ -25,6 +25,11 @@ public class TestManager : MonoBehaviour
             GameManager.Instance.Quit();
         #endregion
 
+        #region 사운드 테스트
+        if (Input.GetKeyDown(KeyCode.M))
+            AudioManager.Instance.ToggleBGM();
+        #endregion
+
         #region 소환 테스트
         for (int i = 1; i <= 10; i++)
         {

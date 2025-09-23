@@ -21,14 +21,11 @@ public class UnitSystem : MonoBehaviour
         col.isTrigger = true;
     }
 
-#if UNITY_EDITOR
-    private void OnValidate()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (sr == null) sr = GetComponent<SpriteRenderer>();
-        if (col == null) col = GetComponent<Collider2D>();
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        Merger(collision);
     }
-#endif
+
 
     public void Shoot(Vector2 _impulse)
     {
@@ -36,14 +33,16 @@ public class UnitSystem : MonoBehaviour
 
         fired = true;
         col.isTrigger = false;
+
+        AudioManager.Instance.ShootSound();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Merger(Collision2D _collision)
     {
-        var other = collision.gameObject.GetComponent<UnitSystem>();
+        var other = _collision.gameObject.GetComponent<UnitSystem>();
 
         if (other == null) return;
-        if (!collision.gameObject.CompareTag(gameObject.tag)) return;
+        if (!_collision.gameObject.CompareTag(gameObject.tag)) return;
         if (other.GetID() != GetID()) return;
         if (other.merging || merging) return;
         if (other.GetInstanceID() < GetInstanceID()) return;
@@ -51,10 +50,10 @@ public class UnitSystem : MonoBehaviour
         merging = true;
         other.merging = true;
 
-        var otherRb = collision.rigidbody;
+        var otherRb = _collision.rigidbody;
 
-        Vector2 pA = rb != null ? rb.position : (Vector2)transform.position;
-        Vector2 pB = otherRb != null ? otherRb.position : (Vector2)other.transform.position;
+        Vector2 pA = rb.position;
+        Vector2 pB = otherRb.position;
         Vector2 pM = (pA + pB) / 2f;
 
         Vector2 vA = GetVelocity();
@@ -67,24 +66,24 @@ public class UnitSystem : MonoBehaviour
         if (!IsFinal())
         {
             UnitSystem us = SpawnManager.Instance.Spawn(GetID() + 1, pM);
-            us.Shoot(vM);
+            us.GetComponent<Rigidbody2D>().AddForce(vM, ForceMode2D.Impulse);
         }
 
         GameManager.Instance.AddScore(GetScore());
+        AudioManager.Instance.MergeSound(GetID());
     }
 
     #region SET
     public void SetData(UnitData _data)
     {
         data = _data;
-        if (data == null) return;
 
         gameObject.name = data.unitName;
 
-        if (sr != null && data.unitImage != null)
+        if (data.unitImage != null)
             sr.sprite = data.unitImage;
 
-        if (rb != null) rb.mass = 1;
+        rb.mass = 1;
         transform.localScale = Vector3.one * data.unitScale;
     }
     #endregion
@@ -95,6 +94,6 @@ public class UnitSystem : MonoBehaviour
 
     public int GetScore() => data.unitScore;
 
-    public Vector2 GetVelocity() => rb != null ? rb.linearVelocity : Vector2.zero;
+    public Vector2 GetVelocity() => rb.linearVelocity;
     #endregion
 }

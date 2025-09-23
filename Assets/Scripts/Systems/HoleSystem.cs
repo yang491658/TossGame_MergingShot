@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class HoleSystem : MonoBehaviour
 {
-
     [Header("Gravity Info.")]
     [SerializeField] private float gravity = 300f;
 
     [Header("Rotation Info.")]
-    [SerializeField] private float rotateSpeed = 30f; 
+    [SerializeField] private float rotateSpeed = 30f;
     private HingeJoint2D hinge;
 
     private void Awake()
@@ -17,18 +16,17 @@ public class HoleSystem : MonoBehaviour
 
     private void Update()
     {
-        if (hinge != null)
-        {
-            var motor = hinge.motor;
-            motor.motorSpeed = rotateSpeed;
-            hinge.motor = motor;
-        }
+        SetMotor();
     }
 
     private void FixedUpdate()
     {
-        var units = SpawnManager.Instance.GetUnits();
+        ApplyGravity();
+    }
 
+    private void ApplyGravity()
+    {
+        var units = SpawnManager.Instance.GetUnits();
         if (units.Count == 0) return;
 
         Vector2 center = transform.position;
@@ -51,4 +49,13 @@ public class HoleSystem : MonoBehaviour
             rb.AddForce(dir.normalized * force, ForceMode2D.Force);
         }
     }
+
+    #region SET
+    private void SetMotor()
+    {
+        var motor = hinge.motor;
+        motor.motorSpeed = rotateSpeed;
+        hinge.motor = motor;
+    }
+    #endregion
 }
