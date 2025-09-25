@@ -13,11 +13,15 @@ public class UIManager : MonoBehaviour
 
     [Header("Score UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI menuScoreText;
 
-    [Header("Pause UI")]
-    [SerializeField] private Button menuBtn;
-    [SerializeField] private Image menuUI;
+    [Header("Menu UI")]
+    [SerializeField] private Button settingBtn;
+    [SerializeField] private Image settingUI;
+    [SerializeField] private TextMeshProUGUI settingScoreText;
+
+    [Header("Confirm UI")]
+    [SerializeField] private Image confirmUI;
+    [SerializeField] private TextMeshProUGUI confirmText;
 
     [Header("Audio UI")]
     [SerializeField] private Image bgmIcon;
@@ -32,13 +36,18 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText == null)
             scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
-        if (menuScoreText == null)
-            menuScoreText = GameObject.Find("Box/ScoreText")?.GetComponent<TextMeshProUGUI>();
+        if (settingScoreText == null)
+            settingScoreText = GameObject.Find("SettingUI/SettingBox/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
-        if (menuBtn == null)
-            menuBtn = GameObject.Find("MenuBtn")?.GetComponent<Button>();
-        if (menuUI == null)
-            menuUI = GameObject.Find("MenuUI")?.GetComponent<Image>();
+        if (settingBtn == null)
+            settingBtn = GameObject.Find("SettingBtn")?.GetComponent<Button>();
+        if (settingUI == null)
+            settingUI = GameObject.Find("SettingUI")?.GetComponent<Image>();
+
+        if (confirmUI == null)
+            confirmUI = GameObject.Find("ConfirmUI")?.GetComponent<Image>();
+        if (confirmText == null)
+            confirmText = GameObject.Find("ConfirmUI/ConfirmBox/ConfirmText")?.GetComponent<TextMeshProUGUI>();
 
         bgmIcons.Clear();
         LoadSprite(bgmIcons, "White Music");
@@ -49,13 +58,13 @@ public class UIManager : MonoBehaviour
         LoadSprite(sfxIcons, "White Sound Off 2");
 
         if (bgmIcon == null)
-            bgmIcon = GameObject.Find("BGM/Btn/Icon")?.GetComponent<Image>();
+            bgmIcon = GameObject.Find("BGM/BgmBtn/BgmIcon")?.GetComponent<Image>();
         if (sfxIcon == null)
-            sfxIcon = GameObject.Find("SFX/Btn/Icon")?.GetComponent<Image>();
+            sfxIcon = GameObject.Find("SFX/SfxBtn/SfxIcon")?.GetComponent<Image>();
         if (bgmSlider == null)
-            bgmSlider = GameObject.Find("BGM/Slider")?.GetComponent<Slider>();
+            bgmSlider = GameObject.Find("BGM/BgmSlider")?.GetComponent<Slider>();
         if (sfxSlider == null)
-            sfxSlider = GameObject.Find("SFX/Slider")?.GetComponent<Slider>();
+            sfxSlider = GameObject.Find("SFX/SfxSlider")?.GetComponent<Slider>();
     }
 
     private static void LoadSprite(List<Sprite> _list, string sprite)
@@ -92,46 +101,58 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
-        OpenMenu(GameManager.Instance.IsPaused);
+        OpenConfirm(false);
+        OpenSetting(false);
         UpdateIcons();
     }
 
     private void OnEnable()
     {
         GameManager.Instance.OnScoreChanged += UpdateScore;
-        GameManager.Instance.OnMenuOpened += OpenMenu;
+        GameManager.Instance.OnSettingOpened += OpenSetting;
 
-        bgmSlider.value = AudioManager.Instance.GetBGMVolume();
-        bgmSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
-        sfxSlider.value = AudioManager.Instance.GetSFXVolume();
-        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+        bgmSlider.value = SoundManager.Instance.GetBGMVolume();
+        bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
+        sfxSlider.value = SoundManager.Instance.GetSFXVolume();
+        sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
 
-        AudioManager.Instance.OnVolumeChanged += ChangeVolume;
+        SoundManager.Instance.OnVolumeChanged += ChangeVolume;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnScoreChanged -= UpdateScore;
-        GameManager.Instance.OnMenuOpened -= OpenMenu;
+        GameManager.Instance.OnSettingOpened -= OpenSetting;
 
-        bgmSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetBGMVolume);
-        sfxSlider.onValueChanged.RemoveListener(AudioManager.Instance.SetSFXVolume);
+        bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
+        sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
 
-        AudioManager.Instance.OnVolumeChanged -= ChangeVolume;
+        SoundManager.Instance.OnVolumeChanged -= ChangeVolume;
     }
 
     private void UpdateScore(int _score)
     {
         scoreText.text = _score.ToString("0000");
-        menuScoreText.text = "Score : " + _score.ToString("0000");
+        settingScoreText.text = "Score : " + _score.ToString("0000");
     }
 
-    private void OpenMenu(bool _paused)
+    private void OpenSetting(bool _on)
     {
-        scoreText.gameObject.SetActive(!_paused);
+        scoreText.gameObject.SetActive(!_on);
 
-        menuBtn.gameObject.SetActive(!_paused);
-        menuUI.gameObject.SetActive(_paused);
+        settingBtn.gameObject.SetActive(!_on);
+        settingUI.gameObject.SetActive(_on);
+    }
+
+    private void OpenConfirm(bool _on, string _text = null)
+    {
+        scoreText.gameObject.SetActive(!_on);
+
+        settingBtn.gameObject.SetActive(!_on);
+        settingUI.gameObject.SetActive(!_on);
+
+        confirmUI.gameObject.SetActive(_on);
+        if (_on) confirmText.text = $"{_text}하시겠습니까?";
     }
 
     private void ChangeVolume(Sound _sound, float _volume)
@@ -152,16 +173,71 @@ public class UIManager : MonoBehaviour
     private void UpdateIcons()
     {
         if (bgmIcons.Count >= 2)
-            bgmIcon.sprite = AudioManager.Instance.IsBGMMuted() ? bgmIcons[1] : bgmIcons[0];
+            bgmIcon.sprite = SoundManager.Instance.IsBGMMuted() ? bgmIcons[1] : bgmIcons[0];
 
         if (sfxIcons.Count >= 3)
         {
-            if (AudioManager.Instance.IsSFXMuted())
+            if (SoundManager.Instance.IsSFXMuted())
                 sfxIcon.sprite = sfxIcons[2];
-            else if (AudioManager.Instance.GetSFXVolume() < 0.2f)
+            else if (SoundManager.Instance.GetSFXVolume() < 0.2f)
                 sfxIcon.sprite = sfxIcons[1];
             else
                 sfxIcon.sprite = sfxIcons[0];
         }
     }
+
+    #region 버튼
+    public void OnClikSetting()
+    {
+        SoundManager.Instance.Button();
+        OpenSetting(true);
+    }
+
+    public void OnClikClose()
+    {
+        SoundManager.Instance.Button();
+        OpenSetting(false);
+    }
+
+    public void OnClikBGM()
+    {
+        SoundManager.Instance.Button();
+        SoundManager.Instance.ToggleBGM();
+    }
+
+    public void OnClikSFX()
+    {
+        SoundManager.Instance.Button();
+        SoundManager.Instance.ToggleSFX();
+    }
+
+    public void OnClikReplay()
+    {
+        SoundManager.Instance.Button();
+        OpenConfirm(true, "다시");
+    }
+
+    public void OnClikQuit()
+    {
+        SoundManager.Instance.Button();
+        OpenConfirm(true, "종료");
+    }
+
+    public void OnClickOkay()
+    {
+        SoundManager.Instance.Button();
+
+        if (confirmText.text.Contains("다시"))
+            GameManager.Instance.Replay();
+        else if (confirmText.text.Contains("종료"))
+            GameManager.Instance.Quit();
+    }
+
+    public void OnClickCancel()
+    {
+        SoundManager.Instance.Button();
+        OpenConfirm(false);
+        OpenSetting(true);
+    }
+    #endregion
 }

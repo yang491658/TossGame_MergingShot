@@ -27,14 +27,14 @@ public class UnitSystem : MonoBehaviour
     }
 
 
-    public void Shoot(Vector2 _impulse)
+    public void Shoot(Vector2 _impulse, bool _isShot = true)
     {
         rb.AddForce(_impulse, ForceMode2D.Impulse);
 
         fired = true;
         col.isTrigger = false;
 
-        AudioManager.Instance.ShootSound();
+        if (_isShot) SoundManager.Instance.Shoot();
     }
 
     private void Merger(Collision2D _collision)
@@ -63,14 +63,14 @@ public class UnitSystem : MonoBehaviour
         SpawnManager.Instance.DestroyUnit(other);
         SpawnManager.Instance.DestroyUnit(this);
 
-        if (!IsFinal())
+        if (GetID() != SpawnManager.Instance.GetFinal())
         {
             UnitSystem us = SpawnManager.Instance.Spawn(GetID() + 1, pM);
-            us.GetComponent<Rigidbody2D>().AddForce(vM, ForceMode2D.Impulse);
+            us.Shoot(vM, false);
         }
 
         GameManager.Instance.AddScore(GetScore());
-        AudioManager.Instance.MergeSound(GetID());
+        SoundManager.Instance.Merge(GetID());
     }
 
     #region SET
@@ -83,17 +83,14 @@ public class UnitSystem : MonoBehaviour
         if (data.unitImage != null)
             sr.sprite = data.unitImage;
 
-        rb.mass = 1;
+        rb.mass = 1f;
         transform.localScale = Vector3.one * data.unitScale;
     }
     #endregion
 
     #region GET
     public int GetID() => data.unitID;
-    public bool IsFinal() => GetID() == SpawnManager.Instance.GetFinal();
-
     public int GetScore() => data.unitScore;
-
     public Vector2 GetVelocity() => rb.linearVelocity;
     #endregion
 }

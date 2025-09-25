@@ -6,7 +6,7 @@ public class HoleSystem : MonoBehaviour
     [SerializeField] private float gravity = 300f;
 
     [Header("Rotation Info.")]
-    [SerializeField] private float rotateSpeed = 30f;
+    [SerializeField] private float rotateSpeed ;
     private HingeJoint2D hinge;
 
     private void Awake()
@@ -16,6 +16,7 @@ public class HoleSystem : MonoBehaviour
 
     private void Update()
     {
+        rotateSpeed = GameManager.Instance.GetTotalScore() / 10f;
         SetMotor();
     }
 

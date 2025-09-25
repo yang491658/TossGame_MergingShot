@@ -16,17 +16,23 @@ public class ShotManager : MonoBehaviour
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
     private bool isDragging;
 
-    [Header("Aim Info.")]
+    [Header("Aim Dots")]
     [SerializeField] private GameObject dotPrefab;
-    [SerializeField] private int dotCount = 10;
+    [SerializeField] private int dotCount = 12;
     [SerializeField] private float dotSpacing = 0.5f;
     private readonly List<Transform> dots = new List<Transform>();
 
-    [Header("Shot Info.")]
-    [SerializeField] private float powerCoef = 3;
-    [SerializeField] private float maxPower = 5;
+    [Header("Aim Ring & Line")]
+    [SerializeField] private LineRenderer line;
+    [SerializeField] private LineRenderer ring;
+    [SerializeField] private int ringSegments = 64;
+    [SerializeField] private float ringRadius = 0.5f;
 
-    private UnitSystem selected;
+    [Header("Shot Info.")]
+    [SerializeField] private float maxPower = 5f;
+    [SerializeField] private float powerCoef = 3f;
+
+    private UnitSystem selectedUnit;
     private Vector2 dragStart;
 
 #if UNITY_EDITOR
@@ -34,6 +40,9 @@ public class ShotManager : MonoBehaviour
     {
         if (dotPrefab == null)
             dotPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Dot.prefab");
+
+        if (line == null) line = GameObject.Find("Line").GetComponent<LineRenderer>();
+        if (ring == null) ring = GameObject.Find("Ring").GetComponent<LineRenderer>();
     }
 #endif
 
@@ -55,6 +64,9 @@ public class ShotManager : MonoBehaviour
                 dots.Add(dot.transform);
             }
         }
+
+        if (line != null) line.enabled = false;
+        if (ring != null) ring.enabled = false;
     }
 
     private void Update()
@@ -69,12 +81,16 @@ public class ShotManager : MonoBehaviour
     }
 
     #region 클릭
+#if UNITY_EDITOR
     private void HandleMouse()
     {
         if (Input.GetMouseButtonDown(0)) BeginDrag(Input.mousePosition);
         else if (Input.GetMouseButton(0)) DoDrag(Input.mousePosition);
         else if (Input.GetMouseButtonUp(0)) EndDrag(Input.mousePosition);
+
+        if (Input.GetMouseButton(1)) Move(Input.mousePosition);
     }
+#endif
 
     private void HandleTouch()
     {
@@ -110,14 +126,14 @@ public class ShotManager : MonoBehaviour
 
         if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
         {
-            selected = _unit;
+            selectedUnit = _unit;
             dragStart = world;
             isDragging = true;
             ShowAim(true);
         }
         else
         {
-            selected = null;
+            selectedUnit = null;
             isDragging = false;
             ShowAim(false);
         }
@@ -125,16 +141,16 @@ public class ShotManager : MonoBehaviour
 
     private void DoDrag(Vector2 _pos)
     {
-        if (!isDragging || selected == null) return;
+        if (!isDragging || selectedUnit == null) return;
         UpdateAim(ScreenToWorld(_pos));
     }
 
     private void EndDrag(Vector2 _pos)
     {
-        if (!isDragging || selected == null)
+        if (!isDragging || selectedUnit == null)
         {
-            ShowAim(false);
             isDragging = false;
+            ShowAim(false);
             return;
         }
 
@@ -144,36 +160,52 @@ public class ShotManager : MonoBehaviour
 
         float dist = Mathf.Min(shotDir.magnitude, maxPower);
 
-        Vector2 impulse = shotDir.sqrMagnitude > 0f ? shotDir.normalized * dist * powerCoef : Vector2.zero;
-        selected.Shoot(impulse);
+        Vector2 impulse = shotDir.normalized * dist * powerCoef;
+        selectedUnit.Shoot(impulse);
         StartCoroutine(Respawn());
 
-        ShowAim(false);
         isDragging = false;
-        selected = null;
+        ShowAim(false);
+        selectedUnit = null;
     }
     #endregion
 
     #region 조준
     private void ShowAim(bool _on)
     {
-        for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(_on);
+        for (int i = 0; i < dots.Count; i++)
+            dots[i].gameObject.SetActive(_on);
+
+        if (line != null)
+        {
+            line.enabled = _on;
+            if (!_on) line.positionCount = 0;
+        }
+
+        if (ring != null)
+        {
+            ring.enabled = _on;
+            if (!_on) ring.positionCount = 0;
+        }
     }
 
     private void UpdateAim(Vector3 _pos)
     {
-        if (selected == null) return;
+        if (!isDragging || selectedUnit == null) return;
 
-        var rb = selected != null ? selected.GetComponent<Rigidbody2D>() : null;
+        var rb = selectedUnit.GetComponent<Rigidbody2D>();
+        Vector3 start = rb != null ? (Vector3)rb.worldCenterOfMass : selectedUnit.transform.position;
 
-        Vector3 start = rb != null ? (Vector3)rb.worldCenterOfMass : selected.transform.position;
-        Vector3 dir = (start - _pos);
-
-        float dist = Mathf.Min(dir.magnitude, maxPower);
+        Vector3 dirRaw = (start - _pos);
+        float dist = Mathf.Min(dirRaw.magnitude, maxPower);
+        Vector3 dir = dirRaw.normalized * dist;
+        Vector3 ringCenter = start - dir;
 
         if (dist <= Mathf.Epsilon)
         {
             for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
+            if (line != null) line.enabled = false;
+            if (ring != null) ring.enabled = false;
             return;
         }
 
@@ -191,12 +223,58 @@ public class ShotManager : MonoBehaviour
                 p += step;
             }
         }
+
+        if (line != null)
+        {
+            line.enabled = true;
+            line.positionCount = 2;
+            line.SetPosition(0, start);
+            line.SetPosition(1, ringCenter + dir.normalized * ringRadius);
+        }
+
+        if (ring != null)
+        {
+            ring.enabled = true;
+            ring.positionCount = ringSegments + 1;
+            for (int i = 0; i <= ringSegments; i++)
+            {
+                float t = (float)i / ringSegments * Mathf.PI * 2f;
+                Vector3 r = new Vector3(Mathf.Cos(t), Mathf.Sin(t), 0f) * ringRadius;
+                ring.SetPosition(i, ringCenter + r);
+            }
+        }
     }
     #endregion
 
-    private IEnumerator Respawn(int _id = 0)
+    private IEnumerator Respawn()
     {
         yield return new WaitForSeconds(1f);
         SpawnManager.Instance.Spawn(Random.Range(1, 5));
     }
+
+#if UNITY_EDITOR
+    private void Move(Vector2 _pos)
+    {
+        Vector2 world = ScreenToWorld(_pos);
+        RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero, 0.01f, unitLayer);
+
+        UnitSystem target = null;
+        if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem hitUnit))
+            target = hitUnit;
+
+        if (target == null) return;
+
+        var rb = target.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.position = world;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+        else
+        {
+            target.transform.position = world;
+        }
+    }
+#endif
 }

@@ -19,6 +19,7 @@ public class SpawnManager : MonoBehaviour
     [Header("Unit Info.")]
     [SerializeField] private HoleSystem hole;
     [SerializeField] private List<UnitSystem> units = new List<UnitSystem>();
+    [SerializeField] private List<int> counts = new List<int>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -58,21 +59,22 @@ public class SpawnManager : MonoBehaviour
     }
 
     #region ¼ÒÈ¯
+    private UnitData FindById(int id)
+    {
+#if UNITY_EDITOR
+        return System.Linq.Enumerable.FirstOrDefault(unitDatas, d => d.unitID == id);
+#else
+    for (int i = 0; i < unitDatas.Length; i++)
+        if (unitDatas[i].unitID == id) return unitDatas[i];
+    return null;
+#endif
+    }
+
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
-        UnitData data = null;
-
-        if (_id == 0)
-            data = unitDatas[Random.Range(0, unitDatas.Length / 2)];
-        else
-        {
-#if UNITY_EDITOR
-            data = unitDatas.FirstOrDefault(d => d.unitID == _id);
-#else
-        for (int i = 0; i < unitDatas.Length; i++)
-            if (unitDatas[i].unitID == _id) { data = unitDatas[i]; break; }
-#endif
-        }
+        UnitData data = (_id == 0)
+            ? unitDatas[Random.Range(0, unitDatas.Length / 2)]
+            : FindById(_id);
 
         if (data == null) return null;
 
@@ -82,7 +84,7 @@ public class SpawnManager : MonoBehaviour
             .GetComponent<UnitSystem>();
 
         unit.SetData(data.Clone());
-        unit.transform.SetParent(inGame);
+        unit.transform.SetParent(inGame, false);
         units.Add(unit);
 
         return unit;

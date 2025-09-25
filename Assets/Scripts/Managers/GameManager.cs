@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public event System.Action<int> OnScoreChanged;
 
     public bool IsPaused { get; private set; } = false;
-    public event System.Action<bool> OnMenuOpened;
+    public event System.Action<bool> OnSettingOpened;
 
     private void Awake()
     {
@@ -28,15 +28,15 @@ public class GameManager : MonoBehaviour
     }
 
     #region Á¡¼ö
-    public void ResetScore()
-    {
-        totalScore = 0;
-        OnScoreChanged?.Invoke(totalScore);
-    }
-
     public void AddScore(int _score)
     {
         totalScore += _score;
+        OnScoreChanged?.Invoke(totalScore);
+    }
+
+    public void ResetScore()
+    {
+        totalScore = 0;
         OnScoreChanged?.Invoke(totalScore);
     }
     #endregion
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
         IsPaused = true;
         Time.timeScale = 0f;
-        OnMenuOpened?.Invoke(true);
+        OnSettingOpened?.Invoke(true);
     }
 
     public void Resume()
@@ -57,7 +57,13 @@ public class GameManager : MonoBehaviour
 
         IsPaused = false;
         Time.timeScale = 1f;
-        OnMenuOpened?.Invoke(false);
+        OnSettingOpened?.Invoke(false);
+    }
+
+    public void TogglePause()
+    {
+        if (IsPaused) Resume();
+        else Pause();
     }
 
     public void Replay()
