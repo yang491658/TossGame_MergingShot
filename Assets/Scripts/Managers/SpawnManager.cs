@@ -56,6 +56,7 @@ public class SpawnManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     #region º“»Ø

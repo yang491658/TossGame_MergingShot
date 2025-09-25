@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using UnityEngine;
 
-public class TestManager : MonoBehaviour
+public class TestDebug : MonoBehaviour
 {
     private float time = 0;
 
@@ -12,6 +12,7 @@ public class TestManager : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.ToggleBGM();
+        SoundManager.Instance.ToggleSFX();
     }
 
     private void Update()
@@ -19,8 +20,8 @@ public class TestManager : MonoBehaviour
         #region 게임 테스트
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (GameManager.Instance.IsPaused) GameManager.Instance.Resume();
-            else GameManager.Instance.Pause();
+            if (GameManager.Instance.IsPaused) GameManager.Instance.Pause(false);
+            else GameManager.Instance.Pause(true);
         }
 
         if (Input.GetKeyDown(KeyCode.R))

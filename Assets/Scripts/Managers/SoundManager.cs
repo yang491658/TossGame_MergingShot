@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum Sound { BGM, SFX }
 
@@ -14,15 +15,17 @@ public class SoundManager : MonoBehaviour
     [Header("Volume")]
     [SerializeField][Range(0f, 1f)] private float bgmVolume = 1f;
     [SerializeField][Range(0f, 1f)] private float sfxVolume = 1f;
+    private float prevBgmVolume;
+    private float prevSfxVolume;
 
     [Header("Clips")]
     [SerializeField] private AudioClip[] bgmClips;
     [SerializeField] private AudioClip[] sfxClips;
+    private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
-    private float prevBgmVolume;
-    private float prevSfxVolume;
 
-    public event System.Action<Sound, float> OnVolumeChanged;
+    public event System.Action<Sound, float> OnChangeVolume;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -56,12 +59,18 @@ public class SoundManager : MonoBehaviour
         Instance = this;
 
         SetAudio();
+        SetDictionaries();
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
         PlayBGM();
+
+        foreach (var btn in FindObjectsByType<Button>(FindObjectsSortMode.None))
+            btn.onClick.AddListener(Button);
     }
+
 
     #region 배경음
     public void PlayBGM(AudioClip _clip = null)
@@ -69,16 +78,12 @@ public class SoundManager : MonoBehaviour
         if (_clip != null) bgmSource.clip = _clip;
         bgmSource.Play();
     }
+
     public void PlayBGM(string _name)
     {
-        for (int i = 0; i < bgmClips.Length; i++)
+        if (bgmDict.TryGetValue(_name, out var clip))
         {
-            var c = bgmClips[i];
-            if (c != null && c.name == _name)
-            {
-                PlayBGM(c);
-                return;
-            }
+            PlayBGM(clip);
         }
     }
 
@@ -101,16 +106,12 @@ public class SoundManager : MonoBehaviour
 
     #region 효과음
     public void PlaySFX(AudioClip _clip) => sfxSource.PlayOneShot(_clip);
+
     public void PlaySFX(string _name)
     {
-        for (int i = 0; i < sfxClips.Length; i++)
+        if (sfxDict.TryGetValue(_name, out var clip))
         {
-            var c = sfxClips[i];
-            if (c != null && c.name == _name)
-            {
-                PlaySFX(c);
-                return;
-            }
+            PlaySFX(clip);
         }
     }
 
@@ -160,7 +161,7 @@ public class SoundManager : MonoBehaviour
 
         if (bgmVolume > 0f) prevBgmVolume = bgmVolume;
 
-        OnVolumeChanged?.Invoke(Sound.BGM, bgmVolume);
+        OnChangeVolume?.Invoke(Sound.BGM, bgmVolume);
     }
 
     public void SetSFXVolume(float _volume = 1)
@@ -171,13 +172,38 @@ public class SoundManager : MonoBehaviour
 
         if (sfxVolume > 0f) prevSfxVolume = sfxVolume;
 
-        OnVolumeChanged?.Invoke(Sound.SFX, sfxVolume);
+        OnChangeVolume?.Invoke(Sound.SFX, sfxVolume);
+    }
+
+    private void SetDictionaries()
+    {
+        bgmDict.Clear();
+        if (bgmClips != null)
+        {
+            foreach (var clip in bgmClips)
+            {
+                if (clip != null && !bgmDict.ContainsKey(clip.name))
+                    bgmDict.Add(clip.name, clip);
+            }
+        }
+
+        sfxDict.Clear();
+        if (sfxClips != null)
+        {
+            foreach (var clip in sfxClips)
+            {
+                if (clip != null && !sfxDict.ContainsKey(clip.name))
+                    sfxDict.Add(clip.name, clip);
+            }
+        }
     }
     #endregion
 
     #region GET
     public float GetBGMVolume() => bgmVolume;
     public float GetSFXVolume() => sfxVolume;
+    public float GetSFXLength(string _name) =>
+        sfxDict.TryGetValue(_name, out var _clip) && _clip != null ? _clip.length : 0f;
 
     public bool IsBGMMuted() => bgmSource != null && bgmSource.mute;
     public bool IsSFXMuted() => sfxSource != null && sfxSource.mute;

@@ -6,17 +6,18 @@ public class HoleSystem : MonoBehaviour
     [SerializeField] private float gravity = 300f;
 
     [Header("Rotation Info.")]
-    [SerializeField] private float rotateSpeed ;
+    [SerializeField] private float rotateSpeed;
     private HingeJoint2D hinge;
 
     private void Awake()
     {
         hinge = GetComponentInChildren<HingeJoint2D>();
+        hinge.useMotor = true;
     }
 
     private void Update()
     {
-        rotateSpeed = GameManager.Instance.GetTotalScore() / 10f;
+        rotateSpeed = 30f + GameManager.Instance.GetTotalScore() / 50f;
         SetMotor();
     }
 
@@ -41,13 +42,13 @@ public class HoleSystem : MonoBehaviour
 
             Vector2 from = rb.worldCenterOfMass;
             Vector2 dir = center - from;
-            float dist = dir.magnitude;
 
-            float safeDist = Mathf.Max(dist, 0.001f);
-            float invSq = 1f / (safeDist * safeDist);
+            float safeSqr = Mathf.Max(dir.sqrMagnitude, 0.05f * 0.05f);
+            float invSqr = 1f / safeSqr;
+            float invDist = 1f / Mathf.Sqrt(safeSqr);
 
-            float force = gravity * invSq * rb.mass;
-            rb.AddForce(dir.normalized * force, ForceMode2D.Force);
+            Vector2 forceVec = dir * invDist * (gravity * invSqr * rb.mass);
+            rb.AddForce(forceVec, ForceMode2D.Force);
         }
     }
 

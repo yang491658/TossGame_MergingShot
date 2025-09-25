@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Score Info.")]
     [SerializeField] private int totalScore = 0;
-    public event System.Action<int> OnScoreChanged;
+    public event System.Action<int> OnChangeScore;
 
     public bool IsPaused { get; private set; } = false;
-    public event System.Action<bool> OnSettingOpened;
+    public event System.Action<bool> OnOpenSetting;
 
     private void Awake()
     {
@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -31,45 +32,29 @@ public class GameManager : MonoBehaviour
     public void AddScore(int _score)
     {
         totalScore += _score;
-        OnScoreChanged?.Invoke(totalScore);
+        OnChangeScore?.Invoke(totalScore);
     }
 
     public void ResetScore()
     {
         totalScore = 0;
-        OnScoreChanged?.Invoke(totalScore);
+        OnChangeScore?.Invoke(totalScore);
     }
     #endregion
 
     #region ม๘วเ
-    public void Pause()
+    public void Pause(bool _pause)
     {
-        if (IsPaused) return;
+        if (IsPaused == _pause) return;
 
-        IsPaused = true;
-        Time.timeScale = 0f;
-        OnSettingOpened?.Invoke(true);
-    }
-
-    public void Resume()
-    {
-        if (!IsPaused) return;
-
-        IsPaused = false;
-        Time.timeScale = 1f;
-        OnSettingOpened?.Invoke(false);
-    }
-
-    public void TogglePause()
-    {
-        if (IsPaused) Resume();
-        else Pause();
+        IsPaused = _pause;
+        Time.timeScale = _pause ? 0f : 1f;
+        OnOpenSetting?.Invoke(_pause);
     }
 
     public void Replay()
     {
-        Resume();
-        
+        Pause(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

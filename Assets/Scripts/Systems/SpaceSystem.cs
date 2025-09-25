@@ -7,6 +7,7 @@ public class SpaceSystem : MonoBehaviour
     private SpriteRenderer sr;
 
     private int lastW, lastH;
+    private float lastAspect, lastOrthoSize;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -26,15 +27,26 @@ public class SpaceSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Screen.width != lastW || Screen.height != lastH)
+        if (cam == null) cam = Camera.main;
+
+        if (Screen.width != lastW ||
+            Screen.height != lastH ||
+            (cam != null && (!Mathf.Approximately(cam.aspect, lastAspect) ||
+                             !Mathf.Approximately(cam.orthographicSize, lastOrthoSize))))
+        {
             Fit();
+        }
     }
 
     private void Fit()
     {
         if (cam == null || sr == null || sr.sprite == null) return;
+        if (!cam.orthographic) return;
 
-        lastW = Screen.width; lastH = Screen.height;
+        lastW = Screen.width;
+        lastH = Screen.height;
+        lastAspect = cam.aspect;
+        lastOrthoSize = cam.orthographicSize;
 
         float worldH = cam.orthographicSize * 2f;
         float worldW = worldH * cam.aspect;
@@ -43,8 +55,13 @@ public class SpaceSystem : MonoBehaviour
         float spriteW = sp.rect.width / sp.pixelsPerUnit;
         float spriteH = sp.rect.height / sp.pixelsPerUnit;
 
-        float scale = Mathf.Max(worldW / spriteW, worldH / spriteH);
+        float scaleWorld = Mathf.Max(worldW / spriteW, worldH / spriteH);
 
-        transform.localScale = new Vector3(scale, scale, 1f);
+        var parent = transform.parent;
+        Vector3 parentLossy = parent ? parent.lossyScale : Vector3.one;
+        float localX = scaleWorld / (parentLossy.x == 0f ? 1f : parentLossy.x);
+        float localY = scaleWorld / (parentLossy.y == 0f ? 1f : parentLossy.y);
+
+        transform.localScale = new Vector3(localX, localY, transform.localScale.z);
     }
 }

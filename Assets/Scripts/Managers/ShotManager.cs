@@ -22,7 +22,7 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private float dotSpacing = 0.5f;
     private readonly List<Transform> dots = new List<Transform>();
 
-    [Header("Aim Ring & Line")]
+    [Header("Aim Line & Ring")]
     [SerializeField] private LineRenderer line;
     [SerializeField] private LineRenderer ring;
     [SerializeField] private int ringSegments = 64;
@@ -54,6 +54,7 @@ public class ShotManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         if (dots.Count == 0)
         {
@@ -122,9 +123,9 @@ public class ShotManager : MonoBehaviour
         if (PointerOverUI(_fingerId)) return;
 
         Vector2 world = ScreenToWorld(_pos);
-        RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero, 0.01f, unitLayer);
+        Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
 
-        if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
+        if (col != null && col.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
         {
             selectedUnit = _unit;
             dragStart = world;
@@ -256,11 +257,11 @@ public class ShotManager : MonoBehaviour
     private void Move(Vector2 _pos)
     {
         Vector2 world = ScreenToWorld(_pos);
-        RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero, 0.01f, unitLayer);
+        Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
 
         UnitSystem target = null;
-        if (hit.collider != null && hit.collider.TryGetComponent(out UnitSystem hitUnit))
-            target = hitUnit;
+        if (col != null && col.TryGetComponent(out UnitSystem _unit))
+            target = _unit;
 
         if (target == null) return;
 

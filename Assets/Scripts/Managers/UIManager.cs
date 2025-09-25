@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,6 +24,7 @@ public class UIManager : MonoBehaviour
     [Header("Confirm UI")]
     [SerializeField] private Image confirmUI;
     [SerializeField] private TextMeshProUGUI confirmText;
+    private System.Action confirmAction;
 
     [Header("Audio UI")]
     [SerializeField] private Image bgmIcon;
@@ -36,13 +39,13 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText == null)
             scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
-        if (settingScoreText == null)
-            settingScoreText = GameObject.Find("SettingUI/SettingBox/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (settingBtn == null)
             settingBtn = GameObject.Find("SettingBtn")?.GetComponent<Button>();
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI")?.GetComponent<Image>();
+        if (settingScoreText == null)
+            settingScoreText = GameObject.Find("SettingUI/SettingBox/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (confirmUI == null)
             confirmUI = GameObject.Find("ConfirmUI")?.GetComponent<Image>();
@@ -67,9 +70,9 @@ public class UIManager : MonoBehaviour
             sfxSlider = GameObject.Find("SFX/SfxSlider")?.GetComponent<Slider>();
     }
 
-    private static void LoadSprite(List<Sprite> _list, string sprite)
+    private static void LoadSprite(List<Sprite> _list, string _sprite)
     {
-        if (string.IsNullOrEmpty(sprite)) return;
+        if (string.IsNullOrEmpty(_sprite)) return;
         string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { "Assets/Imports/Dark UI/Icons" });
         foreach (var guid in guids)
         {
@@ -78,7 +81,7 @@ public class UIManager : MonoBehaviour
             foreach (var obj in assets)
             {
                 var s = obj as Sprite;
-                if (s != null && s.name == sprite)
+                if (s != null && s.name == _sprite)
                 {
                     _list.Add(s);
                     return;
@@ -96,6 +99,7 @@ public class UIManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -108,26 +112,26 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnScoreChanged += UpdateScore;
-        GameManager.Instance.OnSettingOpened += OpenSetting;
+        GameManager.Instance.OnChangeScore += UpdateScore;
+        GameManager.Instance.OnOpenSetting += OpenSetting;
 
         bgmSlider.value = SoundManager.Instance.GetBGMVolume();
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
 
-        SoundManager.Instance.OnVolumeChanged += ChangeVolume;
+        SoundManager.Instance.OnChangeVolume += ChangeVolume;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnScoreChanged -= UpdateScore;
-        GameManager.Instance.OnSettingOpened -= OpenSetting;
+        GameManager.Instance.OnChangeScore -= UpdateScore;
+        GameManager.Instance.OnOpenSetting -= OpenSetting;
 
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
 
-        SoundManager.Instance.OnVolumeChanged -= ChangeVolume;
+        SoundManager.Instance.OnChangeVolume -= ChangeVolume;
     }
 
     private void UpdateScore(int _score)
@@ -144,7 +148,7 @@ public class UIManager : MonoBehaviour
         settingUI.gameObject.SetActive(_on);
     }
 
-    private void OpenConfirm(bool _on, string _text = null)
+    private void OpenConfirm(bool _on, string _text = null, System.Action _onOkay = null)
     {
         scoreText.gameObject.SetActive(!_on);
 
@@ -152,7 +156,13 @@ public class UIManager : MonoBehaviour
         settingUI.gameObject.SetActive(!_on);
 
         confirmUI.gameObject.SetActive(_on);
-        if (_on) confirmText.text = $"{_text}하시겠습니까?";
+        if (_on)
+        {
+            confirmText.text = $"{_text}하시겠습니까?";
+            confirmAction = _onOkay;
+        }
+        else
+            confirmAction = null;
     }
 
     private void ChangeVolume(Sound _sound, float _volume)
@@ -187,57 +197,21 @@ public class UIManager : MonoBehaviour
     }
 
     #region 버튼
-    public void OnClikSetting()
-    {
-        SoundManager.Instance.Button();
-        OpenSetting(true);
-    }
-
-    public void OnClikClose()
-    {
-        SoundManager.Instance.Button();
-        OpenSetting(false);
-    }
-
-    public void OnClikBGM()
-    {
-        SoundManager.Instance.Button();
-        SoundManager.Instance.ToggleBGM();
-    }
-
-    public void OnClikSFX()
-    {
-        SoundManager.Instance.Button();
-        SoundManager.Instance.ToggleSFX();
-    }
-
-    public void OnClikReplay()
-    {
-        SoundManager.Instance.Button();
-        OpenConfirm(true, "다시");
-    }
-
-    public void OnClikQuit()
-    {
-        SoundManager.Instance.Button();
-        OpenConfirm(true, "종료");
-    }
-
-    public void OnClickOkay()
-    {
-        SoundManager.Instance.Button();
-
-        if (confirmText.text.Contains("다시"))
-            GameManager.Instance.Replay();
-        else if (confirmText.text.Contains("종료"))
-            GameManager.Instance.Quit();
-    }
-
-    public void OnClickCancel()
-    {
-        SoundManager.Instance.Button();
-        OpenConfirm(false);
-        OpenSetting(true);
-    }
+    public void OnClikSetting() => OpenSetting(true);
+    public void OnClikClose() => OpenSetting(false);
+    public void OnClikBGM() => SoundManager.Instance.ToggleBGM();
+    public void OnClikSFX() => SoundManager.Instance.ToggleSFX();
+    public void OnClikReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
+    public void OnClikQuit() => OpenConfirm(true, "종료", GameManager.Instance.Quit);
+    public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
+    public void OnClickCancel() => OpenConfirm(false);
     #endregion
+    
+    private IEnumerator PlayClickThen(System.Action _action)
+    {
+        SoundManager.Instance.Button();
+        float len = SoundManager.Instance.GetSFXLength("Button");
+        if (len > 0f) yield return new WaitForSecondsRealtime(len);
+        _action?.Invoke();
+    }
 }

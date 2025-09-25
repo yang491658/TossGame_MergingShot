@@ -42,7 +42,7 @@ public class UnitSystem : MonoBehaviour
         var other = _collision.gameObject.GetComponent<UnitSystem>();
 
         if (other == null) return;
-        if (!_collision.gameObject.CompareTag(gameObject.tag)) return;
+        if (!other.CompareTag(tag)) return;
         if (other.GetID() != GetID()) return;
         if (other.merging || merging) return;
         if (other.GetInstanceID() < GetInstanceID()) return;
