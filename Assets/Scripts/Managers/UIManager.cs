@@ -1,9 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Collections;
-
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,6 +33,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
+    [Header("GameOver UI")]
+    [SerializeField] private Image gameOverUI;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -45,12 +47,12 @@ public class UIManager : MonoBehaviour
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI")?.GetComponent<Image>();
         if (settingScoreText == null)
-            settingScoreText = GameObject.Find("SettingUI/SettingBox/ScoreText")?.GetComponent<TextMeshProUGUI>();
+            settingScoreText = GameObject.Find("SettingUI/Box/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (confirmUI == null)
             confirmUI = GameObject.Find("ConfirmUI")?.GetComponent<Image>();
         if (confirmText == null)
-            confirmText = GameObject.Find("ConfirmUI/ConfirmBox/ConfirmText")?.GetComponent<TextMeshProUGUI>();
+            confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText")?.GetComponent<TextMeshProUGUI>();
 
         bgmIcons.Clear();
         LoadSprite(bgmIcons, "White Music");
@@ -68,6 +70,9 @@ public class UIManager : MonoBehaviour
             bgmSlider = GameObject.Find("BGM/BgmSlider")?.GetComponent<Slider>();
         if (sfxSlider == null)
             sfxSlider = GameObject.Find("SFX/SfxSlider")?.GetComponent<Slider>();
+
+        if (gameOverUI == null)
+            gameOverUI = GameObject.Find("GameOverUI")?.GetComponent<Image>();
     }
 
     private static void LoadSprite(List<Sprite> _list, string _sprite)

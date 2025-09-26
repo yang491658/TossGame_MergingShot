@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using System.Linq;
 #endif
 
 public class SpawnManager : MonoBehaviour
@@ -19,7 +19,7 @@ public class SpawnManager : MonoBehaviour
     [Header("Unit Info.")]
     [SerializeField] private HoleSystem hole;
     [SerializeField] private List<UnitSystem> units = new List<UnitSystem>();
-    [SerializeField] private List<int> counts = new List<int>();
+    [SerializeField] private List<int> unitCounts = new List<int>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -57,6 +57,9 @@ public class SpawnManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        unitCounts.Clear();
+        for (int i = 0; i < unitDatas.Length; i++) unitCounts.Add(0);
     }
 
     #region ¼ÒÈ¯
@@ -88,6 +91,8 @@ public class SpawnManager : MonoBehaviour
         unit.transform.SetParent(inGame, false);
         units.Add(unit);
 
+        unitCounts[data.unitID - 1]++;
+
         return unit;
     }
     #endregion
@@ -96,6 +101,7 @@ public class SpawnManager : MonoBehaviour
     public void DestroyUnit(UnitSystem _unit)
     {
         units.Remove(_unit);
+
         Destroy(_unit.gameObject);
     }
 
@@ -104,6 +110,8 @@ public class SpawnManager : MonoBehaviour
         for (int i = units.Count - 1; i >= 0; i--)
             DestroyUnit(units[i]);
 
+        for (int i = 0; i < unitCounts.Count; i++) unitCounts[i] = 0;
+
         GameManager.Instance.ResetScore();
     }
     #endregion
@@ -111,5 +119,7 @@ public class SpawnManager : MonoBehaviour
     #region GET
     public IReadOnlyList<UnitSystem> GetUnits() => units;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
+    public int GetCount(UnitSystem _unit) => unitCounts[_unit.GetID() - 1];
+    public int GetTotalCount() => unitCounts.Sum();
     #endregion
 }

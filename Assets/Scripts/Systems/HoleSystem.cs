@@ -17,7 +17,6 @@ public class HoleSystem : MonoBehaviour
 
     private void Update()
     {
-        rotateSpeed = 30f + GameManager.Instance.GetTotalScore() / 50f;
         SetMotor();
     }
 
