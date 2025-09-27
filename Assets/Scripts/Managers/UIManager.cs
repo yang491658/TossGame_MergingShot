@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
 
     [Header("GameOver UI")]
     [SerializeField] private Image gameOverUI;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -47,7 +48,7 @@ public class UIManager : MonoBehaviour
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI")?.GetComponent<Image>();
         if (settingScoreText == null)
-            settingScoreText = GameObject.Find("SettingUI/Box/ScoreText")?.GetComponent<TextMeshProUGUI>();
+            settingScoreText = GameObject.Find("SettingUI/Box/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (confirmUI == null)
             confirmUI = GameObject.Find("ConfirmUI")?.GetComponent<Image>();
@@ -73,6 +74,8 @@ public class UIManager : MonoBehaviour
 
         if (gameOverUI == null)
             gameOverUI = GameObject.Find("GameOverUI")?.GetComponent<Image>();
+        if (gameOverScoreText == null)
+            gameOverScoreText = GameObject.Find("GameOverUI/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
     }
 
     private static void LoadSprite(List<Sprite> _list, string _sprite)
@@ -110,8 +113,11 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
+
+        OpenGameOver(false);
         OpenConfirm(false);
         OpenSetting(false);
+
         UpdateIcons();
     }
 
@@ -139,13 +145,15 @@ public class UIManager : MonoBehaviour
         SoundManager.Instance.OnChangeVolume -= ChangeVolume;
     }
 
-    private void UpdateScore(int _score)
+    public void UpdateScore(int _score)
     {
         scoreText.text = _score.ToString("0000");
-        settingScoreText.text = "Score : " + _score.ToString("0000");
+        settingScoreText.text = _score.ToString("0000");
+        gameOverScoreText.text = _score.ToString("0000");
     }
 
-    private void OpenSetting(bool _on)
+    #region UI 열기
+    public void OpenSetting(bool _on)
     {
         scoreText.gameObject.SetActive(!_on);
 
@@ -153,7 +161,7 @@ public class UIManager : MonoBehaviour
         settingUI.gameObject.SetActive(_on);
     }
 
-    private void OpenConfirm(bool _on, string _text = null, System.Action _onOkay = null)
+    public void OpenConfirm(bool _on, string _text = null, System.Action _onOkay = null)
     {
         scoreText.gameObject.SetActive(!_on);
 
@@ -170,6 +178,20 @@ public class UIManager : MonoBehaviour
             confirmAction = null;
     }
 
+    public void OpenGameOver(bool _on)
+    {
+        scoreText.gameObject.SetActive(!_on);
+
+        settingBtn.gameObject.SetActive(!_on);
+        settingUI.gameObject.SetActive(!_on);
+
+        confirmUI.gameObject.SetActive(!_on);
+
+        gameOverUI.gameObject.SetActive(_on);
+    }
+    #endregion
+
+    #region 사운드 조절
     private void ChangeVolume(Sound _sound, float _volume)
     {
         if (_sound == Sound.BGM)
@@ -200,10 +222,11 @@ public class UIManager : MonoBehaviour
                 sfxIcon.sprite = sfxIcons[0];
         }
     }
+    #endregion
 
     #region 버튼
-    public void OnClikSetting() => OpenSetting(true);
-    public void OnClikClose() => OpenSetting(false);
+    public void OnClikSetting() => GameManager.Instance.Pause(true);
+    public void OnClikClose() => GameManager.Instance.Pause(false);
     public void OnClikBGM() => SoundManager.Instance.ToggleBGM();
     public void OnClikSFX() => SoundManager.Instance.ToggleSFX();
     public void OnClikReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
@@ -211,7 +234,7 @@ public class UIManager : MonoBehaviour
     public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
     public void OnClickCancel() => OpenConfirm(false);
     #endregion
-    
+
     private IEnumerator PlayClickThen(System.Action _action)
     {
         SoundManager.Instance.Button();

@@ -23,7 +23,7 @@ public class UnitSystem : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Merger(collision);
+        Merge(collision);
     }
 
 
@@ -37,7 +37,7 @@ public class UnitSystem : MonoBehaviour
         if (_isShot) SoundManager.Instance.Shoot();
     }
 
-    private void Merger(Collision2D _collision)
+    private void Merge(Collision2D _collision)
     {
         var other = _collision.gameObject.GetComponent<UnitSystem>();
 

@@ -18,21 +18,21 @@ public class SpaceSystem : MonoBehaviour
 
     private void Awake()
     {
-        if (cam == null) cam = Camera.main;
+        cam = Camera.main;
         sr = GetComponent<SpriteRenderer>();
         Fit();
     }
 
-    private void OnEnable() => Fit();
+    private void OnEnable()
+    {
+        Fit();
+    }
 
     private void Update()
     {
-        if (cam == null) cam = Camera.main;
-
-        if (Screen.width != lastW ||
-            Screen.height != lastH ||
-            (cam != null && (!Mathf.Approximately(cam.aspect, lastAspect) ||
-                             !Mathf.Approximately(cam.orthographicSize, lastOrthoSize))))
+        if (Screen.width != lastW || Screen.height != lastH ||
+            !Mathf.Approximately(cam.aspect, lastAspect) ||
+            !Mathf.Approximately(cam.orthographicSize, lastOrthoSize))
         {
             Fit();
         }
@@ -40,28 +40,36 @@ public class SpaceSystem : MonoBehaviour
 
     private void Fit()
     {
-        if (cam == null || sr == null || sr.sprite == null) return;
-        if (!cam.orthographic) return;
+        if (cam == null || !cam.orthographic || sr.sprite == null) return;
 
         lastW = Screen.width;
         lastH = Screen.height;
         lastAspect = cam.aspect;
         lastOrthoSize = cam.orthographicSize;
 
+        var sp = sr.sprite;
+        float ppu = sp.pixelsPerUnit;
+        if (ppu <= 0f) return;
+
         float worldH = cam.orthographicSize * 2f;
         float worldW = worldH * cam.aspect;
 
-        var sp = sr.sprite;
-        float spriteW = sp.rect.width / sp.pixelsPerUnit;
-        float spriteH = sp.rect.height / sp.pixelsPerUnit;
-
-        float scaleWorld = Mathf.Max(worldW / spriteW, worldH / spriteH);
+        float spriteW = sp.rect.width / ppu;
+        float spriteH = sp.rect.height / ppu;
+        if (spriteW <= 0f || spriteH <= 0f) return;
 
         var parent = transform.parent;
         Vector3 parentLossy = parent ? parent.lossyScale : Vector3.one;
-        float localX = scaleWorld / (parentLossy.x == 0f ? 1f : parentLossy.x);
-        float localY = scaleWorld / (parentLossy.y == 0f ? 1f : parentLossy.y);
+        float invX = (parentLossy.x == 0f) ? 1f : parentLossy.x;
+        float invY = (parentLossy.y == 0f) ? 1f : parentLossy.y;
 
+        float localX = (worldW / spriteW) / invX;
+        float localY = (worldH / spriteH) / invY;
         transform.localScale = new Vector3(localX, localY, transform.localScale.z);
+
+        var b = sr.bounds;
+        Vector3 camCenter = cam.transform.position;
+        Vector3 delta = new Vector3(camCenter.x - b.center.x, camCenter.y - b.center.y, 0f);
+        transform.position += delta;
     }
 }

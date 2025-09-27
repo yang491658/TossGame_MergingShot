@@ -24,7 +24,6 @@ public class SoundManager : MonoBehaviour
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
-
     public event System.Action<Sound, float> OnChangeVolume;
 
 #if UNITY_EDITOR
@@ -61,30 +60,28 @@ public class SoundManager : MonoBehaviour
         SetAudio();
         SetDictionaries();
         DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
-        PlayBGM();
 
         foreach (var btn in FindObjectsByType<Button>(FindObjectsSortMode.None))
             btn.onClick.AddListener(Button);
     }
 
+    private void Start()
+    {
+        PlayBGM("Default");
+    }
+
 
     #region ¹è°æÀ½
-    public void PlayBGM(AudioClip _clip = null)
+    public void PlayBGM(AudioClip _clip)
     {
-        if (_clip != null) bgmSource.clip = _clip;
+        bgmSource.clip = _clip;
         bgmSource.Play();
     }
 
     public void PlayBGM(string _name)
     {
         if (bgmDict.TryGetValue(_name, out var clip))
-        {
             PlayBGM(clip);
-        }
     }
 
     public void StopBGM() => bgmSource.Stop();
@@ -110,9 +107,7 @@ public class SoundManager : MonoBehaviour
     public void PlaySFX(string _name)
     {
         if (sfxDict.TryGetValue(_name, out var clip))
-        {
             PlaySFX(clip);
-        }
     }
 
     public void ToggleSFX()
@@ -129,7 +124,11 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void GameOver() => PlaySFX("GameOver");
+    public void GameOver()
+    {
+        PlaySFX("GameOver");
+        PlayBGM("Result");
+    }
 
     public void Shoot() => PlaySFX("Shoot");
     public void Merge(int _id = 0) => PlaySFX(_id != SpawnManager.Instance.GetFinal() ? "Merge" : "Flame");
@@ -147,7 +146,6 @@ public class SoundManager : MonoBehaviour
         sfxSource.playOnAwake = false;
 
         bgmSource.loop = true;
-        if (bgmClips != null && bgmClips.Length > 0) bgmSource.clip = bgmClips[0];
 
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
@@ -179,23 +177,15 @@ public class SoundManager : MonoBehaviour
     {
         bgmDict.Clear();
         if (bgmClips != null)
-        {
             foreach (var clip in bgmClips)
-            {
                 if (clip != null && !bgmDict.ContainsKey(clip.name))
                     bgmDict.Add(clip.name, clip);
-            }
-        }
 
         sfxDict.Clear();
         if (sfxClips != null)
-        {
             foreach (var clip in sfxClips)
-            {
                 if (clip != null && !sfxDict.ContainsKey(clip.name))
                     sfxDict.Add(clip.name, clip);
-            }
-        }
     }
     #endregion
 

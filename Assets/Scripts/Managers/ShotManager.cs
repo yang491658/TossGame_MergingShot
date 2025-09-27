@@ -66,8 +66,8 @@ public class ShotManager : MonoBehaviour
             }
         }
 
-        if (line != null) line.enabled = false;
-        if (ring != null) ring.enabled = false;
+        if (line != null) { line.gameObject.SetActive(false); line.positionCount = 0; }
+        if (ring != null) { ring.gameObject.SetActive(false); ring.positionCount = 0; }
     }
 
     private void Update()
@@ -161,9 +161,12 @@ public class ShotManager : MonoBehaviour
 
         float dist = Mathf.Min(shotDir.magnitude, maxPower);
 
-        Vector2 impulse = shotDir.normalized * dist * powerCoef;
-        selectedUnit.Shoot(impulse);
-        StartCoroutine(Respawn());
+        if (dist > Mathf.Epsilon)
+        {
+            Vector2 impulse = shotDir.normalized * dist * powerCoef;
+            selectedUnit.Shoot(impulse);
+            StartCoroutine(Respawn());
+        }
 
         isDragging = false;
         ShowAim(false);
@@ -179,13 +182,13 @@ public class ShotManager : MonoBehaviour
 
         if (line != null)
         {
-            line.enabled = _on;
+            line.gameObject.SetActive(_on);
             if (!_on) line.positionCount = 0;
         }
 
         if (ring != null)
         {
-            ring.enabled = _on;
+            ring.gameObject.SetActive(_on);
             if (!_on) ring.positionCount = 0;
         }
     }
@@ -205,8 +208,8 @@ public class ShotManager : MonoBehaviour
         if (dist <= Mathf.Epsilon)
         {
             for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
-            if (line != null) line.enabled = false;
-            if (ring != null) ring.enabled = false;
+            if (line != null) { line.gameObject.SetActive(false); line.positionCount = 0; }
+            if (ring != null) { ring.gameObject.SetActive(false); ring.positionCount = 0; }
             return;
         }
 
@@ -227,7 +230,7 @@ public class ShotManager : MonoBehaviour
 
         if (line != null)
         {
-            line.enabled = true;
+            line.gameObject.SetActive(true);
             line.positionCount = 2;
             line.SetPosition(0, start);
             line.SetPosition(1, ringCenter + dir.normalized * ringRadius);
@@ -235,7 +238,7 @@ public class ShotManager : MonoBehaviour
 
         if (ring != null)
         {
-            ring.enabled = true;
+            ring.gameObject.SetActive(true);
             ring.positionCount = ringSegments + 1;
             for (int i = 0; i <= ringSegments; i++)
             {

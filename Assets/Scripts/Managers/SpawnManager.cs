@@ -63,15 +63,12 @@ public class SpawnManager : MonoBehaviour
     }
 
     #region ¼ÒÈ¯
-    private UnitData FindById(int id)
+    private UnitData FindById(int _id)
     {
-#if UNITY_EDITOR
-        return System.Linq.Enumerable.FirstOrDefault(unitDatas, d => d.unitID == id);
-#else
-    for (int i = 0; i < unitDatas.Length; i++)
-        if (unitDatas[i].unitID == id) return unitDatas[i];
-    return null;
-#endif
+        for (int i = 0; i < unitDatas.Length; i++)
+            if (unitDatas[i].unitID == _id) return unitDatas[i];
+
+        return null;
     }
 
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)

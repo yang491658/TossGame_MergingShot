@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
     public bool IsPaused { get; private set; } = false;
     public event System.Action<bool> OnOpenSetting;
 
+    public bool IsGameOver { get; private set; } = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,10 +26,34 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        SceneManager.sceneLoaded += LoadGame;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= LoadGame;
+    }
+
+    private void LoadGame(Scene _scene, LoadSceneMode _mode)
+    {
+        Pause(false);
+        StartCoroutine(LoadCoroutine());
+    }
+
+    private IEnumerator LoadCoroutine()
+    {
+        yield return null;
+
+        IsGameOver = false;
+        UIManager.Instance.OpenGameOver(false);
+        UIManager.Instance.OpenConfirm(false);
+        UIManager.Instance.OpenSetting(false);
+
         SpawnManager.Instance.Spawn(1);
     }
+
 
     #region Á¡¼ö
     public void AddScore(int _score)
@@ -49,12 +76,15 @@ public class GameManager : MonoBehaviour
 
         IsPaused = _pause;
         Time.timeScale = _pause ? 0f : 1f;
+
+        Debug.Log(OnOpenSetting);
+
         OnOpenSetting?.Invoke(_pause);
     }
 
     public void Replay()
     {
-        Pause(false);
+        ResetScore();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -65,8 +95,18 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-    Application.Quit();
+        Application.Quit();
 #endif
+    }
+
+    public void GameOver()
+    {
+        if (IsGameOver) return;  
+        IsGameOver = true;
+
+        Pause(true);
+        SoundManager.Instance.GameOver();
+        UIManager.Instance.OpenGameOver(true);
     }
     #endregion
 

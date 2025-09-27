@@ -12,31 +12,31 @@ public class TestDebug : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.ToggleBGM();
-        SoundManager.Instance.ToggleSFX();
     }
 
     private void Update()
     {
         #region 게임 테스트
         if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (GameManager.Instance.IsPaused) GameManager.Instance.Pause(false);
-            else GameManager.Instance.Pause(true);
-        }
+            GameManager.Instance.Pause(!GameManager.Instance.IsPaused);
 
         if (Input.GetKeyDown(KeyCode.R))
             GameManager.Instance.Replay();
 
         if (Input.GetKeyDown(KeyCode.Q))
             GameManager.Instance.Quit();
+
+        if (Input.GetKeyDown(KeyCode.G))
+            GameManager.Instance.GameOver();
+
         #endregion
 
         #region 사운드 테스트
         if (Input.GetKeyDown(KeyCode.M))
-        {
             SoundManager.Instance.ToggleBGM();
+
+        if (Input.GetKeyDown(KeyCode.N))
             SoundManager.Instance.ToggleSFX();
-        }
         #endregion
 
         #region 소환 테스트
@@ -55,7 +55,8 @@ public class TestDebug : MonoBehaviour
             KeyCode key = (i == 10) ? KeyCode.Alpha0 : (KeyCode)((int)KeyCode.Alpha0 + i);
             if (Input.GetKeyDown(key))
             {
-                UnitSystem unit = SpawnManager.Instance.Spawn(i, (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                var mouse = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                UnitSystem unit = SpawnManager.Instance.Spawn(i, mouse);
                 unit.Shoot(Vector2.zero);
                 break;
             }
