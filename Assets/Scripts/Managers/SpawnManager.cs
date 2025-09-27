@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
             spawn = transform.Find("SpawnPos");
 
         if (inGame == null)
-            inGame = GameObject.Find("InGame").transform;
+            inGame = GameObject.Find("InGame/Units").transform;
 
         if (hole == null)
             hole = FindFirstObjectByType<HoleSystem>();
@@ -58,8 +58,7 @@ public class SpawnManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        unitCounts.Clear();
-        for (int i = 0; i < unitDatas.Length; i++) unitCounts.Add(0);
+        ResetCount();
     }
 
     #region 소환
@@ -88,8 +87,6 @@ public class SpawnManager : MonoBehaviour
         unit.transform.SetParent(inGame, false);
         units.Add(unit);
 
-        unitCounts[data.unitID - 1]++;
-
         return unit;
     }
     #endregion
@@ -113,10 +110,21 @@ public class SpawnManager : MonoBehaviour
     }
     #endregion
 
+    #region 개수
+    public void AddCount(UnitData _data) => unitCounts[_data.unitID - 1]++;
+    
+    public void ResetCount()
+    {
+        unitCounts.Clear();
+        for (int i = 0; i < unitDatas.Length; i++) unitCounts.Add(0);
+    }
+    #endregion
+
     #region GET
+    public IReadOnlyList<UnitData> GetDatas() => unitDatas;
     public IReadOnlyList<UnitSystem> GetUnits() => units;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
-    public int GetCount(UnitSystem _unit) => unitCounts[_unit.GetID() - 1];
+    public int GetCount(int _id) => unitCounts[_id - 1];
     public int GetTotalCount() => unitCounts.Sum();
     #endregion
 }

@@ -34,14 +34,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
 
     [Header("GameOver UI")]
-    [SerializeField] private Image gameOverUI;
-    [SerializeField] private TextMeshProUGUI gameOverScoreText;
+    [SerializeField] private Image resultUI;
+    [SerializeField] private TextMeshProUGUI resultScoreText;
+    [SerializeField] private List<GameObject> planets = new List<GameObject>();
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
         if (scoreText == null)
-            scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
+            scoreText = GameObject.Find("UICanvas/ScoreText")?.GetComponent<TextMeshProUGUI>();
 
         if (settingBtn == null)
             settingBtn = GameObject.Find("SettingBtn")?.GetComponent<Button>();
@@ -72,10 +73,13 @@ public class UIManager : MonoBehaviour
         if (sfxSlider == null)
             sfxSlider = GameObject.Find("SFX/SfxSlider")?.GetComponent<Slider>();
 
-        if (gameOverUI == null)
-            gameOverUI = GameObject.Find("GameOverUI")?.GetComponent<Image>();
-        if (gameOverScoreText == null)
-            gameOverScoreText = GameObject.Find("GameOverUI/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
+        if (resultUI == null)
+            resultUI = GameObject.Find("ResultUI")?.GetComponent<Image>();
+        if (resultScoreText == null)
+            resultScoreText = GameObject.Find("ResultUI/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
+        if (planets == null || planets.Count == 0)
+            foreach (Transform child in GameObject.Find("ResultUI/Planets").transform)
+                planets.Add(child.gameObject);
     }
 
     private static void LoadSprite(List<Sprite> _list, string _sprite)
@@ -113,11 +117,6 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
-
-        OpenGameOver(false);
-        OpenConfirm(false);
-        OpenSetting(false);
-
         UpdateIcons();
     }
 
@@ -126,12 +125,13 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnChangeScore += UpdateScore;
         GameManager.Instance.OnOpenSetting += OpenSetting;
 
+        SoundManager.Instance.OnChangeVolume += ChangeVolume;
+
         bgmSlider.value = SoundManager.Instance.GetBGMVolume();
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
 
-        SoundManager.Instance.OnChangeVolume += ChangeVolume;
     }
 
     private void OnDisable()
@@ -139,17 +139,18 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnChangeScore -= UpdateScore;
         GameManager.Instance.OnOpenSetting -= OpenSetting;
 
+        SoundManager.Instance.OnChangeVolume -= ChangeVolume;
+
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
 
-        SoundManager.Instance.OnChangeVolume -= ChangeVolume;
     }
 
     public void UpdateScore(int _score)
     {
         scoreText.text = _score.ToString("0000");
         settingScoreText.text = _score.ToString("0000");
-        gameOverScoreText.text = _score.ToString("0000");
+        resultScoreText.text = _score.ToString("0000");
     }
 
     #region UI ¿­±â
@@ -178,7 +179,7 @@ public class UIManager : MonoBehaviour
             confirmAction = null;
     }
 
-    public void OpenGameOver(bool _on)
+    public void OpenResult(bool _on)
     {
         scoreText.gameObject.SetActive(!_on);
 
@@ -187,7 +188,17 @@ public class UIManager : MonoBehaviour
 
         confirmUI.gameObject.SetActive(!_on);
 
-        gameOverUI.gameObject.SetActive(_on);
+        for (int i = 0; i < planets.Count; i++)
+        {
+            var p = planets[i];
+            var u = SpawnManager.Instance.GetDatas()[i];
+
+            p.name = u.unitName;
+            p.GetComponentInChildren<Image>().sprite = u.unitImage;
+            p.GetComponentInChildren<TextMeshProUGUI>().text = SpawnManager.Instance.GetCount(u.unitID).ToString("¡¿00");
+        }
+
+        resultUI.gameObject.SetActive(_on);
     }
     #endregion
 

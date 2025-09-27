@@ -56,10 +56,10 @@ public class SoundManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         SetAudio();
         SetDictionaries();
-        DontDestroyOnLoad(gameObject);
 
         foreach (var btn in FindObjectsByType<Button>(FindObjectsSortMode.None))
             btn.onClick.AddListener(Button);

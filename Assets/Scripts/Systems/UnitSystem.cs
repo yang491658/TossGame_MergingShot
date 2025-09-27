@@ -35,6 +35,8 @@ public class UnitSystem : MonoBehaviour
         col.isTrigger = false;
 
         if (_isShot) SoundManager.Instance.Shoot();
+
+        SpawnManager.Instance.AddCount(data);
     }
 
     private void Merge(Collision2D _collision)

@@ -6,7 +6,7 @@ public class HoleSystem : MonoBehaviour
     [SerializeField] private float gravity = 300f;
 
     [Header("Rotation Info.")]
-    [SerializeField] private float rotateSpeed;
+    [SerializeField] private float rotateSpeed = 30f;
     private HingeJoint2D hinge;
 
     private void Awake()

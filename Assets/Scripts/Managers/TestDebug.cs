@@ -7,12 +7,7 @@ public class TestDebug : MonoBehaviour
 
     [SerializeField][Range(0f, 3f)] private float delay = 0.1f;
 
-    [SerializeField][Range(0f, 45f)] float angleRange = 0f;
-
-    private void Start()
-    {
-        SoundManager.Instance.ToggleBGM();
-    }
+    [SerializeField][Range(0f, 45f)] float angleRange = 30f;
 
     private void Update()
     {
@@ -42,11 +37,12 @@ public class TestDebug : MonoBehaviour
         #region 소환 테스트
         if (Input.GetKey(KeyCode.W) && Time.time >= time)
         {
-            UnitSystem unit = SpawnManager.Instance.Spawn(1);
+            UnitSystem unit = SpawnManager.Instance.Spawn();
 
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;
             unit.Shoot(dir * 15f);
+
             time = Time.time + delay;
         }
 

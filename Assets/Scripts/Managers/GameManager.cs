@@ -44,14 +44,19 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadCoroutine()
     {
-        yield return null;
-
         IsGameOver = false;
-        UIManager.Instance.OpenGameOver(false);
+        ResetScore();
+
+        SoundManager.Instance.PlayBGM("Default");
+
+        UIManager.Instance.OpenResult(false);
         UIManager.Instance.OpenConfirm(false);
         UIManager.Instance.OpenSetting(false);
 
+        SpawnManager.Instance.ResetCount();
         SpawnManager.Instance.Spawn(1);
+
+        yield return null;
     }
 
 
@@ -77,16 +82,10 @@ public class GameManager : MonoBehaviour
         IsPaused = _pause;
         Time.timeScale = _pause ? 0f : 1f;
 
-        Debug.Log(OnOpenSetting);
-
         OnOpenSetting?.Invoke(_pause);
     }
 
-    public void Replay()
-    {
-        ResetScore();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    public void Replay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     public void Quit()
     {
@@ -101,12 +100,12 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (IsGameOver) return;  
+        if (IsGameOver) return;
         IsGameOver = true;
 
         Pause(true);
         SoundManager.Instance.GameOver();
-        UIManager.Instance.OpenGameOver(true);
+        UIManager.Instance.OpenResult(true);
     }
     #endregion
 
