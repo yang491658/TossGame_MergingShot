@@ -1,25 +1,26 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class SpawnManager : MonoBehaviour
+public class EntityManager : MonoBehaviour
 {
-    public static SpawnManager Instance { get; private set; }
+    public static EntityManager Instance { get; private set; }
 
     [Header("Spawn Setting")]
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
     [SerializeField] private Transform spawn;
-    [SerializeField] private Transform inGame;
 
-    [Header("Unit Info.")]
-    [SerializeField] private HoleSystem hole;
-    [SerializeField] private List<UnitSystem> units = new List<UnitSystem>();
+    [Header("Entity Info.")]
+    [SerializeField] private Transform hole;
+    [SerializeField] private Transform units;
     [SerializeField] private List<int> unitCounts = new List<int>();
+    [SerializeField] private List<UnitSystem> spawned = new List<UnitSystem>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -30,11 +31,11 @@ public class SpawnManager : MonoBehaviour
         if (spawn == null)
             spawn = transform.Find("SpawnPos");
 
-        if (inGame == null)
-            inGame = GameObject.Find("InGame/Units").transform;
-
         if (hole == null)
-            hole = FindFirstObjectByType<HoleSystem>();
+            hole = FindFirstObjectByType<HoleSystem>().transform;
+
+        if (units == null)
+            units = GameObject.Find("InGame/Units").transform;
 
         string[] guids = AssetDatabase.FindAssets("t:UnitData", new[] { "Assets/Scripts/ScriptableObjects" });
         var list = new List<UnitData>(guids.Length);
@@ -56,6 +57,7 @@ public class SpawnManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         ResetCount();
@@ -84,24 +86,31 @@ public class SpawnManager : MonoBehaviour
             .GetComponent<UnitSystem>();
 
         unit.SetData(data.Clone());
-        unit.transform.SetParent(inGame, false);
-        units.Add(unit);
+        unit.transform.SetParent(units, false);
+        spawned.Add(unit);
 
         return unit;
+    }
+
+    public void Respawn() => StartCoroutine(RespawnCoroutine());
+    private IEnumerator RespawnCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        Spawn(Random.Range(1, 5)); // TODO 재소환 로직변경
     }
     #endregion
 
     #region 제거
     public void DestroyUnit(UnitSystem _unit)
     {
-        units.Remove(_unit);
+        spawned.Remove(_unit);
         Destroy(_unit.gameObject);
     }
 
     public void DestroyAll()
     {
-        for (int i = units.Count - 1; i >= 0; i--)
-            DestroyUnit(units[i]);
+        for (int i = spawned.Count - 1; i >= 0; i--)
+            DestroyUnit(spawned[i]);
 
         for (int i = 0; i < unitCounts.Count; i++) unitCounts[i] = 0;
 
@@ -111,7 +120,7 @@ public class SpawnManager : MonoBehaviour
 
     #region 개수
     public void AddCount(UnitData _data) => unitCounts[_data.unitID - 1]++;
-    
+
     public void ResetCount()
     {
         unitCounts.Clear();
@@ -121,7 +130,7 @@ public class SpawnManager : MonoBehaviour
 
     #region GET
     public IReadOnlyList<UnitData> GetDatas() => unitDatas;
-    public IReadOnlyList<UnitSystem> GetUnits() => units;
+    public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
     public int GetCount(int _id) => unitCounts[_id - 1];
     public int GetTotalCount() => unitCounts.Sum();

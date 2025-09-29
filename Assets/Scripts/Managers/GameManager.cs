@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (transform.parent != null)transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -53,12 +54,11 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.OpenConfirm(false);
         UIManager.Instance.OpenSetting(false);
 
-        SpawnManager.Instance.ResetCount();
-        SpawnManager.Instance.Spawn(1);
+        EntityManager.Instance.ResetCount();
+        EntityManager.Instance.Spawn(1);
 
         yield return null;
     }
-
 
     #region Á¡¼ö
     public void AddScore(int _score)

@@ -9,8 +9,9 @@ public class UnitSystem : MonoBehaviour
 
     [SerializeField] private UnitData data;
 
-    public bool isFired { get; private set; }
-    public bool isMerging { get; private set; }
+    public bool isFired { get; private set; } = false;
+    public bool isMerging { get; private set; } = false;
+    public bool inHole { get; private set; } = false;
 
     private void Awake()
     {
@@ -26,16 +27,28 @@ public class UnitSystem : MonoBehaviour
         Merge(collision);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isFired) return;
+        if (collision.CompareTag("Hole")) inHole = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!isFired || isMerging || !inHole) return;
+        if (collision.CompareTag("Hole")) GameManager.Instance.GameOver();
+    }
+
     public void Shoot(Vector2 _impulse, bool _isShot = true)
     {
-        rb.AddForce(_impulse, ForceMode2D.Impulse);
+        rb.AddForce(_impulse * rb.mass, ForceMode2D.Impulse);
 
         isFired = true;
         col.isTrigger = false;
 
         if (_isShot) SoundManager.Instance.Shoot();
 
-        SpawnManager.Instance.AddCount(data);
+        EntityManager.Instance.AddCount(data);
     }
 
     private void Merge(Collision2D _collision)
@@ -61,15 +74,15 @@ public class UnitSystem : MonoBehaviour
         Vector2 vB = other.GetVelocity();
         Vector2 vM = (vA + vB) / 2f;
 
-        SpawnManager.Instance.DestroyUnit(other);
-        SpawnManager.Instance.DestroyUnit(this);
+        EntityManager.Instance.DestroyUnit(other);
+        EntityManager.Instance.DestroyUnit(this);
 
         int id = GetID();
         int score = GetScore();
 
-        if (id != SpawnManager.Instance.GetFinal())
+        if (id != EntityManager.Instance.GetFinal())
         {
-            UnitSystem us = SpawnManager.Instance.Spawn(id + 1, pM);
+            UnitSystem us = EntityManager.Instance.Spawn(id + 1, pM);
             us.Shoot(vM, false);
         }
 

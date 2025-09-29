@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     [Header("Score UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
 
-    [Header("Menu UI")]
+    [Header("Setting UI")]
     [SerializeField] private Button settingBtn;
     [SerializeField] private Image settingUI;
     [SerializeField] private TextMeshProUGUI settingScoreText;
@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI confirmText;
     private System.Action confirmAction;
 
-    [Header("Audio UI")]
+    [Header("Sound UI")]
     [SerializeField] private Image bgmIcon;
     [SerializeField] private Image sfxIcon;
     [SerializeField] private List<Sprite> bgmIcons = new List<Sprite>();
@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
-    [Header("GameOver UI")]
+    [Header("Rsult UI")]
     [SerializeField] private Image resultUI;
     [SerializeField] private TextMeshProUGUI resultScoreText;
     [SerializeField] private List<GameObject> planets = new List<GameObject>();
@@ -111,6 +111,7 @@ public class UIManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (transform.parent != null)transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -191,11 +192,11 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < planets.Count; i++)
         {
             var p = planets[i];
-            var u = SpawnManager.Instance.GetDatas()[i];
+            var u = EntityManager.Instance.GetDatas()[i];
 
             p.name = u.unitName;
             p.GetComponentInChildren<Image>().sprite = u.unitImage;
-            p.GetComponentInChildren<TextMeshProUGUI>().text = SpawnManager.Instance.GetCount(u.unitID).ToString("×00");
+            p.GetComponentInChildren<TextMeshProUGUI>().text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
         }
 
         resultUI.gameObject.SetActive(_on);
@@ -203,9 +204,9 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region 사운드 조절
-    private void ChangeVolume(Sound _sound, float _volume)
+    private void ChangeVolume(SoundType _sound, float _volume)
     {
-        if (_sound == Sound.BGM)
+        if (_sound == SoundType.BGM)
         {
             if (!Mathf.Approximately(bgmSlider.value, _volume))
                 bgmSlider.value = _volume;

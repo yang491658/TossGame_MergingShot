@@ -1,14 +1,21 @@
 #if UNITY_EDITOR
 using UnityEngine;
 
-public class TestDebug : MonoBehaviour
+public class TestManager : MonoBehaviour
 {
     private float time = 0;
 
-    [SerializeField][Range(0f, 3f)] private float delay = 0.1f;
-
+    [Header("Spawn Test")]
+    [SerializeField][Range(0.05f, 3f)] private float delay = 0.05f;
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
     [SerializeField][Range(0f, 15f)] float shotPower = 15f;
+    private bool autoFire = false;
+
+    private void Start()
+    {
+        SoundManager.Instance.ToggleBGM();
+        SoundManager.Instance.ToggleSFX();
+    }
 
     private void Update()
     {
@@ -33,18 +40,21 @@ public class TestDebug : MonoBehaviour
             SoundManager.Instance.ToggleBGM();
             SoundManager.Instance.ToggleSFX();
         }
-
         #endregion
 
-        #region 소환 테스트
-        if (Input.GetKey(KeyCode.W) && Time.time >= time)
+        #region 엔티티 테스트
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            UnitSystem unit = SpawnManager.Instance.Spawn(1);
+            autoFire = !autoFire;
+            time = Time.time;
+        }
 
+        if (autoFire && !GameManager.Instance.IsGameOver && Time.time >= time)
+        {
+            UnitSystem unit = EntityManager.Instance.Spawn(1);
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;
             unit.Shoot(dir * shotPower);
-
             time = Time.time + delay;
         }
 
@@ -53,20 +63,17 @@ public class TestDebug : MonoBehaviour
             KeyCode key = (i == 10) ? KeyCode.Alpha0 : (KeyCode)((int)KeyCode.Alpha0 + i);
             if (Input.GetKeyDown(key))
             {
-                var mouse = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                //UnitSystem unit = SpawnManager.Instance.Spawn(i, mouse);
-                UnitSystem unit = SpawnManager.Instance.Spawn(i);
-                //unit.Shoot(Vector2.zero);
+                UnitSystem unit = EntityManager.Instance.Spawn(i);
                 unit.Shoot(Vector2.up * shotPower);
                 break;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.S))
-            SpawnManager.Instance.Spawn(1);
+            EntityManager.Instance.Spawn(1);
 
         if (Input.GetKeyDown(KeyCode.D))
-            SpawnManager.Instance.DestroyAll();
+            EntityManager.Instance.DestroyAll();
         #endregion
     }
 }

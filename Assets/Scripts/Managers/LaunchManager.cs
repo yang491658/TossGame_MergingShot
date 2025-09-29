@@ -1,15 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class ShotManager : MonoBehaviour
+public class LaunchManager : MonoBehaviour
 {
-    public static ShotManager Instance { get; private set; }
+    public static LaunchManager Instance { get; private set; }
 
     private Camera cam => Camera.main;
 
@@ -28,7 +27,7 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private int ringSegments = 64;
     [SerializeField] private float ringRadius = 0.5f;
 
-    [Header("Shot Info.")]
+    [Header("Launch Info.")]
     [SerializeField] private float maxPower = 5f;
     [SerializeField] private float powerCoef = 3f;
 
@@ -54,6 +53,7 @@ public class ShotManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (transform.parent != null)transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         if (dots.Count == 0)
@@ -164,7 +164,7 @@ public class ShotManager : MonoBehaviour
         {
             Vector2 impulse = shotDir.normalized * dist * powerCoef;
             selectedUnit.Shoot(impulse);
-            StartCoroutine(Respawn());
+            EntityManager.Instance.Respawn();
         }
 
         isDragging = false;
@@ -248,12 +248,6 @@ public class ShotManager : MonoBehaviour
         }
     }
     #endregion
-
-    private IEnumerator Respawn()
-    {
-        yield return new WaitForSeconds(1f);
-        SpawnManager.Instance.Spawn(Random.Range(1, 5)); // TODO 재소환 로직변경
-    }
 
 #if UNITY_EDITOR
     private void Move(Vector2 _pos)

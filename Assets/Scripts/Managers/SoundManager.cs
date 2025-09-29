@@ -2,7 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public enum Sound { BGM, SFX }
+public enum SoundType { BGM, SFX }
+
+[System.Serializable]
+public struct SoundClip
+{
+    public AudioClip[] bgmClips;
+    public AudioClip[] sfxClips;
+}
 
 public class SoundManager : MonoBehaviour
 {
@@ -19,29 +26,28 @@ public class SoundManager : MonoBehaviour
     private float prevSfxVolume;
 
     [Header("Clips")]
-    [SerializeField] private AudioClip[] bgmClips;
-    [SerializeField] private AudioClip[] sfxClips;
+    [SerializeField] private SoundClip soundClips;
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
-    public event System.Action<Sound, float> OnChangeVolume;
+    public event System.Action<SoundType, float> OnChangeVolume;
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
         var bgmList = new List<AudioClip>();
-        LoadSound(bgmList, Sound.BGM);
-        bgmClips = bgmList.ToArray();
+        LoadSound(bgmList, SoundType.BGM);
+        soundClips.bgmClips = bgmList.ToArray();
 
         var sfxList = new List<AudioClip>();
-        LoadSound(sfxList, Sound.SFX);
-        sfxClips = sfxList.ToArray();
+        LoadSound(sfxList, SoundType.SFX);
+        soundClips.sfxClips = sfxList.ToArray();
     }
 
-    private static void LoadSound(List<AudioClip> _list, Sound _type)
+    private static void LoadSound(List<AudioClip> _list, SoundType _type)
     {
         _list.Clear();
-        string path = "Sounds/" + (_type == Sound.BGM ? "BGMs" : "SFXs");
+        string path = "Sounds/" + (_type == SoundType.BGM ? "BGMs" : "SFXs");
         var clips = Resources.LoadAll<AudioClip>(path);
         if (clips != null && clips.Length > 0)
             _list.AddRange(clips);
@@ -56,6 +62,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (transform.parent != null)transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         SetAudio();
@@ -131,7 +138,7 @@ public class SoundManager : MonoBehaviour
     }
 
     public void Shoot() => PlaySFX("Shoot");
-    public void Merge(int _id = 0) => PlaySFX(_id != SpawnManager.Instance.GetFinal() ? "Merge" : "Flame");
+    public void Merge(int _id = 0) => PlaySFX(_id != EntityManager.Instance.GetFinal() ? "Merge" : "Flame");
 
     public void Button() => PlaySFX("Button");
     #endregion
@@ -159,7 +166,7 @@ public class SoundManager : MonoBehaviour
 
         if (bgmVolume > 0f) prevBgmVolume = bgmVolume;
 
-        OnChangeVolume?.Invoke(Sound.BGM, bgmVolume);
+        OnChangeVolume?.Invoke(SoundType.BGM, bgmVolume);
     }
 
     public void SetSFXVolume(float _volume = 1)
@@ -170,22 +177,22 @@ public class SoundManager : MonoBehaviour
 
         if (sfxVolume > 0f) prevSfxVolume = sfxVolume;
 
-        OnChangeVolume?.Invoke(Sound.SFX, sfxVolume);
+        OnChangeVolume?.Invoke(SoundType.SFX, sfxVolume);
     }
 
     private void SetDictionaries()
     {
         bgmDict.Clear();
-        if (bgmClips != null)
-            foreach (var clip in bgmClips)
-                if (clip != null && !bgmDict.ContainsKey(clip.name))
-                    bgmDict.Add(clip.name, clip);
+        if (soundClips.bgmClips != null)
+            foreach (var c in soundClips.bgmClips)
+                if (c != null && !bgmDict.ContainsKey(c.name))
+                    bgmDict.Add(c.name, c);
 
         sfxDict.Clear();
-        if (sfxClips != null)
-            foreach (var clip in sfxClips)
-                if (clip != null && !sfxDict.ContainsKey(clip.name))
-                    sfxDict.Add(clip.name, clip);
+        if (soundClips.sfxClips != null)
+            foreach (var c in soundClips.sfxClips)
+                if (c != null && !sfxDict.ContainsKey(c.name))
+                    sfxDict.Add(c.name, c);
     }
     #endregion
 

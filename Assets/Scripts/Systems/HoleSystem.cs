@@ -45,7 +45,7 @@ public class HoleSystem : MonoBehaviour
 
     private void ApplyGravity()
     {
-        var units = SpawnManager.Instance.GetUnits();
+        var units = EntityManager.Instance.GetUnits();
         if (units == null || units.Count == 0) return;
 
         Vector2 center = transform.position;
