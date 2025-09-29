@@ -10,11 +10,6 @@ public class TestDebug : MonoBehaviour
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
     [SerializeField][Range(0f, 15f)] float shotPower = 15f;
 
-    private void Start()
-    {
-        SoundManager.Instance.ToggleBGM();
-    }
-
     private void Update()
     {
         #region 게임 테스트
@@ -34,10 +29,11 @@ public class TestDebug : MonoBehaviour
 
         #region 사운드 테스트
         if (Input.GetKeyDown(KeyCode.M))
+        {
             SoundManager.Instance.ToggleBGM();
-
-        if (Input.GetKeyDown(KeyCode.N))
             SoundManager.Instance.ToggleSFX();
+        }
+
         #endregion
 
         #region 소환 테스트

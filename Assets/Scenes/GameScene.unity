@@ -1435,6 +1435,37 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &241929156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 241929157}
+  m_Layer: 0
+  m_Name: =====Managers=====
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &241929157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241929156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 303.06256, y: 91.31188, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &258042201
 GameObject:
   m_ObjectHideFlags: 0
@@ -4087,8 +4118,8 @@ Transform:
   m_GameObject: {fileID: 872845352}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.5, z: 0}
-  m_LocalScale: {x: 12, y: 12, z: 12}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1030031173}
@@ -4106,12 +4137,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a8d97399ec0144aa552fe0110536e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 300
-  stopRadius: 0.1
+  gravity: 500
+  sleepRadius: 0.6
   sleepSpeed: 0.05
-  radialDamping: 8
-  tangentialDamping: 2
-  maxForce: 300000
+  sleepFrame: 8
+  dampRadius: 1.2
+  radDamping: 8
+  tanDamping: 2
+  maxForce: 30
+  bounceKillRadius: 0.55
+  bounceKillSpeed: 0.06
   rotateSpeed: 30
 --- !u!212 &872845356
 SpriteRenderer:
@@ -4958,7 +4993,7 @@ HingeJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 4.5}
+  m_ConnectedAnchor: {x: 0, y: 5}
   m_UseConnectedAnchor: 1
   m_UseMotor: 1
   m_Motor:
@@ -9621,3 +9656,4 @@ SceneRoots:
   - {fileID: 953657503875273841}
   - {fileID: 2116395663990640690}
   - {fileID: 1336853628}
+  - {fileID: 241929157}
