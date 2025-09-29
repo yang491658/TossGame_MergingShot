@@ -34,7 +34,7 @@ public class HoleSystem : MonoBehaviour
 
         foreach (var unit in units)
         {
-            if (unit == null || !unit.fired) continue;
+            if (unit == null || !unit.isFired) continue;
 
             var rb = unit.GetComponent<Rigidbody2D>();
             if (rb == null) continue;

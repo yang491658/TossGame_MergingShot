@@ -8,6 +8,12 @@ public class TestDebug : MonoBehaviour
     [SerializeField][Range(0f, 3f)] private float delay = 0.1f;
 
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
+    [SerializeField][Range(0f, 15f)] float shotPower = 15f;
+
+    private void Start()
+    {
+        SoundManager.Instance.ToggleBGM();
+    }
 
     private void Update()
     {
@@ -37,11 +43,11 @@ public class TestDebug : MonoBehaviour
         #region 소환 테스트
         if (Input.GetKey(KeyCode.W) && Time.time >= time)
         {
-            UnitSystem unit = SpawnManager.Instance.Spawn();
+            UnitSystem unit = SpawnManager.Instance.Spawn(1);
 
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;
-            unit.Shoot(dir * 15f);
+            unit.Shoot(dir * shotPower);
 
             time = Time.time + delay;
         }
@@ -52,11 +58,16 @@ public class TestDebug : MonoBehaviour
             if (Input.GetKeyDown(key))
             {
                 var mouse = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                UnitSystem unit = SpawnManager.Instance.Spawn(i, mouse);
-                unit.Shoot(Vector2.zero);
+                //UnitSystem unit = SpawnManager.Instance.Spawn(i, mouse);
+                UnitSystem unit = SpawnManager.Instance.Spawn(i);
+                //unit.Shoot(Vector2.zero);
+                unit.Shoot(Vector2.up * shotPower);
                 break;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.S))
+            SpawnManager.Instance.Spawn(1);
 
         if (Input.GetKeyDown(KeyCode.D))
             SpawnManager.Instance.DestroyAll();

@@ -9,8 +9,8 @@ public class UnitSystem : MonoBehaviour
 
     [SerializeField] private UnitData data;
 
-    public bool fired { get; private set; }
-    public bool merging { get; private set; }
+    public bool isFired { get; private set; }
+    public bool isMerging { get; private set; }
 
     private void Awake()
     {
@@ -26,12 +26,11 @@ public class UnitSystem : MonoBehaviour
         Merge(collision);
     }
 
-
     public void Shoot(Vector2 _impulse, bool _isShot = true)
     {
         rb.AddForce(_impulse, ForceMode2D.Impulse);
 
-        fired = true;
+        isFired = true;
         col.isTrigger = false;
 
         if (_isShot) SoundManager.Instance.Shoot();
@@ -46,11 +45,11 @@ public class UnitSystem : MonoBehaviour
         if (other == null) return;
         if (!other.CompareTag(tag)) return;
         if (other.GetID() != GetID()) return;
-        if (other.merging || merging) return;
+        if (other.isMerging || isMerging) return;
         if (other.GetInstanceID() < GetInstanceID()) return;
 
-        merging = true;
-        other.merging = true;
+        isMerging = true;
+        other.isMerging = true;
 
         var otherRb = _collision.rigidbody;
 
@@ -85,7 +84,7 @@ public class UnitSystem : MonoBehaviour
         if (data.unitImage != null)
             sr.sprite = data.unitImage;
 
-        rb.mass = 1f;
+        rb.mass = data.unitMass;
         transform.localScale = Vector3.one * data.unitScale;
     }
     #endregion
