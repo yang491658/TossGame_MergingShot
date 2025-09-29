@@ -64,14 +64,17 @@ public class UnitSystem : MonoBehaviour
         SpawnManager.Instance.DestroyUnit(other);
         SpawnManager.Instance.DestroyUnit(this);
 
-        if (GetID() != SpawnManager.Instance.GetFinal())
+        int id = GetID();
+        int score = GetScore();
+
+        if (id != SpawnManager.Instance.GetFinal())
         {
-            UnitSystem us = SpawnManager.Instance.Spawn(GetID() + 1, pM);
+            UnitSystem us = SpawnManager.Instance.Spawn(id + 1, pM);
             us.Shoot(vM, false);
         }
 
-        GameManager.Instance.AddScore(GetScore());
-        SoundManager.Instance.Merge(GetID());
+        GameManager.Instance.AddScore(score);
+        SoundManager.Instance.Merge(id);
     }
 
     #region SET

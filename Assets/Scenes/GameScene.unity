@@ -1290,7 +1290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -250, y: 100}
+  m_AnchoredPosition: {x: -250, y: 120}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &192083452
@@ -2706,7 +2706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 250, y: 100}
+  m_AnchoredPosition: {x: 250, y: 120}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &617771310
@@ -4106,7 +4106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a8d97399ec0144aa552fe0110536e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 100
+  gravity: 300
+  stopRadius: 0.1
+  sleepSpeed: 0.05
+  radialDamping: 8
+  tangentialDamping: 2
+  maxForce: 300000
   rotateSpeed: 30
 --- !u!212 &872845356
 SpriteRenderer:

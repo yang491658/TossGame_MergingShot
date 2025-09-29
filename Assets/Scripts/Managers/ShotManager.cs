@@ -107,7 +107,6 @@ public class ShotManager : MonoBehaviour
     }
 
     private bool PointerOverUI(int fingerId = -1) => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
-
     private Vector2 ScreenToWorld(Vector2 _screenPos) => cam.ScreenToWorldPoint(_screenPos);
 
     private bool CanSelect(UnitSystem _unit)
@@ -253,7 +252,7 @@ public class ShotManager : MonoBehaviour
     private IEnumerator Respawn()
     {
         yield return new WaitForSeconds(1f);
-        SpawnManager.Instance.Spawn(Random.Range(1, 5));
+        SpawnManager.Instance.Spawn(Random.Range(1, 5)); // TODO 재소환 로직변경
     }
 
 #if UNITY_EDITOR

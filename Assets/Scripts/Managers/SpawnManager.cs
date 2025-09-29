@@ -95,7 +95,6 @@ public class SpawnManager : MonoBehaviour
     public void DestroyUnit(UnitSystem _unit)
     {
         units.Remove(_unit);
-
         Destroy(_unit.gameObject);
     }
 
