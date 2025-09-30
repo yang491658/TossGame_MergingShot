@@ -11,12 +11,6 @@ public class TestManager : MonoBehaviour
     [SerializeField][Range(0f, 15f)] float shotPower = 15f;
     private bool autoFire = false;
 
-    private void Start()
-    {
-        SoundManager.Instance.ToggleBGM();
-        SoundManager.Instance.ToggleSFX();
-    }
-
     private void Update()
     {
         #region 게임 테스트

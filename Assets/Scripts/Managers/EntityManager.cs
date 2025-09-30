@@ -17,6 +17,7 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private Transform spawn;
 
     [Header("Entity Info.")]
+    [SerializeField] private Transform inGame;
     [SerializeField] private Transform hole;
     [SerializeField] private Transform units;
     [SerializeField] private List<int> unitCounts = new List<int>();
@@ -27,13 +28,13 @@ public class EntityManager : MonoBehaviour
     {
         if (unitBase == null)
             unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
-
         if (spawn == null)
             spawn = transform.Find("SpawnPos");
 
+        if (inGame == null)
+            inGame = GameObject.Find("InGame").transform;
         if (hole == null)
             hole = FindFirstObjectByType<HoleSystem>().transform;
-
         if (units == null)
             units = GameObject.Find("InGame/Units").transform;
 
@@ -112,7 +113,7 @@ public class EntityManager : MonoBehaviour
         for (int i = spawned.Count - 1; i >= 0; i--)
             DestroyUnit(spawned[i]);
 
-        for (int i = 0; i < unitCounts.Count; i++) unitCounts[i] = 0;
+        ResetCount();
 
         GameManager.Instance.ResetScore();
     }

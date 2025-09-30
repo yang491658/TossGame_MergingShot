@@ -36,7 +36,7 @@ public class UnitSystem : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!isFired || isMerging || !inHole) return;
-        if (collision.CompareTag("Hole")) GameManager.Instance.GameOver();
+        //if (collision.CompareTag("Hole")) GameManager.Instance.GameOver();
     }
 
     public void Shoot(Vector2 _impulse, bool _isShot = true)

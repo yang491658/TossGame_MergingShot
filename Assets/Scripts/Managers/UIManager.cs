@@ -61,7 +61,7 @@ public class UIManager : MonoBehaviour
         LoadSprite(bgmIcons, "White Music Off");
         sfxIcons.Clear();
         LoadSprite(sfxIcons, "White Sound On");
-        LoadSprite(sfxIcons, "White Sound Icom");
+        LoadSprite(sfxIcons, "White Sound Icon");
         LoadSprite(sfxIcons, "White Sound Off 2");
 
         if (bgmIcon == null)
@@ -189,6 +189,7 @@ public class UIManager : MonoBehaviour
 
         confirmUI.gameObject.SetActive(!_on);
 
+        resultUI.gameObject.SetActive(_on);
         for (int i = 0; i < planets.Count; i++)
         {
             var p = planets[i];
@@ -198,8 +199,6 @@ public class UIManager : MonoBehaviour
             p.GetComponentInChildren<Image>().sprite = u.unitImage;
             p.GetComponentInChildren<TextMeshProUGUI>().text = EntityManager.Instance.GetCount(u.unitID).ToString("¡¿00");
         }
-
-        resultUI.gameObject.SetActive(_on);
     }
     #endregion
 

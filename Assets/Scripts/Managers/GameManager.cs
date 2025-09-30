@@ -104,8 +104,8 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
 
         Pause(true);
-        SoundManager.Instance.GameOver();
-        UIManager.Instance.OpenResult(true);
+        SoundManager.Instance?.GameOver();
+        UIManager.Instance?.OpenResult(true);
     }
     #endregion
 

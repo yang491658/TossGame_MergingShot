@@ -15,7 +15,7 @@ public class HoleSystem : MonoBehaviour
     [SerializeField] private float dampRadius = 1.2f;
     [SerializeField] private float radDamping = 8f;
     [SerializeField] private float tanDamping = 2f;
-    [SerializeField] private float maxForce = 30f;
+    [SerializeField][Min(0f)] private float maxForce = 30f;
 
     [Header("Stabilize / BounceKill")]
     [SerializeField] private float bounceKillRadius = 0.55f;
@@ -26,6 +26,7 @@ public class HoleSystem : MonoBehaviour
     private HingeJoint2D hinge;
 
     private readonly Dictionary<Rigidbody2D, int> sleepCount = new Dictionary<Rigidbody2D, int>(64);
+    private readonly List<Rigidbody2D> buffers = new List<Rigidbody2D>(64);
 
     private void Awake()
     {
@@ -41,6 +42,7 @@ public class HoleSystem : MonoBehaviour
     private void FixedUpdate()
     {
         ApplyGravity();
+        CleanBuffers();
     }
 
     private void ApplyGravity()
@@ -96,14 +98,31 @@ public class HoleSystem : MonoBehaviour
             Vector2 tangentialDamp = -vTan * (tanDamping * t) * rb.mass;
 
             Vector2 total = gravityForce + radialDamp + tangentialDamp;
-            float mag = total.magnitude;
-            if (mag > maxForce) total *= (maxForce / mag);
+
+            if (maxForce > 0f)
+            {
+                float mag = total.magnitude;
+                if (mag > maxForce) total *= (maxForce / mag);
+            }
 
             rb.AddForce(total, ForceMode2D.Force);
 
             if (rb.linearVelocity.sqrMagnitude < 1e-4f) rb.linearVelocity = Vector2.zero;
             if (Mathf.Abs(rb.angularVelocity) < 1e-2f) rb.angularVelocity = 0f;
         }
+    }
+
+    private void CleanBuffers()
+    {
+        buffers.Clear();
+        foreach (var kv in sleepCount)
+        {
+            var rb = kv.Key;
+            if (rb == null || rb.gameObject == null)
+                buffers.Add(rb);
+        }
+        for (int i = 0; i < buffers.Count; i++)
+            sleepCount.Remove(buffers[i]);
     }
 
     private void SetMotor()
