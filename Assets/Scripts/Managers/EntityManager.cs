@@ -1,7 +1,7 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,8 +15,9 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
     [SerializeField] private Transform spawn;
+    private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
 
-    [Header("Entity Info.")]
+    [Header("Entity")]
     [SerializeField] private Transform inGame;
     [SerializeField] private Transform hole;
     [SerializeField] private Transform units;
@@ -28,15 +29,6 @@ public class EntityManager : MonoBehaviour
     {
         if (unitBase == null)
             unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
-        if (spawn == null)
-            spawn = transform.Find("SpawnPos");
-
-        if (inGame == null)
-            inGame = GameObject.Find("InGame").transform;
-        if (hole == null)
-            hole = FindFirstObjectByType<HoleSystem>().transform;
-        if (units == null)
-            units = GameObject.Find("InGame/Units").transform;
 
         string[] guids = AssetDatabase.FindAssets("t:UnitData", new[] { "Assets/Scripts/ScriptableObjects" });
         var list = new List<UnitData>(guids.Length);
@@ -47,6 +39,11 @@ public class EntityManager : MonoBehaviour
             if (data != null) list.Add(data);
         }
         unitDatas = list.OrderBy(d => d.unitID).ThenBy(d => d.unitName).ToArray();
+
+        if (spawn == null)
+            spawn = transform.Find("SpawnPos");
+
+        SetEntity();
     }
 #endif
 
@@ -61,17 +58,20 @@ public class EntityManager : MonoBehaviour
         if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
+        dataDic.Clear();
+        for (int i = 0; i < unitDatas.Length; i++)
+        {
+            var d = unitDatas[i];
+            if (d != null && !dataDic.ContainsKey(d.unitID))
+                dataDic.Add(d.unitID, d);
+        }
+
+        SetEntity();
         ResetCount();
     }
 
     #region 소환
-    private UnitData FindById(int _id)
-    {
-        for (int i = 0; i < unitDatas.Length; i++)
-            if (unitDatas[i].unitID == _id) return unitDatas[i];
-
-        return null;
-    }
+    private UnitData FindById(int _id) => dataDic.TryGetValue(_id, out var data) ? data : null;
 
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
@@ -83,11 +83,10 @@ public class EntityManager : MonoBehaviour
 
         Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
 
-        UnitSystem unit = Instantiate(unitBase, spawnPos, Quaternion.identity)
+        UnitSystem unit = Instantiate(unitBase, spawnPos, Quaternion.identity, units)
             .GetComponent<UnitSystem>();
 
         unit.SetData(data.Clone());
-        unit.transform.SetParent(units, false);
         spawned.Add(unit);
 
         return unit;
@@ -97,25 +96,25 @@ public class EntityManager : MonoBehaviour
     private IEnumerator RespawnCoroutine()
     {
         yield return new WaitForSeconds(1f);
-        Spawn(Random.Range(1, 5)); // TODO 재소환 로직변경
+        Spawn();
     }
     #endregion
 
     #region 제거
-    public void DestroyUnit(UnitSystem _unit)
+    public void Despawn(UnitSystem _unit)
     {
+        if (_unit == null) return;
+
         spawned.Remove(_unit);
+
+        _unit.SetOut();
         Destroy(_unit.gameObject);
     }
 
-    public void DestroyAll()
+    public void DespawnAll()
     {
         for (int i = spawned.Count - 1; i >= 0; i--)
-            DestroyUnit(spawned[i]);
-
-        ResetCount();
-
-        GameManager.Instance.ResetScore();
+            Despawn(spawned[i]);
     }
     #endregion
 
@@ -126,6 +125,15 @@ public class EntityManager : MonoBehaviour
     {
         unitCounts.Clear();
         for (int i = 0; i < unitDatas.Length; i++) unitCounts.Add(0);
+    }
+    #endregion
+
+    #region SET
+    public void SetEntity()
+    {
+        if (inGame == null) inGame = GameObject.Find("InGame").transform;
+        if (hole == null) hole = FindFirstObjectByType<HoleSystem>().transform;
+        if (units == null) units = GameObject.Find("InGame/Units").transform;
     }
     #endregion
 

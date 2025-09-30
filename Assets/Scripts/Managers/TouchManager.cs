@@ -6,14 +6,17 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-public class LaunchManager : MonoBehaviour
+public class TouchManager : MonoBehaviour
 {
-    public static LaunchManager Instance { get; private set; }
+    public static TouchManager Instance { get; private set; }
 
     private Camera cam => Camera.main;
-
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
     private bool isDragging;
+
+    private UnitSystem hovered;
+    private UnitSystem selected;
+    private Vector2 dragStart;
 
     [Header("Aim Dots")]
     [SerializeField] private GameObject dotPrefab;
@@ -26,13 +29,12 @@ public class LaunchManager : MonoBehaviour
     [SerializeField] private LineRenderer ring;
     [SerializeField] private int ringSegments = 64;
     [SerializeField] private float ringRadius = 0.5f;
+    private Vector3[] ringUnit;
 
-    [Header("Launch Info.")]
+    [Header("Launch")]
     [SerializeField] private float maxPower = 5f;
     [SerializeField] private float powerCoef = 3f;
 
-    private UnitSystem selectedUnit;
-    private Vector2 dragStart;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -53,7 +55,7 @@ public class LaunchManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null)transform.SetParent(null);
+        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         if (dots.Count == 0)
@@ -66,8 +68,23 @@ public class LaunchManager : MonoBehaviour
             }
         }
 
-        if (line != null) { line.gameObject.SetActive(false); line.positionCount = 0; }
-        if (ring != null) { ring.gameObject.SetActive(false); ring.positionCount = 0; }
+        if (line != null)
+        {
+            line.gameObject.SetActive(false);
+            line.positionCount = 0;
+        }
+
+        if (ring != null)
+        {
+            ring.gameObject.SetActive(false);
+            ring.positionCount = 0;
+            ringUnit = new Vector3[ringSegments + 1];
+            for (int i = 0; i <= ringSegments; i++)
+            {
+                float t = (float)i / ringSegments * Mathf.PI * 2f;
+                ringUnit[i] = new Vector3(Mathf.Cos(t), Mathf.Sin(t), 0f);
+            }
+        }
     }
 
     private void Update()
@@ -85,11 +102,15 @@ public class LaunchManager : MonoBehaviour
 #if UNITY_EDITOR
     private void HandleMouse()
     {
+        Hover(Input.mousePosition);
+
         if (Input.GetMouseButtonDown(0)) BeginDrag(Input.mousePosition);
         else if (Input.GetMouseButton(0)) DoDrag(Input.mousePosition);
         else if (Input.GetMouseButtonUp(0)) EndDrag(Input.mousePosition);
 
-        if (Input.GetMouseButton(1)) Move(Input.mousePosition);
+        if (Input.GetMouseButtonDown(1)) Remove(Input.mousePosition);
+
+        if (Input.GetMouseButton(2)) Move(Input.mousePosition);
     }
 #endif
 
@@ -106,34 +127,36 @@ public class LaunchManager : MonoBehaviour
             EndDrag(t.position);
     }
 
-    private bool PointerOverUI(int fingerId = -1) => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
+    private bool PointerOverUI(int _fingerID = -1)
+        => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(_fingerID);
+
     private Vector2 ScreenToWorld(Vector2 _screenPos) => cam.ScreenToWorldPoint(_screenPos);
 
     private bool CanSelect(UnitSystem _unit)
     {
-        var rb = _unit.GetComponent<Rigidbody2D>();
+        var rb = _unit.GetRB();
         return rb != null && rb.linearVelocity.sqrMagnitude <= 0.01f;
     }
     #endregion
 
     #region 드래그
-    private void BeginDrag(Vector2 _pos, int _fingerId = -1)
+    private void BeginDrag(Vector2 _pos, int _fingerID = -1)
     {
-        if (PointerOverUI(_fingerId)) return;
+        if (PointerOverUI(_fingerID)) return;
 
         Vector2 world = ScreenToWorld(_pos);
         Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
 
-        if (col != null && col.TryGetComponent(out UnitSystem _unit) && CanSelect(_unit))
+        if (col != null && col.TryGetComponent(out UnitSystem unit) && CanSelect(unit))
         {
-            selectedUnit = _unit;
+            selected = unit;
             dragStart = world;
             isDragging = true;
             ShowAim(true);
         }
         else
         {
-            selectedUnit = null;
+            selected = null;
             isDragging = false;
             ShowAim(false);
         }
@@ -141,13 +164,13 @@ public class LaunchManager : MonoBehaviour
 
     private void DoDrag(Vector2 _pos)
     {
-        if (!isDragging || selectedUnit == null) return;
+        if (!isDragging || selected == null) return;
         UpdateAim(ScreenToWorld(_pos));
     }
 
     private void EndDrag(Vector2 _pos)
     {
-        if (!isDragging || selectedUnit == null)
+        if (!isDragging || selected == null)
         {
             isDragging = false;
             ShowAim(false);
@@ -163,13 +186,13 @@ public class LaunchManager : MonoBehaviour
         if (dist > Mathf.Epsilon)
         {
             Vector2 impulse = shotDir.normalized * dist * powerCoef;
-            selectedUnit.Shoot(impulse);
+            selected.Shoot(impulse);
             EntityManager.Instance.Respawn();
         }
 
         isDragging = false;
         ShowAim(false);
-        selectedUnit = null;
+        selected = null;
     }
     #endregion
 
@@ -194,10 +217,10 @@ public class LaunchManager : MonoBehaviour
 
     private void UpdateAim(Vector3 _pos)
     {
-        if (!isDragging || selectedUnit == null) return;
+        if (!isDragging || selected == null) return;
 
-        var rb = selectedUnit.GetComponent<Rigidbody2D>();
-        Vector3 start = rb != null ? (Vector3)rb.worldCenterOfMass : selectedUnit.transform.position;
+        var rb = selected.GetRB();
+        Vector3 start = rb != null ? (Vector3)rb.worldCenterOfMass : selected.transform.position;
 
         Vector3 dirRaw = (start - _pos);
         float dist = Mathf.Min(dirRaw.magnitude, maxPower);
@@ -240,28 +263,58 @@ public class LaunchManager : MonoBehaviour
             ring.gameObject.SetActive(true);
             ring.positionCount = ringSegments + 1;
             for (int i = 0; i <= ringSegments; i++)
-            {
-                float t = (float)i / ringSegments * Mathf.PI * 2f;
-                Vector3 r = new Vector3(Mathf.Cos(t), Mathf.Sin(t), 0f) * ringRadius;
-                ring.SetPosition(i, ringCenter + r);
-            }
+                ring.SetPosition(i, ringCenter + ringUnit[i] * ringRadius);
         }
     }
     #endregion
 
 #if UNITY_EDITOR
+    private void Hover(Vector2 _pos)
+    {
+        if (PointerOverUI()) return;
+
+        Vector2 world = ScreenToWorld(_pos);
+        Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
+
+        if (col != null && col.TryGetComponent(out UnitSystem unit))
+        {
+            if (unit == hovered) return;
+            ClearHover();
+
+            hovered = unit;
+            var sr = hovered.GetSR();
+            if (sr != null) sr.color = Color.red;
+        }
+        else
+        {
+            ClearHover();
+        }
+    }
+
+    private void ClearHover()
+    {
+    if (hovered != null)
+    {
+        var sr = hovered.GetSR();
+        if (sr != null) sr.color = Color.white;
+    }
+    hovered = null;
+    }
+
     private void Move(Vector2 _pos)
     {
+        if (PointerOverUI()) return;
+
         Vector2 world = ScreenToWorld(_pos);
         Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
 
         UnitSystem target = null;
-        if (col != null && col.TryGetComponent(out UnitSystem _unit))
-            target = _unit;
+        if (col != null && col.TryGetComponent(out UnitSystem unit))
+            target = unit;
 
         if (target == null) return;
 
-        var rb = target.GetComponent<Rigidbody2D>();
+        var rb = target.GetRB();
         if (rb != null)
         {
             rb.position = world;
@@ -272,6 +325,17 @@ public class LaunchManager : MonoBehaviour
         {
             target.transform.position = world;
         }
+    }
+
+    private void Remove(Vector2 _pos)
+    {
+        if (PointerOverUI()) return;
+
+        Vector2 world = ScreenToWorld(_pos);
+        Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
+
+        if (col != null && col.TryGetComponent(out UnitSystem unit))
+            EntityManager.Instance.Despawn(unit);
     }
 #endif
 }

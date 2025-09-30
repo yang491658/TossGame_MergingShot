@@ -36,7 +36,13 @@ public class UnitSystem : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!isFired || isMerging || !inHole) return;
-        //if (collision.CompareTag("Hole")) GameManager.Instance.GameOver();
+        if (collision.CompareTag("Hole"))
+        {
+            if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) > 0)
+                GameManager.Instance.GameOver();
+            else
+                GameManager.Instance.Replay();
+        }
     }
 
     public void Shoot(Vector2 _impulse, bool _isShot = true)
@@ -74,8 +80,8 @@ public class UnitSystem : MonoBehaviour
         Vector2 vB = other.GetVelocity();
         Vector2 vM = (vA + vB) / 2f;
 
-        EntityManager.Instance.DestroyUnit(other);
-        EntityManager.Instance.DestroyUnit(this);
+        EntityManager.Instance.Despawn(other);
+        EntityManager.Instance.Despawn(this);
 
         int id = GetID();
         int score = GetScore();
@@ -103,9 +109,13 @@ public class UnitSystem : MonoBehaviour
         rb.mass = data.unitMass;
         transform.localScale = Vector3.one * data.unitScale;
     }
+
+    public void SetOut() => inHole = false;
     #endregion
 
     #region GET
+    public SpriteRenderer GetSR() => sr;
+    public Rigidbody2D GetRB() => rb;
     public int GetID() => data.unitID;
     public int GetScore() => data.unitScore;
     public Vector2 GetVelocity() => rb.linearVelocity;

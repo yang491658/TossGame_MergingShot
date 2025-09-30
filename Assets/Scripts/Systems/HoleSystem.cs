@@ -21,8 +21,9 @@ public class HoleSystem : MonoBehaviour
     [SerializeField] private float bounceKillRadius = 0.55f;
     [SerializeField] private float bounceKillSpeed = 0.06f;
 
-    [Header("Rotation Info.")]
-    [SerializeField] private float rotateSpeed = 30f;
+    [Header("Motor")]
+    [SerializeField] private float motorSpeed = 30f;
+    [SerializeField] private float motorMax = 360f;
     private HingeJoint2D hinge;
 
     private readonly Dictionary<Rigidbody2D, int> sleepCount = new Dictionary<Rigidbody2D, int>(64);
@@ -32,17 +33,24 @@ public class HoleSystem : MonoBehaviour
     {
         hinge = GetComponentInChildren<HingeJoint2D>();
         hinge.useMotor = true;
-    }
 
-    private void Update()
-    {
-        SetMotor();
+        SetMotor(0);
     }
 
     private void FixedUpdate()
     {
         ApplyGravity();
         CleanBuffers();
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.OnChangeScore += SetMotor;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnChangeScore -= SetMotor;
     }
 
     private void ApplyGravity()
@@ -57,7 +65,7 @@ public class HoleSystem : MonoBehaviour
             var unit = units[i];
             if (unit == null || !unit.isFired) continue;
 
-            var rb = unit.GetComponent<Rigidbody2D>();
+            var rb = unit.GetRB();
             if (rb == null) continue;
 
             Vector2 p = rb.worldCenterOfMass;
@@ -125,11 +133,13 @@ public class HoleSystem : MonoBehaviour
             sleepCount.Remove(buffers[i]);
     }
 
-    private void SetMotor()
+    private void SetMotor(int _score)
     {
         if (hinge == null) return;
+
+        float final = Mathf.Clamp(motorSpeed + _score / 10f, motorSpeed, motorMax);
         var motor = hinge.motor;
-        motor.motorSpeed = rotateSpeed;
+        motor.motorSpeed = final;
         hinge.motor = motor;
     }
 }

@@ -8,20 +8,36 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
+[System.Serializable]
+public struct PlanetSlot
+{
+    public GameObject go;
+    public Image image;
+    public TextMeshProUGUI tmp;
+
+    public PlanetSlot(GameObject obj)
+    {
+        go = obj;
+        image = obj.GetComponentInChildren<Image>();
+        tmp = obj.GetComponentInChildren<TextMeshProUGUI>();
+    }
+}
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [Header("Score UI")]
+    [Header("InGame UI")]
+    [SerializeField] private GameObject inGameUI;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private Button settingBtn;
 
     [Header("Setting UI")]
-    [SerializeField] private Button settingBtn;
-    [SerializeField] private Image settingUI;
+    [SerializeField] private GameObject settingUI;
     [SerializeField] private TextMeshProUGUI settingScoreText;
 
     [Header("Confirm UI")]
-    [SerializeField] private Image confirmUI;
+    [SerializeField] private GameObject confirmUI;
     [SerializeField] private TextMeshProUGUI confirmText;
     private System.Action confirmAction;
 
@@ -33,28 +49,30 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
-    [Header("Rsult UI")]
-    [SerializeField] private Image resultUI;
+    [Header("Result UI")]
+    [SerializeField] private GameObject resultUI;
     [SerializeField] private TextMeshProUGUI resultScoreText;
-    [SerializeField] private List<GameObject> planets = new List<GameObject>();
+    [SerializeField] private List<PlanetSlot> planets = new List<PlanetSlot>();
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        if (inGameUI == null)
+            inGameUI = GameObject.Find("InGameUI");
         if (scoreText == null)
-            scoreText = GameObject.Find("UICanvas/ScoreText")?.GetComponent<TextMeshProUGUI>();
-
+            scoreText = GameObject.Find("InGameUI/ScoreText").GetComponent<TextMeshProUGUI>();
         if (settingBtn == null)
-            settingBtn = GameObject.Find("SettingBtn")?.GetComponent<Button>();
+            settingBtn = GameObject.Find("InGameUI/SettingBtn").GetComponent<Button>();
+
         if (settingUI == null)
-            settingUI = GameObject.Find("SettingUI")?.GetComponent<Image>();
+            settingUI = GameObject.Find("SettingUI");
         if (settingScoreText == null)
-            settingScoreText = GameObject.Find("SettingUI/Box/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
+            settingScoreText = GameObject.Find("SettingUI/Box/Score/ScoreText").GetComponent<TextMeshProUGUI>();
 
         if (confirmUI == null)
-            confirmUI = GameObject.Find("ConfirmUI")?.GetComponent<Image>();
+            confirmUI = GameObject.Find("ConfirmUI");
         if (confirmText == null)
-            confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText")?.GetComponent<TextMeshProUGUI>();
+            confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText").GetComponent<TextMeshProUGUI>();
 
         bgmIcons.Clear();
         LoadSprite(bgmIcons, "White Music");
@@ -65,21 +83,22 @@ public class UIManager : MonoBehaviour
         LoadSprite(sfxIcons, "White Sound Off 2");
 
         if (bgmIcon == null)
-            bgmIcon = GameObject.Find("BGM/BgmBtn/BgmIcon")?.GetComponent<Image>();
+            bgmIcon = GameObject.Find("BGM/BgmBtn/BgmIcon").GetComponent<Image>();
         if (sfxIcon == null)
-            sfxIcon = GameObject.Find("SFX/SfxBtn/SfxIcon")?.GetComponent<Image>();
+            sfxIcon = GameObject.Find("SFX/SfxBtn/SfxIcon").GetComponent<Image>();
         if (bgmSlider == null)
-            bgmSlider = GameObject.Find("BGM/BgmSlider")?.GetComponent<Slider>();
+            bgmSlider = GameObject.Find("BGM/BgmSlider").GetComponent<Slider>();
         if (sfxSlider == null)
-            sfxSlider = GameObject.Find("SFX/SfxSlider")?.GetComponent<Slider>();
+            sfxSlider = GameObject.Find("SFX/SfxSlider").GetComponent<Slider>();
 
         if (resultUI == null)
-            resultUI = GameObject.Find("ResultUI")?.GetComponent<Image>();
+            resultUI = GameObject.Find("ResultUI");
         if (resultScoreText == null)
-            resultScoreText = GameObject.Find("ResultUI/Score/ScoreText")?.GetComponent<TextMeshProUGUI>();
+            resultScoreText = GameObject.Find("ResultUI/Score/ScoreText").GetComponent<TextMeshProUGUI>();
         if (planets == null || planets.Count == 0)
             foreach (Transform child in GameObject.Find("ResultUI/Planets").transform)
-                planets.Add(child.gameObject);
+                planets.Add(new PlanetSlot(child.gameObject));
+
     }
 
     private static void LoadSprite(List<Sprite> _list, string _sprite)
@@ -111,7 +130,7 @@ public class UIManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null)transform.SetParent(null);
+        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -132,7 +151,6 @@ public class UIManager : MonoBehaviour
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
-
     }
 
     private void OnDisable()
@@ -144,7 +162,6 @@ public class UIManager : MonoBehaviour
 
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
-
     }
 
     public void UpdateScore(int _score)
@@ -157,63 +174,58 @@ public class UIManager : MonoBehaviour
     #region UI 열기
     public void OpenSetting(bool _on)
     {
-        scoreText.gameObject.SetActive(!_on);
+        if (settingUI == null) return;
 
-        settingBtn.gameObject.SetActive(!_on);
-        settingUI.gameObject.SetActive(_on);
+        inGameUI.SetActive(!_on);
+
+        settingUI.SetActive(_on);
     }
 
     public void OpenConfirm(bool _on, string _text = null, System.Action _onOkay = null)
     {
-        scoreText.gameObject.SetActive(!_on);
+        if (confirmUI == null) return;
 
-        settingBtn.gameObject.SetActive(!_on);
-        settingUI.gameObject.SetActive(!_on);
+        confirmUI.SetActive(_on);
+        confirmText.text = $"{_text}하시겠습니까?";
+        confirmAction = _onOkay;
 
-        confirmUI.gameObject.SetActive(_on);
-        if (_on)
-        {
-            confirmText.text = $"{_text}하시겠습니까?";
-            confirmAction = _onOkay;
-        }
-        else
-            confirmAction = null;
+        if (!_on) confirmAction = null;
     }
 
     public void OpenResult(bool _on)
     {
-        scoreText.gameObject.SetActive(!_on);
+        if (resultUI == null) return;
 
-        settingBtn.gameObject.SetActive(!_on);
-        settingUI.gameObject.SetActive(!_on);
+        resultUI.SetActive(_on);
 
-        confirmUI.gameObject.SetActive(!_on);
-
-        resultUI.gameObject.SetActive(_on);
         for (int i = 0; i < planets.Count; i++)
         {
-            var p = planets[i];
             var u = EntityManager.Instance.GetDatas()[i];
 
-            p.name = u.unitName;
-            p.GetComponentInChildren<Image>().sprite = u.unitImage;
-            p.GetComponentInChildren<TextMeshProUGUI>().text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
+            planets[i].go.name = u.unitName;
+            planets[i].image.sprite = u.unitImage;
+            planets[i].tmp.text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
         }
     }
     #endregion
 
     #region 사운드 조절
-    private void ChangeVolume(SoundType _sound, float _volume)
+    private void ChangeVolume(SoundType _type, float _volume)
     {
-        if (_sound == SoundType.BGM)
+        switch (_type)
         {
-            if (!Mathf.Approximately(bgmSlider.value, _volume))
-                bgmSlider.value = _volume;
-        }
-        else
-        {
-            if (!Mathf.Approximately(sfxSlider.value, _volume))
-                sfxSlider.value = _volume;
+            case SoundType.BGM:
+                if (!Mathf.Approximately(bgmSlider.value, _volume))
+                    bgmSlider.value = _volume;
+                break;
+
+            case SoundType.SFX:
+                if (!Mathf.Approximately(sfxSlider.value, _volume))
+                    sfxSlider.value = _volume;
+                break;
+
+            default:
+                return;
         }
         UpdateIcons();
     }

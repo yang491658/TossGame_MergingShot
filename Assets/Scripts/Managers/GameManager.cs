@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Score Info.")]
+    [Header("Score")]
     [SerializeField] private int totalScore = 0;
     public event System.Action<int> OnChangeScore;
 
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null)transform.SetParent(null);
+        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.OpenSetting(false);
 
         EntityManager.Instance.ResetCount();
+        EntityManager.Instance.SetEntity();
         EntityManager.Instance.Spawn(1);
 
         yield return null;
@@ -85,7 +86,11 @@ public class GameManager : MonoBehaviour
         OnOpenSetting?.Invoke(_pause);
     }
 
-    public void Replay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    public void Replay()
+    {
+        EntityManager.Instance.DespawnAll();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
     public void Quit()
     {
@@ -104,8 +109,8 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
 
         Pause(true);
-        SoundManager.Instance?.GameOver();
-        UIManager.Instance?.OpenResult(true);
+        SoundManager.Instance.GameOver();
+        UIManager.Instance.OpenResult(true);
     }
     #endregion
 

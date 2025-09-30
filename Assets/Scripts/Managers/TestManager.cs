@@ -3,13 +3,27 @@ using UnityEngine;
 
 public class TestManager : MonoBehaviour
 {
+    public static TestManager Instance { get; private set; }
+
     private float time = 0;
 
     [Header("Spawn Test")]
-    [SerializeField][Range(0.05f, 3f)] private float delay = 0.05f;
+    [SerializeField] private bool autoFire = false;
+    [SerializeField][Range(0.1f, 3f)] private float delay = 0.3f;
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
-    [SerializeField][Range(0f, 15f)] float shotPower = 15f;
-    private bool autoFire = false;
+    [SerializeField][Range(0f, 20f)] float shotPower = 15f;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        if (transform.parent != null) transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Update()
     {
@@ -45,7 +59,7 @@ public class TestManager : MonoBehaviour
 
         if (autoFire && !GameManager.Instance.IsGameOver && Time.time >= time)
         {
-            UnitSystem unit = EntityManager.Instance.Spawn(1);
+            UnitSystem unit = EntityManager.Instance.Spawn();
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;
             unit.Shoot(dir * shotPower);
@@ -67,7 +81,11 @@ public class TestManager : MonoBehaviour
             EntityManager.Instance.Spawn(1);
 
         if (Input.GetKeyDown(KeyCode.D))
-            EntityManager.Instance.DestroyAll();
+        {
+            GameManager.Instance.ResetScore();
+            EntityManager.Instance.ResetCount();
+            EntityManager.Instance.DespawnAll();
+        }
         #endregion
     }
 }
