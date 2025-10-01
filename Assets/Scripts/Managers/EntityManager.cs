@@ -12,9 +12,9 @@ public class EntityManager : MonoBehaviour
     public static EntityManager Instance { get; private set; }
 
     [Header("Spawn Setting")]
+    [SerializeField] private Transform spawn;
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
-    [SerializeField] private Transform spawn;
     private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
 
     [Header("Entity")]
@@ -27,6 +27,9 @@ public class EntityManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        if (spawn == null)
+            spawn = transform.Find("SpawnPos");
+
         if (unitBase == null)
             unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
 
@@ -39,11 +42,6 @@ public class EntityManager : MonoBehaviour
             if (data != null) list.Add(data);
         }
         unitDatas = list.OrderBy(d => d.unitID).ThenBy(d => d.unitName).ToArray();
-
-        if (spawn == null)
-            spawn = transform.Find("SpawnPos");
-
-        SetEntity();
     }
 #endif
 

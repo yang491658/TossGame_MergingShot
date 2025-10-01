@@ -66,7 +66,6 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SetAudio();
-        SetDictionaries();
 
         foreach (var btn in FindObjectsByType<Button>(FindObjectsSortMode.None))
             btn.onClick.AddListener(Button);
@@ -157,6 +156,7 @@ public class SoundManager : MonoBehaviour
 
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
+        SetDictionaries();
     }
 
     public void SetBGMVolume(float _volume = 1)
@@ -186,14 +186,12 @@ public class SoundManager : MonoBehaviour
         bgmDict.Clear();
         if (soundClips.bgmClips != null)
             foreach (var c in soundClips.bgmClips)
-                if (c != null && !bgmDict.ContainsKey(c.name))
-                    bgmDict.Add(c.name, c);
+                if (c != null) bgmDict.TryAdd(c.name, c);
 
         sfxDict.Clear();
         if (soundClips.sfxClips != null)
             foreach (var c in soundClips.sfxClips)
-                if (c != null && !sfxDict.ContainsKey(c.name))
-                    sfxDict.Add(c.name, c);
+                if (c != null) sfxDict.TryAdd(c.name, c);
     }
     #endregion
 
