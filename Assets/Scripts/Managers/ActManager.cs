@@ -330,6 +330,10 @@ public class ActManager : MonoBehaviour
     }
     #endregion
 
+    #region GET
+    public UnitSystem GetReady() => ready;
+    #endregion
+
 #if UNITY_EDITOR
     private void HoverOn(Vector2 _pos)
     {
