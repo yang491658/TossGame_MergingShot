@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
 
     [Header("InGame UI")]
     [SerializeField] private GameObject inGameUI;
+    [SerializeField] private Image nextImage;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Button settingBtn;
 
@@ -63,6 +64,8 @@ public class UIManager : MonoBehaviour
             scoreText = GameObject.Find("InGameUI/ScoreText").GetComponent<TextMeshProUGUI>();
         if (settingBtn == null)
             settingBtn = GameObject.Find("InGameUI/SettingBtn").GetComponent<Button>();
+        if (nextImage == null)
+            nextImage = GameObject.Find("InGameUI/NextImage").GetComponent<Image>();
 
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI");

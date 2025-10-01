@@ -23,11 +23,6 @@ public class SpaceSystem : MonoBehaviour
         Fit();
     }
 
-    private void OnEnable()
-    {
-        Fit();
-    }
-
     private void Update()
     {
         if (Screen.width != lastW || Screen.height != lastH ||
@@ -36,6 +31,11 @@ public class SpaceSystem : MonoBehaviour
         {
             Fit();
         }
+    }
+
+    private void OnEnable()
+    {
+        Fit();
     }
 
     private void Fit()

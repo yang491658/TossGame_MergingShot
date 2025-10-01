@@ -74,7 +74,7 @@ public class EntityManager : MonoBehaviour
     public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
     {
         UnitData data = (_id == 0)
-            ? unitDatas[Random.Range(0, unitDatas.Length / 2)]
+            ? unitDatas[Random.Range(0, unitDatas.Length)]
             : FindById(_id);
 
         if (data == null) return null;
