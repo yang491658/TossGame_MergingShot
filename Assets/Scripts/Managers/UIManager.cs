@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     [Header("Setting UI")]
     [SerializeField] private GameObject settingUI;
     [SerializeField] private TextMeshProUGUI settingScoreText;
+    public event System.Action<bool> OnOpenSetting;
 
     [Header("Confirm UI")]
     [SerializeField] private GameObject confirmUI;
@@ -139,6 +140,8 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
+        UpdateSlider(SoundType.BGM, SoundManager.Instance.GetBGMVolume());
+        UpdateSlider(SoundType.SFX, SoundManager.Instance.GetSFXVolume());
         UpdateIcon();
         UpdateNext(EntityManager.Instance.GetNextSR());
     }
@@ -146,27 +149,29 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.OnChangeScore += UpdateScore;
-        GameManager.Instance.OnOpenSetting += OpenSetting;
 
-        SoundManager.Instance.OnChangeVolume += UpdateVolume;
+        SoundManager.Instance.OnChangeVolume += UpdateSlider;
         bgmSlider.value = SoundManager.Instance.GetBGMVolume();
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
 
         EntityManager.Instance.OnChangeNext += UpdateNext;
+
+        OnOpenSetting += GameManager.Instance.Pause;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnChangeScore -= UpdateScore;
-        GameManager.Instance.OnOpenSetting -= OpenSetting;
 
-        SoundManager.Instance.OnChangeVolume -= UpdateVolume;
+        SoundManager.Instance.OnChangeVolume -= UpdateSlider;
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
 
         EntityManager.Instance.OnChangeNext -= UpdateNext;
+
+        OnOpenSetting -= GameManager.Instance.Pause;
     }
 
     #region OPEN
@@ -174,14 +179,17 @@ public class UIManager : MonoBehaviour
     {
         if (settingUI == null) return;
 
-        inGameUI.SetActive(!_on);
+        OnOpenSetting?.Invoke(_on);
 
+        inGameUI.SetActive(!_on);
         settingUI.SetActive(_on);
     }
 
     public void OpenConfirm(bool _on, string _text = null, System.Action _action = null)
     {
         if (confirmUI == null) return;
+
+        OnOpenSetting?.Invoke(_on);
 
         confirmUI.SetActive(_on);
         confirmText.text = $"{_text}하시겠습니까?";
@@ -194,8 +202,9 @@ public class UIManager : MonoBehaviour
     {
         if (resultUI == null) return;
 
-        resultUI.SetActive(_on);
+        OnOpenSetting?.Invoke(_on);
 
+        resultUI.SetActive(_on);
         for (int i = 0; i < planets.Count; i++)
         {
             var u = EntityManager.Instance.GetDatas()[i];
@@ -204,6 +213,7 @@ public class UIManager : MonoBehaviour
             planets[i].image.sprite = u.unitImage;
             planets[i].tmp.text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
         }
+
     }
     #endregion
 
@@ -215,7 +225,7 @@ public class UIManager : MonoBehaviour
         resultScoreText.text = _score.ToString("0000");
     }
 
-    private void UpdateVolume(SoundType _type, float _volume)
+    private void UpdateSlider(SoundType _type, float _volume)
     {
         switch (_type)
         {
@@ -255,8 +265,8 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region 버튼
-    public void OnClickSetting() => GameManager.Instance.Pause(true);
-    public void OnClickClose() => GameManager.Instance.Pause(false);
+    public void OnClickSetting() => OpenSetting(true);
+    public void OnClickClose() => OpenSetting(false);
     public void OnClickBGM() => SoundManager.Instance.ToggleBGM();
     public void OnClickSFX() => SoundManager.Instance.ToggleSFX();
     public void OnClickReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);

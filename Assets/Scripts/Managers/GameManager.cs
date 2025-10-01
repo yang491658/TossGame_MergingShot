@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     public event System.Action<int> OnChangeScore;
 
     public bool IsPaused { get; private set; } = false;
-    public event System.Action<bool> OnOpenSetting;
 
     public bool IsGameOver { get; private set; } = false;
 
@@ -81,8 +80,6 @@ public class GameManager : MonoBehaviour
 
         IsPaused = _pause;
         Time.timeScale = _pause ? 0f : 1f;
-
-        OnOpenSetting?.Invoke(_pause);
     }
 
     public void Replay()

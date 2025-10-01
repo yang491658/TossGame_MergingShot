@@ -24,13 +24,13 @@ public class SoundManager : MonoBehaviour
     [SerializeField][Range(0f, 1f)] private float sfxVolume = 1f;
     private float prevBgmVolume;
     private float prevSfxVolume;
+    public event System.Action<SoundType, float> OnChangeVolume;
 
     [Header("Clip")]
     [SerializeField] private SoundClip soundClips;
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
-    public event System.Action<SoundType, float> OnChangeVolume;
 
 #if UNITY_EDITOR
     private void OnValidate()

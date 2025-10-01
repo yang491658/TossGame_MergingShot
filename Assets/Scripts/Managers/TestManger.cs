@@ -20,6 +20,12 @@ public class TestManger : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.ToggleBGM();
+        SoundManager.Instance.ToggleSFX();
+    }
+
     private void Update()
     {
         #region 게임 테스트

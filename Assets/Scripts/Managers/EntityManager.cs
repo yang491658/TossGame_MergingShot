@@ -105,7 +105,12 @@ public class EntityManager : MonoBehaviour
         return unit;
     }
 
-    public void Respawn() => StartCoroutine(RespawnCoroutine());
+    public void Respawn()
+    {
+        StopAllCoroutines();
+        StartCoroutine(RespawnCoroutine());
+    }
+
     private IEnumerator RespawnCoroutine()
     {
         float t = 0f;

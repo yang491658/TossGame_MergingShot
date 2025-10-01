@@ -37,7 +37,7 @@ public class ActManager : MonoBehaviour
     [SerializeField] private float maxPower = 5f;
     [SerializeField] private float powerCoef = 3f;
     [SerializeField] private float timer = 0f;
-    [SerializeField][Min(0f)] private float timeLimit = 10f;
+    [SerializeField][Min(0.01f)] private float timeLimit = 10f;
     [SerializeField][Range(0f, 90f)] private float angleLimit = 45f;
 
 #if UNITY_EDITOR
@@ -71,22 +71,16 @@ public class ActManager : MonoBehaviour
             }
         }
 
-        if (line != null)
-        {
-            line.gameObject.SetActive(false);
-            line.positionCount = 0;
-        }
+        line.gameObject.SetActive(false);
+        line.positionCount = 0;
 
-        if (ring != null)
+        ring.gameObject.SetActive(false);
+        ring.positionCount = 0;
+        ringUnit = new Vector3[ringSegments + 1];
+        for (int i = 0; i <= ringSegments; i++)
         {
-            ring.gameObject.SetActive(false);
-            ring.positionCount = 0;
-            ringUnit = new Vector3[ringSegments + 1];
-            for (int i = 0; i <= ringSegments; i++)
-            {
-                float t = (float)i / ringSegments * Mathf.PI * 2f;
-                ringUnit[i] = new Vector3(Mathf.Cos(t), Mathf.Sin(t), 0f);
-            }
+            float t = (float)i / ringSegments * Mathf.PI * 2f;
+            ringUnit[i] = new Vector3(Mathf.Cos(t), Mathf.Sin(t), 0f);
         }
     }
 
@@ -94,9 +88,9 @@ public class ActManager : MonoBehaviour
     {
         if (GameManager.Instance.IsPaused) return;
 
-        if (ready == null || ready.isFired) SetReady();
-
-        if (ready != null && !ready.isFired && !isDragging)
+        if (ready == null || ready.isFired)
+            SetReady();
+        else
         {
             timer += Time.deltaTime;
             if (timer >= timeLimit) AutoFire();
@@ -151,9 +145,11 @@ public class ActManager : MonoBehaviour
     #endregion
 
     #region 드래그
-    private void DragBegin(Vector2 _pos, int _fingerID = -1)
+    private void DragBegin(Vector2 _pos, int _fingerID = -1, bool _ignoreUI = false)
     {
-        if (PointerOverUI(_fingerID)) return;
+        if (!_ignoreUI && PointerOverUI(_fingerID)) return;
+
+        ShowAim(false);
 
         Vector2 world = ScreenToWorld(_pos);
         Collider2D col = Physics2D.OverlapPoint(world, unitLayer);
@@ -163,13 +159,11 @@ public class ActManager : MonoBehaviour
             selected = unit;
             dragStart = world;
             isDragging = true;
-            ShowAim(true);
         }
         else
         {
             selected = null;
             isDragging = false;
-            ShowAim(false);
         }
     }
 
@@ -206,10 +200,6 @@ public class ActManager : MonoBehaviour
             timer = 0f;
         }
 
-        if (line != null) { line.positionCount = 0; }
-        if (ring != null) { ring.positionCount = 0; }
-        for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
-
         isDragging = false;
         ShowAim(false);
         selected = null;
@@ -222,17 +212,11 @@ public class ActManager : MonoBehaviour
         for (int i = 0; i < dots.Count; i++)
             dots[i].gameObject.SetActive(_on);
 
-        if (line != null)
-        {
-            line.gameObject.SetActive(_on);
-            if (!_on) line.positionCount = 0;
-        }
+        line.gameObject.SetActive(_on);
+        if (!_on) line.positionCount = 0;
 
-        if (ring != null)
-        {
-            ring.gameObject.SetActive(_on);
-            if (!_on) ring.positionCount = 0;
-        }
+        ring.gameObject.SetActive(_on);
+        if (!_on) ring.positionCount = 0;
     }
 
     private void UpdateAim(Vector3 _pos)
@@ -246,9 +230,7 @@ public class ActManager : MonoBehaviour
         float dist = Mathf.Min(dirRaw.magnitude, maxPower);
         if (dist <= Mathf.Epsilon || dirRaw.y <= 0f)
         {
-            for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
-            if (line != null) { line.gameObject.SetActive(false); line.positionCount = 0; }
-            if (ring != null) { ring.gameObject.SetActive(false); ring.positionCount = 0; }
+            ShowAim(false);
             return;
         }
 
@@ -272,22 +254,17 @@ public class ActManager : MonoBehaviour
             }
         }
 
-        if (line != null)
-        {
-            line.gameObject.SetActive(true);
-            line.positionCount = 2;
-            line.SetPosition(0, start);
-            line.SetPosition(1, ringCenter + dir.normalized * ringRadius);
-        }
+        line.gameObject.SetActive(true);
+        line.positionCount = 2;
+        line.SetPosition(0, start);
+        line.SetPosition(1, ringCenter + dir.normalized * ringRadius);
 
-        if (ring != null)
-        {
-            ring.gameObject.SetActive(true);
-            ring.positionCount = ringSegments + 1;
-            for (int i = 0; i <= ringSegments; i++)
-                ring.SetPosition(i, ringCenter + ringUnit[i] * ringRadius);
-        }
+        ring.gameObject.SetActive(true);
+        ring.positionCount = ringSegments + 1;
+        for (int i = 0; i <= ringSegments; i++)
+            ring.SetPosition(i, ringCenter + ringUnit[i] * ringRadius);
     }
+
     #endregion
 
     #region 발사
@@ -303,7 +280,7 @@ public class ActManager : MonoBehaviour
         Vector2 endWorld = startWorld - dir * dist;
         Vector2 endScreen = cam.WorldToScreenPoint(endWorld);
 
-        DragBegin(startScreen);
+        DragBegin(startScreen, -1, true);
         DragMove(endScreen);
         DragEnd(endScreen);
     }
