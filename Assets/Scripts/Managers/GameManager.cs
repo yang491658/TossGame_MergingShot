@@ -38,11 +38,6 @@ public class GameManager : MonoBehaviour
     private void LoadGame(Scene _scene, LoadSceneMode _mode)
     {
         Pause(false);
-        StartCoroutine(LoadCoroutine());
-    }
-
-    private IEnumerator LoadCoroutine()
-    {
         IsGameOver = false;
         ResetScore();
 
@@ -55,8 +50,6 @@ public class GameManager : MonoBehaviour
         EntityManager.Instance.ResetCount();
         EntityManager.Instance.SetEntity();
         EntityManager.Instance.Spawn(1);
-
-        yield return null;
     }
 
     #region Á¡¼ö

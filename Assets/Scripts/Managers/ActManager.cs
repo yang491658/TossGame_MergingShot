@@ -39,6 +39,7 @@ public class ActManager : MonoBehaviour
     [SerializeField] private float timer = 0f;
     [SerializeField][Min(0.01f)] private float timeLimit = 10f;
     [SerializeField][Range(0f, 90f)] private float angleLimit = 45f;
+    public event System.Action<float, float> OnChangeTimer;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -93,6 +94,7 @@ public class ActManager : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
+            OnChangeTimer?.Invoke(timer, timeLimit);
             if (timer >= timeLimit) AutoFire();
         }
 
@@ -194,10 +196,14 @@ public class ActManager : MonoBehaviour
             float clamped = Mathf.Clamp(angle, -angleLimit, angleLimit);
             Vector2 dirClamped = (Vector2)(Quaternion.Euler(0f, 0f, clamped) * Vector2.up);
             Vector2 impulse = dirClamped.normalized * dist * powerCoef;
+
             selected.Shoot(impulse);
             ready = null;
+
             EntityManager.Instance.Respawn();
+
             timer = 0f;
+            OnChangeTimer?.Invoke(timer, timeLimit);
         }
 
         isDragging = false;
@@ -302,8 +308,11 @@ public class ActManager : MonoBehaviour
                 var u = list[i];
                 if (u != null && !u.isFired) { ready = u; break; }
             }
+
             if (ready != null) timer = 0f;
         }
+
+        OnChangeTimer?.Invoke(timer, timeLimit);
     }
     #endregion
 

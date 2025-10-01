@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using UnityEngine;
 
-public class TestManger : MonoBehaviour
+public class TestManager : MonoBehaviour
 {
-    public static TestManger Instance { get; private set; }
+    public static TestManager Instance { get; private set; }
 
     [Header("Spawn Test")]
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
@@ -18,12 +18,6 @@ public class TestManger : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
-        SoundManager.Instance.ToggleBGM();
-        SoundManager.Instance.ToggleSFX();
     }
 
     private void Update()
@@ -47,7 +41,6 @@ public class TestManger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             SoundManager.Instance.ToggleBGM();
-            SoundManager.Instance.ToggleSFX();
         }
         #endregion
 

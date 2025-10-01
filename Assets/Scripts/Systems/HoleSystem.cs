@@ -73,7 +73,8 @@ public class HoleSystem : MonoBehaviour
             Vector2 d = center - p;
             float dist = d.magnitude;
 
-            bool canSleep = dist < sleepRadius && rb.linearVelocity.magnitude < sleepSpeed;
+            bool canSleep = dist < sleepRadius
+                && rb.linearVelocity.sqrMagnitude < (sleepSpeed * sleepSpeed);
             int c = 0;
             sleepCount.TryGetValue(rb, out c);
             c = canSleep ? c + 1 : 0;

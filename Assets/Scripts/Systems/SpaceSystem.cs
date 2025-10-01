@@ -59,7 +59,7 @@ public class SpaceSystem : MonoBehaviour
         if (spriteW <= 0f || spriteH <= 0f) return;
 
         var parent = transform.parent;
-        Vector3 parentLossy = parent ? parent.lossyScale : Vector3.one;
+        Vector3 parentLossy = (parent != null) ? parent.lossyScale : Vector3.one;
         float invX = (parentLossy.x == 0f) ? 1f : parentLossy.x;
         float invY = (parentLossy.y == 0f) ? 1f : parentLossy.y;
 

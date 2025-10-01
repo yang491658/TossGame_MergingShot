@@ -39,7 +39,7 @@ public class UnitSystem : MonoBehaviour
         if (collision.CompareTag("Hole"))
         {
 #if UNITY_EDITOR
-            TestManger.Instance.TestPlay();
+            TestManager.Instance.TestPlay();
 #else
             GameManager.Instance.GameOver();
 #endif

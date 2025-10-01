@@ -182,6 +182,5 @@ public class EntityManager : MonoBehaviour
 
     public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetCount(int _id) => unitCounts[_id - 1];
-    public int GetTotalCount() => unitCounts.Sum();
     #endregion
 }

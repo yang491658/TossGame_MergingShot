@@ -29,27 +29,37 @@ public class UIManager : MonoBehaviour
 
     [Header("InGame UI")]
     [SerializeField] private GameObject inGameUI;
-    [SerializeField] private Image nextImage;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Button settingBtn;
+    [SerializeField] private Image nextImage;
+
+    [Header("InGame UI / Timer")]
+    [SerializeField] private Slider timerSlider;
+    [SerializeField] private Image timerImage;
+    [SerializeField] private TextMeshProUGUI timerText;
+    [Space]
+    [SerializeField] private float shakeSpeed = 50f;
+    [SerializeField] private float shakeAmount = 8f;
+    [SerializeField] private Vector2 textSize = new Vector2(0f, 120f);
+    private Vector2 timerPos0;
 
     [Header("Setting UI")]
     [SerializeField] private GameObject settingUI;
     [SerializeField] private TextMeshProUGUI settingScoreText;
     public event System.Action<bool> OnOpenSetting;
 
-    [Header("Confirm UI")]
-    [SerializeField] private GameObject confirmUI;
-    [SerializeField] private TextMeshProUGUI confirmText;
-    private System.Action confirmAction;
-
     [Header("Sound UI")]
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
     [SerializeField] private Image bgmIcon;
     [SerializeField] private Image sfxIcon;
     [SerializeField] private List<Sprite> bgmIcons = new List<Sprite>();
     [SerializeField] private List<Sprite> sfxIcons = new List<Sprite>();
-    [SerializeField] private Slider bgmSlider;
-    [SerializeField] private Slider sfxSlider;
+
+    [Header("Confirm UI")]
+    [SerializeField] private GameObject confirmUI;
+    [SerializeField] private TextMeshProUGUI confirmText;
+    private System.Action confirmAction;
 
     [Header("Result UI")]
     [SerializeField] private GameObject resultUI;
@@ -68,15 +78,26 @@ public class UIManager : MonoBehaviour
         if (nextImage == null)
             nextImage = GameObject.Find("InGameUI/Next/NextImage").GetComponent<Image>();
 
+        if (timerSlider == null)
+            timerSlider = GameObject.Find("InGameUI/Timer").GetComponentInChildren<Slider>();
+        if (timerImage == null)
+            timerImage = GameObject.Find("InGameUI/Timer").GetComponentInChildren<Image>();
+        if (timerText == null)
+            timerText = GameObject.Find("InGameUI/Timer").GetComponentInChildren<TextMeshProUGUI>();
+
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI");
         if (settingScoreText == null)
             settingScoreText = GameObject.Find("SettingUI/Box/Score/ScoreText").GetComponent<TextMeshProUGUI>();
 
-        if (confirmUI == null)
-            confirmUI = GameObject.Find("ConfirmUI");
-        if (confirmText == null)
-            confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText").GetComponent<TextMeshProUGUI>();
+        if (bgmSlider == null)
+            bgmSlider = GameObject.Find("BGM/BgmSlider").GetComponent<Slider>();
+        if (sfxSlider == null)
+            sfxSlider = GameObject.Find("SFX/SfxSlider").GetComponent<Slider>();
+        if (bgmIcon == null)
+            bgmIcon = GameObject.Find("BGM/BgmBtn/BgmIcon").GetComponent<Image>();
+        if (sfxIcon == null)
+            sfxIcon = GameObject.Find("SFX/SfxBtn/SfxIcon").GetComponent<Image>();
 
         bgmIcons.Clear();
         LoadSprite(bgmIcons, "White Music");
@@ -86,14 +107,10 @@ public class UIManager : MonoBehaviour
         LoadSprite(sfxIcons, "White Sound Icon");
         LoadSprite(sfxIcons, "White Sound Off 2");
 
-        if (bgmIcon == null)
-            bgmIcon = GameObject.Find("BGM/BgmBtn/BgmIcon").GetComponent<Image>();
-        if (sfxIcon == null)
-            sfxIcon = GameObject.Find("SFX/SfxBtn/SfxIcon").GetComponent<Image>();
-        if (bgmSlider == null)
-            bgmSlider = GameObject.Find("BGM/BgmSlider").GetComponent<Slider>();
-        if (sfxSlider == null)
-            sfxSlider = GameObject.Find("SFX/SfxSlider").GetComponent<Slider>();
+        if (confirmUI == null)
+            confirmUI = GameObject.Find("ConfirmUI");
+        if (confirmText == null)
+            confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText").GetComponent<TextMeshProUGUI>();
 
         if (resultUI == null)
             resultUI = GameObject.Find("ResultUI");
@@ -140,21 +157,22 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
-        UpdateSlider(SoundType.BGM, SoundManager.Instance.GetBGMVolume());
-        UpdateSlider(SoundType.SFX, SoundManager.Instance.GetSFXVolume());
-        UpdateIcon();
         UpdateNext(EntityManager.Instance.GetNextSR());
+
+        timerPos0 = ((RectTransform)timerSlider.transform).anchoredPosition;
     }
 
     private void OnEnable()
     {
         GameManager.Instance.OnChangeScore += UpdateScore;
 
-        SoundManager.Instance.OnChangeVolume += UpdateSlider;
+        SoundManager.Instance.OnChangeVolume += UpdateVolume;
         bgmSlider.value = SoundManager.Instance.GetBGMVolume();
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+
+        ActManager.Instance.OnChangeTimer += UpdateTimer;
 
         EntityManager.Instance.OnChangeNext += UpdateNext;
 
@@ -165,9 +183,11 @@ public class UIManager : MonoBehaviour
     {
         GameManager.Instance.OnChangeScore -= UpdateScore;
 
-        SoundManager.Instance.OnChangeVolume -= UpdateSlider;
+        SoundManager.Instance.OnChangeVolume -= UpdateVolume;
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
+
+        ActManager.Instance.OnChangeTimer -= UpdateTimer;
 
         EntityManager.Instance.OnChangeNext -= UpdateNext;
 
@@ -225,7 +245,7 @@ public class UIManager : MonoBehaviour
         resultScoreText.text = _score.ToString("0000");
     }
 
-    private void UpdateSlider(SoundType _type, float _volume)
+    private void UpdateVolume(SoundType _type, float _volume)
     {
         switch (_type)
         {
@@ -262,6 +282,56 @@ public class UIManager : MonoBehaviour
     }
 
     private void UpdateNext(Sprite _sprite) => nextImage.sprite = _sprite;
+
+    private void UpdateTimer(float _timer, float _max)
+    {
+        bool isReady = ActManager.Instance.GetReady() != null;
+        timerSlider.gameObject.SetActive(isReady);
+        if (!isReady)
+        {
+            timerText.gameObject.SetActive(false);
+            ((RectTransform)timerSlider.transform).anchoredPosition = timerPos0;
+            timerImage.color = Color.white;
+            timerText.color = Color.white;
+            return;
+        }
+
+        float remain = Mathf.Clamp(_max - _timer, 0f, _max);
+        timerSlider.value = Mathf.Clamp01(remain / _max);
+
+        var rt = (RectTransform)timerSlider.transform;
+
+        if (remain > 3f || remain <= 0f)
+        {
+            timerText.gameObject.SetActive(false);
+            rt.anchoredPosition = timerPos0;
+            timerImage.color = Color.white;
+            timerText.color = Color.white;
+            return;
+        }
+
+        bool showText = _max >= 8f;
+        timerText.gameObject.SetActive(showText);
+        if (showText)
+        {
+            int display = Mathf.Clamp(Mathf.CeilToInt(remain), 1, 3);
+            timerText.text = display.ToString();
+            float frac = remain - Mathf.Floor(remain);
+            float size = Mathf.Sin(frac * Mathf.PI) * textSize.y;
+            timerText.fontSize = size;
+        }
+
+        float t = Mathf.InverseLerp(3f, 0f, remain);
+        Color color = Color.Lerp(Color.white, Color.red, t);
+        timerImage.color = color;
+        if (showText) timerText.color = color;
+
+        float intensity = 1f - Mathf.Clamp01(remain / 3f);
+        float amp = shakeAmount * intensity * intensity;
+        float sx = Mathf.Sign(Mathf.Sin(Time.unscaledTime * shakeSpeed));
+        float sy = Mathf.Sign(Mathf.Cos(Time.unscaledTime * shakeSpeed));
+        rt.anchoredPosition = timerPos0 + new Vector2(sx, sy) * amp;
+    }
     #endregion
 
     #region ¹öÆ°
