@@ -3876,10 +3876,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c72aa4ddf28cb24ba9c81d5778f1219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBase: {fileID: 0}
-  unitDatas: []
-  spawnPos: {fileID: 0}
-  spawnCol: {fileID: 0}
+  unitBase: {fileID: 8166794966985416557, guid: 20a65fb9e1d9eb149b410c64862f3256, type: 3}
+  unitDatas:
+  - {fileID: 11400000, guid: fc6f0135f4f76bb468ef232781844928, type: 2}
+  - {fileID: 11400000, guid: 21f4bdd28c37a1b448bbfb87ac05ce37, type: 2}
+  - {fileID: 11400000, guid: c967c93a280c3804daccfd55acf66f6e, type: 2}
+  - {fileID: 11400000, guid: e4a88bbd754a3c343bbd1fdb3ebd8e64, type: 2}
+  - {fileID: 11400000, guid: c7f17c5980b3b9149a49f77404882bcc, type: 2}
+  - {fileID: 11400000, guid: 9244bf2a820ed404bb8b76a1aac2f146, type: 2}
+  - {fileID: 11400000, guid: 55c48b5f2cde7184b90fe6f04de640d8, type: 2}
+  - {fileID: 11400000, guid: 0afd0ba6be3a9c14e8d5ff9402d1d760, type: 2}
+  - {fileID: 11400000, guid: b32c0626096fbdf4aa8d7d7cf76a4f39, type: 2}
+  - {fileID: 11400000, guid: ab7be87288d5ca849a6ec6b9b9a34e25, type: 2}
+  spawnPos: {fileID: 4936520173943828161}
+  spawnCol: {fileID: 4936520173943828162}
   respawnID: 1
   respawnDelay: 3
   inGame: {fileID: 0}
@@ -4535,23 +4545,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab6a7cc085ef1249acbc363024a3083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameUI: {fileID: 0}
-  nextImage: {fileID: 0}
-  scoreText: {fileID: 0}
-  settingBtn: {fileID: 0}
-  settingUI: {fileID: 0}
-  settingScoreText: {fileID: 0}
-  confirmUI: {fileID: 0}
-  confirmText: {fileID: 0}
-  bgmIcon: {fileID: 0}
-  sfxIcon: {fileID: 0}
-  bgmIcons: []
-  sfxIcons: []
-  bgmSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
-  resultUI: {fileID: 0}
-  resultScoreText: {fileID: 0}
-  planets: []
+  inGameUI: {fileID: 563301415}
+  nextImage: {fileID: 393751307}
+  scoreText: {fileID: 670532466}
+  settingBtn: {fileID: 982617113}
+  settingUI: {fileID: 6682255597397982435}
+  settingScoreText: {fileID: 277468839}
+  confirmUI: {fileID: 921409744}
+  confirmText: {fileID: 778530815}
+  bgmIcon: {fileID: 828578015}
+  sfxIcon: {fileID: 1054147627}
+  bgmIcons:
+  - {fileID: 21300000, guid: 06a16cb520d0f2449a999572cae2cf97, type: 3}
+  - {fileID: 21300000, guid: cabad5b87dec1fd4e8749fa9f8936e63, type: 3}
+  sfxIcons:
+  - {fileID: 21300000, guid: fd30afab859581246b9ba7593ee3c10c, type: 3}
+  - {fileID: 21300000, guid: 2896697aee29fec4eae8809b364feeb0, type: 3}
+  - {fileID: 21300000, guid: d7f4f52e0d03f214b8b9ff47d92ab909, type: 3}
+  bgmSlider: {fileID: 1278883481}
+  sfxSlider: {fileID: 18600568}
+  resultUI: {fileID: 882105329451422526}
+  resultScoreText: {fileID: 1009736912}
+  planets:
+  - go: {fileID: 276787050}
+    image: {fileID: 679337379}
+    tmp: {fileID: 710488217}
+  - go: {fileID: 1880897882}
+    image: {fileID: 754729381}
+    tmp: {fileID: 1476664673}
+  - go: {fileID: 1182777966}
+    image: {fileID: 471058085}
+    tmp: {fileID: 1134077806}
+  - go: {fileID: 2085869833}
+    image: {fileID: 2131846057}
+    tmp: {fileID: 88617831}
+  - go: {fileID: 609782648}
+    image: {fileID: 1056711955}
+    tmp: {fileID: 637748953}
+  - go: {fileID: 145219149}
+    image: {fileID: 129999754}
+    tmp: {fileID: 1321117223}
+  - go: {fileID: 893512447}
+    image: {fileID: 31662232}
+    tmp: {fileID: 1524594770}
+  - go: {fileID: 993816047}
+    image: {fileID: 619553968}
+    tmp: {fileID: 2046217373}
+  - go: {fileID: 2112501542}
+    image: {fileID: 1216511147}
+    tmp: {fileID: 120536169}
+  - go: {fileID: 38531498}
+    image: {fileID: 508850677}
+    tmp: {fileID: 1357628182}
 --- !u!1 &921409744
 GameObject:
   m_ObjectHideFlags: 0
@@ -7209,8 +7254,15 @@ MonoBehaviour:
   bgmVolume: 1
   sfxVolume: 1
   soundClips:
-    bgmClips: []
-    sfxClips: []
+    bgmClips:
+    - {fileID: 8300000, guid: d76ecd11a0b575847ba2a1c53dea9f05, type: 3}
+    - {fileID: 8300000, guid: 49731314153f00046b85f50fdc038198, type: 3}
+    sfxClips:
+    - {fileID: 8300000, guid: 2bd74fec26584e646adfcee5d63449bd, type: 3}
+    - {fileID: 8300000, guid: 58c0bd9825fcc4648bddc2fca11d848a, type: 3}
+    - {fileID: 8300000, guid: ceebd236cb9506b488ca55c45d0c9580, type: 3}
+    - {fileID: 8300000, guid: 07516dcb8d5fe21449c80680f9e47417, type: 3}
+    - {fileID: 8300000, guid: 527b07d42b46e8c4eb6abaf83a227a8c, type: 3}
 --- !u!1 &1576059224
 GameObject:
   m_ObjectHideFlags: 0
@@ -9988,6 +10040,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a97bfe777a238d4469e30c7b4ee5ed8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ready: {fileID: 0}
+  hovered: {fileID: 0}
+  selected: {fileID: 0}
   dotPrefab: {fileID: 0}
   dotCount: 12
   dotSpacing: 0.5
@@ -9997,6 +10052,9 @@ MonoBehaviour:
   ringRadius: 0.5
   maxPower: 5
   powerCoef: 3
+  timer: 0
+  timeLimit: 10
+  angleLimit: 45
 --- !u!1 &7898924024881897790
 GameObject:
   m_ObjectHideFlags: 0

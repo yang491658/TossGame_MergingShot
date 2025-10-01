@@ -128,7 +128,7 @@ public class EntityManager : MonoBehaviour
 
             yield return null;
         }
-        Spawn();
+        ActManager.Instance.SetReady(Spawn());
     }
 
     #endregion

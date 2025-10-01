@@ -25,7 +25,7 @@ public class SoundManager : MonoBehaviour
     private float prevBgmVolume;
     private float prevSfxVolume;
 
-    [Header("Clips")]
+    [Header("Clip")]
     [SerializeField] private SoundClip soundClips;
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();

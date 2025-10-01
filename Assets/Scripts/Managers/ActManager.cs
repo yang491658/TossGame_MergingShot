@@ -14,8 +14,10 @@ public class ActManager : MonoBehaviour
     private LayerMask unitLayer => LayerMask.GetMask("Unit");
     private bool isDragging;
 
-    private UnitSystem hovered;
-    private UnitSystem selected;
+    [Header("Unit")]
+    [SerializeField] private UnitSystem ready;
+    [SerializeField] private UnitSystem hovered;
+    [SerializeField] private UnitSystem selected;
     private Vector2 dragStart;
 
     [Header("Aim Dots")]
@@ -34,7 +36,9 @@ public class ActManager : MonoBehaviour
     [Header("Launch")]
     [SerializeField] private float maxPower = 5f;
     [SerializeField] private float powerCoef = 3f;
-
+    [SerializeField] private float timer = 0f;
+    [SerializeField][Min(0f)] private float timeLimit = 10f;
+    [SerializeField][Range(0f, 90f)] private float angleLimit = 45f;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -90,6 +94,14 @@ public class ActManager : MonoBehaviour
     {
         if (GameManager.Instance.IsPaused) return;
 
+        if (ready == null || ready.isFired) SetReady();
+
+        if (ready != null && !ready.isFired && !isDragging)
+        {
+            timer += Time.deltaTime;
+            if (timer >= timeLimit) AutoFire();
+        }
+
 #if UNITY_EDITOR
         HandleMouse();
 #else
@@ -101,15 +113,15 @@ public class ActManager : MonoBehaviour
 #if UNITY_EDITOR
     private void HandleMouse()
     {
-        Hover(Input.mousePosition);
+        HoverOn(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0)) BeginDrag(Input.mousePosition);
-        else if (Input.GetMouseButton(0)) DoDrag(Input.mousePosition);
-        else if (Input.GetMouseButtonUp(0)) EndDrag(Input.mousePosition);
+        if (Input.GetMouseButtonDown(0)) DragBegin(Input.mousePosition);
+        else if (Input.GetMouseButton(0)) DragMove(Input.mousePosition);
+        else if (Input.GetMouseButtonUp(0)) DragEnd(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(1)) Remove(Input.mousePosition);
+        if (Input.GetMouseButtonDown(1)) RemoveAt(Input.mousePosition);
 
-        if (Input.GetMouseButton(2)) Move(Input.mousePosition);
+        if (Input.GetMouseButton(2)) MoveTo(Input.mousePosition);
     }
 #endif
 
@@ -119,11 +131,11 @@ public class ActManager : MonoBehaviour
         Touch t = Input.GetTouch(0);
 
         if (t.phase == TouchPhase.Began)
-            BeginDrag(t.position, t.fingerId);
+            DragBegin(t.position, t.fingerId);
         else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary)
-            DoDrag(t.position);
+            DragMove(t.position);
         else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
-            EndDrag(t.position);
+            DragEnd(t.position);
     }
 
     private bool PointerOverUI(int _fingerID = -1)
@@ -134,12 +146,12 @@ public class ActManager : MonoBehaviour
     private bool CanSelect(UnitSystem _unit)
     {
         var rb = _unit.GetRB();
-        return rb != null && rb.linearVelocity.sqrMagnitude <= 0.01f;
+        return (_unit == ready) && rb != null && rb.linearVelocity.sqrMagnitude <= 0.01f;
     }
     #endregion
 
     #region 드래그
-    private void BeginDrag(Vector2 _pos, int _fingerID = -1)
+    private void DragBegin(Vector2 _pos, int _fingerID = -1)
     {
         if (PointerOverUI(_fingerID)) return;
 
@@ -161,13 +173,13 @@ public class ActManager : MonoBehaviour
         }
     }
 
-    private void DoDrag(Vector2 _pos)
+    private void DragMove(Vector2 _pos)
     {
         if (!isDragging || selected == null) return;
         UpdateAim(ScreenToWorld(_pos));
     }
 
-    private void EndDrag(Vector2 _pos)
+    private void DragEnd(Vector2 _pos)
     {
         if (!isDragging || selected == null)
         {
@@ -181,13 +193,22 @@ public class ActManager : MonoBehaviour
         Vector2 shotDir = -drag;
 
         float dist = Mathf.Min(shotDir.magnitude, maxPower);
+        float angle = Vector2.SignedAngle(Vector2.up, shotDir);
 
-        if (dist > Mathf.Epsilon)
+        if (dist > Mathf.Epsilon && shotDir.y > 0f)
         {
-            Vector2 impulse = shotDir.normalized * dist * powerCoef;
+            float clamped = Mathf.Clamp(angle, -angleLimit, angleLimit);
+            Vector2 dirClamped = (Vector2)(Quaternion.Euler(0f, 0f, clamped) * Vector2.up);
+            Vector2 impulse = dirClamped.normalized * dist * powerCoef;
             selected.Shoot(impulse);
+            ready = null;
             EntityManager.Instance.Respawn();
+            timer = 0f;
         }
+
+        if (line != null) { line.positionCount = 0; }
+        if (ring != null) { ring.positionCount = 0; }
+        for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
 
         isDragging = false;
         ShowAim(false);
@@ -223,16 +244,18 @@ public class ActManager : MonoBehaviour
 
         Vector3 dirRaw = (start - _pos);
         float dist = Mathf.Min(dirRaw.magnitude, maxPower);
-        Vector3 dir = dirRaw.normalized * dist;
-        Vector3 ringCenter = start - dir;
-
-        if (dist <= Mathf.Epsilon)
+        if (dist <= Mathf.Epsilon || dirRaw.y <= 0f)
         {
             for (int i = 0; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
             if (line != null) { line.gameObject.SetActive(false); line.positionCount = 0; }
             if (ring != null) { ring.gameObject.SetActive(false); ring.positionCount = 0; }
             return;
         }
+
+        float angle = Vector2.SignedAngle(Vector2.up, dirRaw);
+        float clamped = Mathf.Clamp(angle, -angleLimit, angleLimit);
+        Vector3 dir = (Quaternion.Euler(0f, 0f, clamped) * Vector3.up) * dist;
+        Vector3 ringCenter = start - dir;
 
         Vector3 step = dir.normalized * dotSpacing;
         int visible = Mathf.Min(Mathf.FloorToInt(dist / dotSpacing), dots.Count);
@@ -267,8 +290,48 @@ public class ActManager : MonoBehaviour
     }
     #endregion
 
+    #region 발사
+    private void AutoFire()
+    {
+        var rb = ready.GetRB();
+        Vector2 startWorld = rb != null ? rb.worldCenterOfMass : (Vector2)ready.transform.position;
+        Vector2 startScreen = cam.WorldToScreenPoint(startWorld);
+
+        float ang = Random.Range(-angleLimit, angleLimit);
+        Vector2 dir = (Vector2)(Quaternion.Euler(0f, 0f, ang) * Vector2.up);
+        float dist = maxPower;
+        Vector2 endWorld = startWorld - dir * dist;
+        Vector2 endScreen = cam.WorldToScreenPoint(endWorld);
+
+        DragBegin(startScreen);
+        DragMove(endScreen);
+        DragEnd(endScreen);
+    }
+    #endregion
+
+    #region SET
+    public void SetReady(UnitSystem _unit = null)
+    {
+        if (_unit != null)
+        {
+            ready = _unit; timer = 0f;
+        }
+        else
+        {
+            var list = EntityManager.Instance.GetUnits();
+            ready = null;
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                var u = list[i];
+                if (u != null && !u.isFired) { ready = u; break; }
+            }
+            if (ready != null) timer = 0f;
+        }
+    }
+    #endregion
+
 #if UNITY_EDITOR
-    private void Hover(Vector2 _pos)
+    private void HoverOn(Vector2 _pos)
     {
         if (PointerOverUI()) return;
 
@@ -292,15 +355,15 @@ public class ActManager : MonoBehaviour
 
     private void ClearHover()
     {
-    if (hovered != null)
-    {
-        var sr = hovered.GetSR();
-        if (sr != null) sr.color = Color.white;
-    }
-    hovered = null;
+        if (hovered != null)
+        {
+            var sr = hovered.GetSR();
+            if (sr != null) sr.color = Color.white;
+        }
+        hovered = null;
     }
 
-    private void Move(Vector2 _pos)
+    private void MoveTo(Vector2 _pos)
     {
         if (PointerOverUI()) return;
 
@@ -326,7 +389,7 @@ public class ActManager : MonoBehaviour
         }
     }
 
-    private void Remove(Vector2 _pos)
+    private void RemoveAt(Vector2 _pos)
     {
         if (PointerOverUI()) return;
 
