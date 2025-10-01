@@ -286,8 +286,9 @@ public class UIManager : MonoBehaviour
     private void UpdateTimer(float _timer, float _max)
     {
         bool isReady = ActManager.Instance.GetReady() != null;
-        timerSlider.gameObject.SetActive(isReady);
-        if (!isReady)
+        bool showSlider = isReady && _max >= 3f;
+        timerSlider.gameObject.SetActive(showSlider);
+        if (!showSlider)
         {
             timerText.gameObject.SetActive(false);
             ((RectTransform)timerSlider.transform).anchoredPosition = timerPos0;
@@ -332,6 +333,7 @@ public class UIManager : MonoBehaviour
         float sy = Mathf.Sign(Mathf.Cos(Time.unscaledTime * shakeSpeed));
         rt.anchoredPosition = timerPos0 + new Vector2(sx, sy) * amp;
     }
+
     #endregion
 
     #region ¹öÆ°

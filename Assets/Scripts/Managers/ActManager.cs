@@ -36,7 +36,7 @@ public class ActManager : MonoBehaviour
     [Header("Launch")]
     [SerializeField] private float maxPower = 5f;
     [SerializeField] private float powerCoef = 3f;
-    [SerializeField] private float timer = 0f;
+    private float timer = 0f;
     [SerializeField][Min(0.01f)] private float timeLimit = 10f;
     [SerializeField][Range(0f, 90f)] private float angleLimit = 45f;
     public event System.Action<float, float> OnChangeTimer;
