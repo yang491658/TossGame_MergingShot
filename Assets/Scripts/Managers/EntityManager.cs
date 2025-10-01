@@ -12,7 +12,7 @@ public class EntityManager : MonoBehaviour
     public static EntityManager Instance { get; private set; }
 
     [Header("Spawn Setting")]
-    [SerializeField] private Transform spawn;
+    [SerializeField] private Transform spawnPos;
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
     private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
@@ -27,8 +27,8 @@ public class EntityManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (spawn == null)
-            spawn = transform.Find("SpawnPos");
+        if (spawnPos == null)
+            spawnPos = transform.Find("SpawnPos");
 
         if (unitBase == null)
             unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
@@ -79,7 +79,7 @@ public class EntityManager : MonoBehaviour
 
         if (data == null) return null;
 
-        Vector2 spawnPos = _spawnPos ?? (Vector2)spawn.position;
+        Vector2 spawnPos = _spawnPos ?? (Vector2)spawnPos.position;
 
         UnitSystem unit = Instantiate(unitBase, spawnPos, Quaternion.identity, units)
             .GetComponent<UnitSystem>();
@@ -137,8 +137,9 @@ public class EntityManager : MonoBehaviour
 
     #region GET
     public IReadOnlyList<UnitData> GetDatas() => unitDatas;
-    public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
+
+    public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetCount(int _id) => unitCounts[_id - 1];
     public int GetTotalCount() => unitCounts.Sum();
     #endregion
