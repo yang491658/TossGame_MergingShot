@@ -62,7 +62,6 @@ public class SoundManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null)transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         SetAudio();
@@ -167,7 +166,7 @@ public class SoundManager : MonoBehaviour
 
         if (bgmVolume > 0f) prevBgmVolume = bgmVolume;
 
-        OnChangeVolume?.Invoke(SoundType.BGM, bgmVolume);
+        OnChangeVolume.Invoke(SoundType.BGM, bgmVolume);
     }
 
     public void SetSFXVolume(float _volume = 1)
@@ -178,7 +177,7 @@ public class SoundManager : MonoBehaviour
 
         if (sfxVolume > 0f) prevSfxVolume = sfxVolume;
 
-        OnChangeVolume?.Invoke(SoundType.SFX, sfxVolume);
+        OnChangeVolume.Invoke(SoundType.SFX, sfxVolume);
     }
 
     private void SetDictionaries()

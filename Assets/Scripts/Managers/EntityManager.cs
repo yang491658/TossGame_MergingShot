@@ -11,11 +11,15 @@ public class EntityManager : MonoBehaviour
 {
     public static EntityManager Instance { get; private set; }
 
-    [Header("Spawn Setting")]
-    [SerializeField] private Transform spawnPos;
+    [Header("Data Setting")]
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
+
+    [Header("Spawn Setting")]
+    [SerializeField] private Transform spawnPos;
     private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
+    [SerializeField] private int nextID = 1;
+    public event System.Action<Sprite> OnChangeNext;
 
     [Header("Entity")]
     [SerializeField] private Transform inGame;
@@ -53,7 +57,6 @@ public class EntityManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         dataDic.Clear();
@@ -69,19 +72,23 @@ public class EntityManager : MonoBehaviour
     }
 
     #region ¼ÒÈ¯
-    private UnitData FindById(int _id) => dataDic.TryGetValue(_id, out var data) ? data : null;
+    private UnitData FindByID(int _id) => dataDic.TryGetValue(_id, out var data) ? data : null;
 
-    public UnitSystem Spawn(int _id = 0, Vector2? _spawnPos = null)
+    public UnitSystem Spawn(int _id = 0, Vector2? _pos = null)
     {
-        UnitData data = (_id == 0)
-            ? unitDatas[Random.Range(0, unitDatas.Length)]
-            : FindById(_id);
+        UnitData data = FindByID((_id == 0) ? nextID : _id);
+
+        if (_id == 0)
+        {
+            nextID = Random.Range(0, unitDatas.Length) + 1;
+            OnChangeNext.Invoke(FindByID(nextID).unitImage);
+        }
 
         if (data == null) return null;
 
-        Vector2 spawnPos = _spawnPos ?? (Vector2)spawnPos.position;
+        Vector2 pos = _pos ?? (Vector2)spawnPos.position;
 
-        UnitSystem unit = Instantiate(unitBase, spawnPos, Quaternion.identity, units)
+        UnitSystem unit = Instantiate(unitBase, pos, Quaternion.identity, units)
             .GetComponent<UnitSystem>();
 
         unit.SetData(data.Clone());
@@ -138,6 +145,7 @@ public class EntityManager : MonoBehaviour
     #region GET
     public IReadOnlyList<UnitData> GetDatas() => unitDatas;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
+    public Sprite GetNext() => FindByID(nextID).unitImage;
 
     public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetCount(int _id) => unitCounts[_id - 1];

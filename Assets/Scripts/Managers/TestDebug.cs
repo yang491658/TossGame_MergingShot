@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using UnityEngine;
 
-public class TestManager : MonoBehaviour
+public class TestDebug : MonoBehaviour
 {
-    public static TestManager Instance { get; private set; }
+    public static TestDebug Instance { get; private set; }
 
     private float time = 0;
 
@@ -21,7 +21,6 @@ public class TestManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 

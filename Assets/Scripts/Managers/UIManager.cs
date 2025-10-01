@@ -133,14 +133,14 @@ public class UIManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
-        UpdateIcons();
+        UpdateIcon();
+        UpdateNext(EntityManager.Instance.GetNext());
     }
 
     private void OnEnable()
@@ -148,12 +148,13 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnChangeScore += UpdateScore;
         GameManager.Instance.OnOpenSetting += OpenSetting;
 
-        SoundManager.Instance.OnChangeVolume += ChangeVolume;
-
+        SoundManager.Instance.OnChangeVolume += UpdateVolume;
         bgmSlider.value = SoundManager.Instance.GetBGMVolume();
         bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
+
+        EntityManager.Instance.OnChangeNext += UpdateNext;
     }
 
     private void OnDisable()
@@ -161,20 +162,14 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnChangeScore -= UpdateScore;
         GameManager.Instance.OnOpenSetting -= OpenSetting;
 
-        SoundManager.Instance.OnChangeVolume -= ChangeVolume;
-
+        SoundManager.Instance.OnChangeVolume -= UpdateVolume;
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
+
+        EntityManager.Instance.OnChangeNext -= UpdateNext;
     }
 
-    public void UpdateScore(int _score)
-    {
-        scoreText.text = _score.ToString("0000");
-        settingScoreText.text = _score.ToString("0000");
-        resultScoreText.text = _score.ToString("0000");
-    }
-
-    #region UI 열기
+    #region OPEN
     public void OpenSetting(bool _on)
     {
         if (settingUI == null) return;
@@ -184,13 +179,13 @@ public class UIManager : MonoBehaviour
         settingUI.SetActive(_on);
     }
 
-    public void OpenConfirm(bool _on, string _text = null, System.Action _onOkay = null)
+    public void OpenConfirm(bool _on, string _text = null, System.Action _action = null)
     {
         if (confirmUI == null) return;
 
         confirmUI.SetActive(_on);
         confirmText.text = $"{_text}하시겠습니까?";
-        confirmAction = _onOkay;
+        confirmAction = _action;
 
         if (!_on) confirmAction = null;
     }
@@ -212,8 +207,15 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    #region 사운드 조절
-    private void ChangeVolume(SoundType _type, float _volume)
+    #region UPDATE
+    public void UpdateScore(int _score)
+    {
+        scoreText.text = _score.ToString("0000");
+        settingScoreText.text = _score.ToString("0000");
+        resultScoreText.text = _score.ToString("0000");
+    }
+
+    private void UpdateVolume(SoundType _type, float _volume)
     {
         switch (_type)
         {
@@ -230,10 +232,10 @@ public class UIManager : MonoBehaviour
             default:
                 return;
         }
-        UpdateIcons();
+        UpdateIcon();
     }
 
-    private void UpdateIcons()
+    private void UpdateIcon()
     {
         if (bgmIcons.Count >= 2)
             bgmIcon.sprite = SoundManager.Instance.IsBGMMuted() ? bgmIcons[1] : bgmIcons[0];
@@ -248,15 +250,17 @@ public class UIManager : MonoBehaviour
                 sfxIcon.sprite = sfxIcons[0];
         }
     }
+
+    private void UpdateNext(Sprite _sprite) => nextImage.sprite = _sprite;
     #endregion
 
     #region 버튼
-    public void OnClikSetting() => GameManager.Instance.Pause(true);
-    public void OnClikClose() => GameManager.Instance.Pause(false);
-    public void OnClikBGM() => SoundManager.Instance.ToggleBGM();
-    public void OnClikSFX() => SoundManager.Instance.ToggleSFX();
-    public void OnClikReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
-    public void OnClikQuit() => OpenConfirm(true, "종료", GameManager.Instance.Quit);
+    public void OnClickSetting() => GameManager.Instance.Pause(true);
+    public void OnClickClose() => GameManager.Instance.Pause(false);
+    public void OnClickBGM() => SoundManager.Instance.ToggleBGM();
+    public void OnClickSFX() => SoundManager.Instance.ToggleSFX();
+    public void OnClickReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
+    public void OnClickQuit() => OpenConfirm(true, "종료", GameManager.Instance.Quit);
     public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
     public void OnClickCancel() => OpenConfirm(false);
     #endregion
@@ -266,6 +270,6 @@ public class UIManager : MonoBehaviour
         SoundManager.Instance.Button();
         float len = SoundManager.Instance.GetSFXLength("Button");
         if (len > 0f) yield return new WaitForSecondsRealtime(len);
-        _action?.Invoke();
+        _action.Invoke();
     }
 }

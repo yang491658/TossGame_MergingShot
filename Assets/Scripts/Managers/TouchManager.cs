@@ -55,7 +55,6 @@ public class TouchManager : MonoBehaviour
             return;
         }
         Instance = this;
-        if (transform.parent != null) transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
 
         if (dots.Count == 0)
