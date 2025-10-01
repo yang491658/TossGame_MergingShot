@@ -64,13 +64,13 @@ public class GameManager : MonoBehaviour
     public void AddScore(int _score)
     {
         totalScore += _score;
-        OnChangeScore.Invoke(totalScore);
+        OnChangeScore?.Invoke(totalScore);
     }
 
     public void ResetScore()
     {
         totalScore = 0;
-        OnChangeScore.Invoke(totalScore);
+        OnChangeScore?.Invoke(totalScore);
     }
     #endregion
 
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
         IsPaused = _pause;
         Time.timeScale = _pause ? 0f : 1f;
 
-        OnOpenSetting.Invoke(_pause);
+        OnOpenSetting?.Invoke(_pause);
     }
 
     public void Replay()

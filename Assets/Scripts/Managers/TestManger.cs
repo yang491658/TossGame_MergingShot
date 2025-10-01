@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using UnityEngine;
 
-public class TestDebug : MonoBehaviour
+public class TestManger : MonoBehaviour
 {
-    public static TestDebug Instance { get; private set; }
+    public static TestManger Instance { get; private set; }
 
     private float time = 0;
 
@@ -86,6 +86,14 @@ public class TestDebug : MonoBehaviour
             EntityManager.Instance.DespawnAll();
         }
         #endregion
+    }
+
+    public void TestPlay()
+    {
+        if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) > 0)
+            GameManager.Instance.GameOver();
+        else
+            GameManager.Instance.Replay();
     }
 }
 #endif

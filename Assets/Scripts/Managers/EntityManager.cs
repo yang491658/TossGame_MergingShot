@@ -14,11 +14,13 @@ public class EntityManager : MonoBehaviour
     [Header("Data Setting")]
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
+    private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
 
     [Header("Spawn Setting")]
     [SerializeField] private Transform spawnPos;
-    private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
-    [SerializeField] private int nextID = 1;
+    [SerializeField] private Collider2D spawnCol;
+    [SerializeField] private int respawnID = 1;
+    [SerializeField] private float respawnDelay = 3f;
     public event System.Action<Sprite> OnChangeNext;
 
     [Header("Entity")]
@@ -33,6 +35,9 @@ public class EntityManager : MonoBehaviour
     {
         if (spawnPos == null)
             spawnPos = transform.Find("SpawnPos");
+
+        if (spawnCol == null)
+            spawnCol = spawnPos.GetComponent<Collider2D>();
 
         if (unitBase == null)
             unitBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UnitBase.prefab");
@@ -76,12 +81,15 @@ public class EntityManager : MonoBehaviour
 
     public UnitSystem Spawn(int _id = 0, Vector2? _pos = null)
     {
-        UnitData data = FindByID((_id == 0) ? nextID : _id);
+        UnitData data = FindByID((_id == 0) ? respawnID : _id);
 
         if (_id == 0)
         {
-            nextID = Random.Range(0, unitDatas.Length) + 1;
-            OnChangeNext.Invoke(FindByID(nextID).unitImage);
+            int score = GameManager.Instance.GetTotalScore();
+            int n = (score <= 10) ? 3 : (score <= 100 ? 4 : 5);
+            
+            respawnID = Random.Range(1, n + 1);
+            OnChangeNext?.Invoke(FindByID(respawnID).unitImage);
         }
 
         if (data == null) return null;
@@ -100,9 +108,29 @@ public class EntityManager : MonoBehaviour
     public void Respawn() => StartCoroutine(RespawnCoroutine());
     private IEnumerator RespawnCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        float t = 0f;
+
+        while (true)
+        {
+            bool allInHole = spawned.Count > 0 && spawned.All(u => u != null && u.inHole);
+            if (allInHole) break;
+
+            bool unitInSpawn = false;
+            if (spawnCol != null)
+            {
+                var list = new List<Collider2D>();
+                spawnCol.Overlap(default, list);
+                unitInSpawn = list.Any(c => c != null && c.GetComponent<UnitSystem>() != null);
+            }
+
+            if (unitInSpawn) t = 0f; else t += Time.deltaTime;
+            if (t >= respawnDelay) break;
+
+            yield return null;
+        }
         Spawn();
     }
+
     #endregion
 
     #region Á¦°Å
@@ -145,7 +173,7 @@ public class EntityManager : MonoBehaviour
     #region GET
     public IReadOnlyList<UnitData> GetDatas() => unitDatas;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
-    public Sprite GetNext() => FindByID(nextID).unitImage;
+    public Sprite GetNextSR() => FindByID(respawnID).unitImage;
 
     public IReadOnlyList<UnitSystem> GetUnits() => spawned;
     public int GetCount(int _id) => unitCounts[_id - 1];

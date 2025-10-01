@@ -23,7 +23,8 @@ public class HoleSystem : MonoBehaviour
 
     [Header("Motor")]
     [SerializeField] private float motorSpeed = 30f;
-    [SerializeField] private float motorMax = 360f;
+    [SerializeField][Range(0f, 1f)] private float motorCoef = 0.1f;
+    [SerializeField][Range(180f, 3600f)] private float motorMax = 360f;
     private HingeJoint2D hinge;
 
     private readonly Dictionary<Rigidbody2D, int> sleepCount = new Dictionary<Rigidbody2D, int>(64);
@@ -137,7 +138,7 @@ public class HoleSystem : MonoBehaviour
     {
         if (hinge == null) return;
 
-        float final = Mathf.Clamp(motorSpeed + _score / 10f, motorSpeed, motorMax);
+        float final = Mathf.Clamp(motorSpeed + _score * motorCoef, motorSpeed, motorMax);
         var motor = hinge.motor;
         motor.motorSpeed = final;
         hinge.motor = motor;

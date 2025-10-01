@@ -61,11 +61,11 @@ public class UIManager : MonoBehaviour
         if (inGameUI == null)
             inGameUI = GameObject.Find("InGameUI");
         if (scoreText == null)
-            scoreText = GameObject.Find("InGameUI/ScoreText").GetComponent<TextMeshProUGUI>();
+            scoreText = GameObject.Find("InGameUI/Score/ScoreText").GetComponent<TextMeshProUGUI>();
         if (settingBtn == null)
             settingBtn = GameObject.Find("InGameUI/SettingBtn").GetComponent<Button>();
         if (nextImage == null)
-            nextImage = GameObject.Find("InGameUI/NextImage").GetComponent<Image>();
+            nextImage = GameObject.Find("InGameUI/Next/NextImage").GetComponent<Image>();
 
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI");
@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour
     {
         UpdateScore(GameManager.Instance.GetTotalScore());
         UpdateIcon();
-        UpdateNext(EntityManager.Instance.GetNext());
+        UpdateNext(EntityManager.Instance.GetNextSR());
     }
 
     private void OnEnable()
@@ -270,6 +270,6 @@ public class UIManager : MonoBehaviour
         SoundManager.Instance.Button();
         float len = SoundManager.Instance.GetSFXLength("Button");
         if (len > 0f) yield return new WaitForSecondsRealtime(len);
-        _action.Invoke();
+        _action?.Invoke();
     }
 }

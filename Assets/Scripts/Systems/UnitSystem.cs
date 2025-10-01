@@ -38,10 +38,11 @@ public class UnitSystem : MonoBehaviour
         if (!isFired || isMerging || !inHole) return;
         if (collision.CompareTag("Hole"))
         {
-            if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) > 0)
-                GameManager.Instance.GameOver();
-            else
-                GameManager.Instance.Replay();
+#if UNITY_EDITOR
+            TestManger.Instance.TestPlay();
+#else
+            GameManager.Instance.GameOver();
+#endif
         }
     }
 
