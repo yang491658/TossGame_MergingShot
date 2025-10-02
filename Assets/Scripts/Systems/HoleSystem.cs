@@ -41,7 +41,7 @@ public class HoleSystem : MonoBehaviour
     private void FixedUpdate()
     {
         ApplyGravity();
-        CleanBuffers();
+        CleanBuffer();
     }
 
     private void OnEnable()
@@ -122,7 +122,7 @@ public class HoleSystem : MonoBehaviour
         }
     }
 
-    private void CleanBuffers()
+    private void CleanBuffer()
     {
         buffers.Clear();
         foreach (var kv in sleepCount)
