@@ -136,10 +136,11 @@ public class SoundManager : MonoBehaviour
         PlayBGM("Result");
     }
 
+    public void Button() => PlaySFX("Button");
+    public void Count() => PlaySFX("Count");
+
     public void Shoot() => PlaySFX("Shoot");
     public void Merge(int _id = 0) => PlaySFX(_id != EntityManager.Instance.GetFinal() ? "Merge" : "Flame");
-
-    public void Button() => PlaySFX("Button");
     #endregion
 
     #region SET

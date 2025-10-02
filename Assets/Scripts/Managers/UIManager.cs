@@ -18,7 +18,13 @@ public struct PlanetSlot
     public PlanetSlot(GameObject obj)
     {
         go = obj;
-        image = obj.GetComponentInChildren<Image>();
+        image = null;
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            var img = obj.transform.GetChild(i).GetComponent<Image>();
+            if (img != null) { image = img; break; }
+        }
+
         tmp = obj.GetComponentInChildren<TextMeshProUGUI>();
     }
 }
@@ -42,6 +48,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float shakeAmount = 8f;
     [SerializeField] private Vector2 textSize = new Vector2(0f, 120f);
     private Vector2 timerPos0;
+    private int lastCountSfx = -1;
 
     [Header("Setting UI")]
     [SerializeField] private GameObject settingUI;
@@ -294,6 +301,7 @@ public class UIManager : MonoBehaviour
             ((RectTransform)timerSlider.transform).anchoredPosition = timerPos0;
             timerImage.color = Color.white;
             timerText.color = Color.white;
+            lastCountSfx = -1;
             return;
         }
 
@@ -308,15 +316,22 @@ public class UIManager : MonoBehaviour
             rt.anchoredPosition = timerPos0;
             timerImage.color = Color.white;
             timerText.color = Color.white;
+            lastCountSfx = -1;
             return;
+        }
+
+        int current = Mathf.Clamp(Mathf.CeilToInt(remain), 1, 3);
+        if (current != lastCountSfx)
+        {
+            SoundManager.Instance.Count();
+            lastCountSfx = current;
         }
 
         bool showText = _max >= 8f;
         timerText.gameObject.SetActive(showText);
         if (showText)
         {
-            int display = Mathf.Clamp(Mathf.CeilToInt(remain), 1, 3);
-            timerText.text = display.ToString();
+            timerText.text = current.ToString();
             float frac = remain - Mathf.Floor(remain);
             float size = Mathf.Sin(frac * Mathf.PI) * textSize.y;
             timerText.fontSize = size;
@@ -333,7 +348,6 @@ public class UIManager : MonoBehaviour
         float sy = Mathf.Sign(Mathf.Cos(Time.unscaledTime * shakeSpeed));
         rt.anchoredPosition = timerPos0 + new Vector2(sx, sy) * amp;
     }
-
     #endregion
 
     #region ¹öÆ°
