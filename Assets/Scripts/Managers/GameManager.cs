@@ -42,9 +42,7 @@ public class GameManager : MonoBehaviour
 
         SoundManager.Instance.PlayBGM("Default");
 
-        UIManager.Instance.OpenResult(false);
-        UIManager.Instance.OpenConfirm(false);
-        UIManager.Instance.OpenSetting(false);
+        UIManager.Instance.OpenUI(false);
 
         EntityManager.Instance.CancelRespawn();
         EntityManager.Instance.ResetCount();

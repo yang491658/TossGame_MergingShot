@@ -33,10 +33,11 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
+    public event System.Action<bool> OnOpenUI;
+
     [Header("InGame UI")]
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Button settingBtn;
     [SerializeField] private Image nextImage;
 
     [Header("InGame UI / Timer")]
@@ -53,7 +54,6 @@ public class UIManager : MonoBehaviour
     [Header("Setting UI")]
     [SerializeField] private GameObject settingUI;
     [SerializeField] private TextMeshProUGUI settingScoreText;
-    public event System.Action<bool> OnOpenSetting;
 
     [Header("Sound UI")]
     [SerializeField] private Slider bgmSlider;
@@ -68,6 +68,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI confirmText;
     private System.Action confirmAction;
 
+    [Header("Help UI")]
+    [SerializeField] private GameObject helpUI;
+
     [Header("Result UI")]
     [SerializeField] private GameObject resultUI;
     [SerializeField] private TextMeshProUGUI resultScoreText;
@@ -80,8 +83,6 @@ public class UIManager : MonoBehaviour
             inGameUI = GameObject.Find("InGameUI");
         if (scoreText == null)
             scoreText = GameObject.Find("InGameUI/Score/ScoreText").GetComponent<TextMeshProUGUI>();
-        if (settingBtn == null)
-            settingBtn = GameObject.Find("InGameUI/SettingBtn").GetComponent<Button>();
         if (nextImage == null)
             nextImage = GameObject.Find("InGameUI/Next/NextImage").GetComponent<Image>();
 
@@ -126,6 +127,9 @@ public class UIManager : MonoBehaviour
         if (planets == null || planets.Count == 0)
             foreach (Transform child in GameObject.Find("ResultUI/Planets").transform)
                 planets.Add(new PlanetSlot(child.gameObject));
+
+        if (helpUI == null)
+            helpUI = GameObject.Find("HelpUI");
 
     }
 
@@ -183,7 +187,7 @@ public class UIManager : MonoBehaviour
 
         EntityManager.Instance.OnChangeNext += UpdateNext;
 
-        OnOpenSetting += GameManager.Instance.Pause;
+        OnOpenUI += GameManager.Instance.Pause;
     }
 
     private void OnDisable()
@@ -198,15 +202,23 @@ public class UIManager : MonoBehaviour
 
         EntityManager.Instance.OnChangeNext -= UpdateNext;
 
-        OnOpenSetting -= GameManager.Instance.Pause;
+        OnOpenUI -= GameManager.Instance.Pause;
     }
 
     #region OPEN
+    public void OpenUI(bool _on)
+    {
+        OpenResult(_on);
+        OpenHelp(_on);
+        OpenConfirm(_on);
+        OpenSetting(_on);
+    }
+
     public void OpenSetting(bool _on)
     {
         if (settingUI == null) return;
 
-        OnOpenSetting?.Invoke(_on);
+        OnOpenUI?.Invoke(_on);
 
         inGameUI.SetActive(!_on);
         settingUI.SetActive(_on);
@@ -216,7 +228,7 @@ public class UIManager : MonoBehaviour
     {
         if (confirmUI == null) return;
 
-        OnOpenSetting?.Invoke(_on);
+        OnOpenUI?.Invoke(_on);
 
         confirmUI.SetActive(_on);
         confirmText.text = $"{_text}하시겠습니까?";
@@ -225,11 +237,20 @@ public class UIManager : MonoBehaviour
         if (!_on) confirmAction = null;
     }
 
+    public void OpenHelp(bool _on)
+    {
+        if (helpUI == null) return;
+
+        OnOpenUI?.Invoke(_on);
+
+        helpUI.SetActive(_on);
+    }
+
     public void OpenResult(bool _on)
     {
         if (resultUI == null) return;
 
-        OnOpenSetting?.Invoke(_on);
+        OnOpenUI?.Invoke(_on);
 
         resultUI.SetActive(_on);
         for (int i = 0; i < planets.Count; i++)
@@ -352,11 +373,15 @@ public class UIManager : MonoBehaviour
 
     #region 버튼
     public void OnClickSetting() => OpenSetting(true);
-    public void OnClickClose() => OpenSetting(false);
+    public void OnClickHelp() => OpenHelp(true);
+    public void OnClickClose() => OpenUI(false);
+
     public void OnClickBGM() => SoundManager.Instance.ToggleBGM();
     public void OnClickSFX() => SoundManager.Instance.ToggleSFX();
+
     public void OnClickReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
     public void OnClickQuit() => OpenConfirm(true, "종료", GameManager.Instance.Quit);
+
     public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
     public void OnClickCancel() => OpenConfirm(false);
     #endregion
