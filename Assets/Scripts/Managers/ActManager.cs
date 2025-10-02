@@ -115,9 +115,10 @@ public class ActManager : MonoBehaviour
         else if (Input.GetMouseButton(0)) DragMove(Input.mousePosition);
         else if (Input.GetMouseButtonUp(0)) DragEnd(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(1)) RemoveAt(Input.mousePosition);
+        if (Input.GetMouseButton(1)) MoveTo(Input.mousePosition);
 
-        if (Input.GetMouseButton(2)) MoveTo(Input.mousePosition);
+        if (Input.GetMouseButtonDown(2)) RemoveAt(Input.mousePosition);
+
     }
 #endif
 
@@ -313,6 +314,20 @@ public class ActManager : MonoBehaviour
         }
 
         OnChangeTimer?.Invoke(timer, timeLimit);
+    }
+
+    public void SetReady(Vector3 _pos)
+    {
+        if (ready == null || ready.isFired) return;
+
+        var rb = ready.GetRB();
+        if (rb != null)
+        {
+            Vector2 p = (Vector2)_pos;
+            rb.position = p;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
     }
     #endregion
 

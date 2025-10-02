@@ -34,14 +34,13 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
             GameManager.Instance.GameOver();
-
         #endregion
 
         #region 사운드 테스트
         if (Input.GetKeyDown(KeyCode.M))
-        {
             SoundManager.Instance.ToggleBGM();
-        }
+        if (Input.GetKeyDown(KeyCode.N))
+            SoundManager.Instance.ToggleSFX();
         #endregion
 
         #region 엔티티 테스트

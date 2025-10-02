@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using static UnityEditor.PlayerSettings;
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,17 +11,21 @@ public class EntityManager : MonoBehaviour
 {
     public static EntityManager Instance { get; private set; }
 
-    [Header("Data Setting")]
+    [Header("Data")]
     [SerializeField] private GameObject unitBase;
     [SerializeField] private UnitData[] unitDatas;
     private readonly Dictionary<int, UnitData> dataDic = new Dictionary<int, UnitData>();
 
-    [Header("Spawn Setting")]
+    [Header("Spawn")]
     [SerializeField] private Transform spawnPos;
     [SerializeField] private Collider2D spawnCol;
     [SerializeField] private int respawnID = 1;
     [SerializeField] private float respawnDelay = 3f;
     public event System.Action<Sprite> OnChangeNext;
+
+    private readonly List<Collider2D> cols = new List<Collider2D>();
+    private Coroutine respawnRoutine;
+    private float respawnTime = 0f;
 
     [Header("Entity")]
     [SerializeField] private Transform inGame;
@@ -31,6 +33,10 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private Transform units;
     [SerializeField] private List<int> unitCounts = new List<int>();
     [SerializeField] private List<UnitSystem> spawned = new List<UnitSystem>();
+
+    [Header("Entity / Standard")]
+    [SerializeField] private float holeY = 5f;
+    [SerializeField] private float spawnPosY = -6f;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -109,35 +115,45 @@ public class EntityManager : MonoBehaviour
 
     public void Respawn()
     {
-        StopAllCoroutines();
-        StartCoroutine(RespawnCoroutine());
+        if (respawnRoutine != null) return;
+        respawnTime = Time.time + respawnDelay;
+        respawnRoutine = StartCoroutine(RespawnCoroutine());
     }
 
     private IEnumerator RespawnCoroutine()
     {
-        float t = 0f;
-
         while (true)
         {
             bool allInHole = spawned.Count > 0 && spawned.All(u => u != null && u.inHole);
             if (allInHole) break;
 
+            bool timeReady = Time.time >= respawnTime;
+
             bool unitInSpawn = false;
             if (spawnCol != null)
             {
-                var list = new List<Collider2D>();
-                spawnCol.Overlap(default, list);
-                unitInSpawn = list.Any(c => c != null && c.GetComponent<UnitSystem>() != null);
+                cols.Clear();
+                spawnCol.Overlap(default, cols);
+                unitInSpawn = cols.Any(c => c != null && c.GetComponent<UnitSystem>() != null);
             }
 
-            if (unitInSpawn) t = 0f; else t += Time.deltaTime;
-            if (t >= respawnDelay) break;
+            if (timeReady && !unitInSpawn) break;
 
             yield return null;
         }
         ActManager.Instance.SetReady(Spawn());
+        respawnRoutine = null;
     }
 
+    public void CancelRespawn()
+    {
+        if (respawnRoutine != null)
+        {
+            StopCoroutine(respawnRoutine);
+            respawnRoutine = null;
+        }
+        respawnTime = 0f;
+    }
     #endregion
 
     #region Á¦°Å
@@ -174,12 +190,24 @@ public class EntityManager : MonoBehaviour
         if (inGame == null) inGame = GameObject.Find("InGame").transform;
         if (hole == null) hole = FindFirstObjectByType<HoleSystem>().transform;
         if (units == null) units = GameObject.Find("InGame/Units").transform;
+
+        float d = AutoCamera.SizeDelta;
+
+        Vector3 hp = hole.position;
+        hp.y = holeY + d;
+        hole.position = hp;
+
+        Vector3 sp = spawnPos.position;
+        sp.y = spawnPosY - d;
+        spawnPos.position = sp;
     }
     #endregion
 
     #region GET
     public IReadOnlyList<UnitData> GetDatas() => unitDatas;
     public int GetFinal() => unitDatas[unitDatas.Length - 1].unitID;
+
+    public Vector3 GetSpawnPos() => spawnPos.position;
     public Sprite GetNextSR() => FindByID(respawnID).unitImage;
 
     public IReadOnlyList<UnitSystem> GetUnits() => spawned;

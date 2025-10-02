@@ -7,6 +7,8 @@ public class AutoCamera : MonoBehaviour
     [SerializeField] private float baseSize = 12f;
     [SerializeField] private float minSize = 12f;
 
+    public static float SizeDelta { get; private set; } = 0f;
+
     private Camera cam;
     private int lw, lh;
 
@@ -22,18 +24,25 @@ public class AutoCamera : MonoBehaviour
         if (Screen.width != lw || Screen.height != lh) Apply(false);
     }
 
-    private void Apply(bool force)
+    private void Apply(bool _force)
     {
-        lw = Screen.width; lh = Screen.height;
+        int cw = Screen.width;
+        int ch = Screen.height;
+
+        if (!_force && cw == lw && ch == lh) return;
+        lw = cw; lh = ch;
 
         float currentAspect = (float)lw / lh;
         float refAspect = res.x / res.y;
 
         float size = baseSize * (refAspect / currentAspect);
-        size = Mathf.Max(minSize, size);
-
+        size = Mathf.Max(size, minSize);
         cam.orthographicSize = size;
 
-        EntityManager.Instance?.SetEntity();
+        float delta = size - baseSize;
+        if (Mathf.Abs(delta - SizeDelta) > 1e-5f) SizeDelta = delta;
+
+        EntityManager.Instance.SetEntity();
+        ActManager.Instance.SetReady(EntityManager.Instance.GetSpawnPos());
     }
 }

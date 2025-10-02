@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -47,6 +46,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.OpenConfirm(false);
         UIManager.Instance.OpenSetting(false);
 
+        EntityManager.Instance.CancelRespawn();
         EntityManager.Instance.ResetCount();
         EntityManager.Instance.SetEntity();
         EntityManager.Instance.Spawn(1);
@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     public void Replay()
     {
+        EntityManager.Instance.CancelRespawn();
         EntityManager.Instance.DespawnAll();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
