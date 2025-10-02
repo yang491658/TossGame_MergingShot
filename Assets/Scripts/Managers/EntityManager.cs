@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using static UnityEditor.PlayerSettings;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -87,7 +89,7 @@ public class EntityManager : MonoBehaviour
         {
             int score = GameManager.Instance.GetTotalScore();
             int n = (score <= 10) ? 3 : (score <= 100 ? 4 : 5);
-            
+
             respawnID = Random.Range(1, n + 1);
             OnChangeNext?.Invoke(FindByID(respawnID).unitImage);
         }
