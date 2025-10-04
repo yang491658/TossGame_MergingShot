@@ -124,7 +124,16 @@ public class EntityManager : MonoBehaviour
     {
         while (true)
         {
-            bool allInHole = spawned.Count > 0 && spawned.All(u => u != null && u.inHole);
+            bool allInHole = false;
+            if (spawned.Count > 0)
+            {
+                allInHole = true;
+                for (int i = 0; i < spawned.Count; i++)
+                {
+                    var u = spawned[i];
+                    if (u == null || !u.inHole) { allInHole = false; break; }
+                }
+            }
             if (allInHole) break;
 
             bool timeReady = Time.time >= respawnTime;
@@ -134,7 +143,11 @@ public class EntityManager : MonoBehaviour
             {
                 cols.Clear();
                 spawnCol.Overlap(default, cols);
-                unitInSpawn = cols.Any(c => c != null && c.GetComponent<UnitSystem>() != null);
+                for (int i = 0; i < cols.Count; i++)
+                {
+                    var c = cols[i];
+                    if (c != null && c.GetComponent<UnitSystem>() != null) { unitInSpawn = true; break; }
+                }
             }
 
             if (timeReady && !unitInSpawn) break;

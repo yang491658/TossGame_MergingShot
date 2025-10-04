@@ -13,7 +13,7 @@ public struct PlanetSlot
 {
     public GameObject go;
     public Image image;
-    public TextMeshProUGUI tmp;
+    public TextMeshProUGUI text;
 
     public PlanetSlot(GameObject obj)
     {
@@ -25,7 +25,7 @@ public struct PlanetSlot
             if (img != null) { image = img; break; }
         }
 
-        tmp = obj.GetComponentInChildren<TextMeshProUGUI>();
+        text = obj.GetComponentInChildren<TextMeshProUGUI>();
     }
 }
 
@@ -70,11 +70,16 @@ public class UIManager : MonoBehaviour
 
     [Header("Help UI")]
     [SerializeField] private GameObject helpUI;
+    [SerializeField] private List<PlanetSlot> helpPlanets = new List<PlanetSlot>();
 
-    [Header("Result UI")]
+    [Header("Game Over UI")]
     [SerializeField] private GameObject resultUI;
     [SerializeField] private TextMeshProUGUI resultScoreText;
-    [SerializeField] private List<PlanetSlot> planets = new List<PlanetSlot>();
+
+    [Header("Result UI")]
+    [SerializeField] private GameObject detailUI;
+    [SerializeField] private TextMeshProUGUI detailScoreText;
+    [SerializeField] private List<PlanetSlot> detailPlanets = new List<PlanetSlot>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -120,16 +125,25 @@ public class UIManager : MonoBehaviour
         if (confirmText == null)
             confirmText = GameObject.Find("ConfirmUI/Box/ConfirmText").GetComponent<TextMeshProUGUI>();
 
+        if (helpUI == null)
+            helpUI = GameObject.Find("HelpUI");
+        if (helpPlanets == null || helpPlanets.Count == 0)
+            foreach (Transform child in GameObject.Find("HelpUI/Planets").transform)
+                helpPlanets.Add(new PlanetSlot(child.gameObject));
+
         if (resultUI == null)
             resultUI = GameObject.Find("ResultUI");
         if (resultScoreText == null)
             resultScoreText = GameObject.Find("ResultUI/Score/ScoreText").GetComponent<TextMeshProUGUI>();
-        if (planets == null || planets.Count == 0)
-            foreach (Transform child in GameObject.Find("ResultUI/Planets").transform)
-                planets.Add(new PlanetSlot(child.gameObject));
 
-        if (helpUI == null)
-            helpUI = GameObject.Find("HelpUI");
+        if (detailUI == null)
+            detailUI = GameObject.Find("DetailUI");
+        if (detailScoreText == null)
+            detailScoreText = GameObject.Find("DetailUI/Score/ScoreText").GetComponent<TextMeshProUGUI>();
+        if (detailPlanets == null || detailPlanets.Count == 0)
+            foreach (Transform child in GameObject.Find("DetailUI/Planets").transform)
+                detailPlanets.Add(new PlanetSlot(child.gameObject));
+
 
     }
 
@@ -208,6 +222,7 @@ public class UIManager : MonoBehaviour
     #region OPEN
     public void OpenUI(bool _on)
     {
+        OpenDetail(_on);
         OpenResult(_on);
         OpenHelp(_on);
         OpenConfirm(_on);
@@ -224,17 +239,22 @@ public class UIManager : MonoBehaviour
         settingUI.SetActive(_on);
     }
 
-    public void OpenConfirm(bool _on, string _text = null, System.Action _action = null)
+    public void OpenConfirm(bool _on, string _text = null, System.Action _action = null, bool _pass = false)
     {
         if (confirmUI == null) return;
 
         OnOpenUI?.Invoke(_on);
 
-        confirmUI.SetActive(_on);
-        confirmText.text = $"{_text}하시겠습니까?";
-        confirmAction = _action;
+        if (!_pass)
+        {
+            confirmUI.SetActive(_on);
+            confirmText.text = $"{_text}하시겠습니까?";
+            confirmAction = _action;
+        }
 
         if (!_on) confirmAction = null;
+
+        if (_pass) _action?.Invoke();
     }
 
     public void OpenHelp(bool _on)
@@ -244,24 +264,40 @@ public class UIManager : MonoBehaviour
         OnOpenUI?.Invoke(_on);
 
         helpUI.SetActive(_on);
-    }
+        for (int i = 0; i < helpPlanets.Count; i++)
+        {
+            var u = EntityManager.Instance.GetDatas()[i];
 
+            helpPlanets[i].go.name = u.unitName;
+            helpPlanets[i].image.sprite = u.unitImage;
+            helpPlanets[i].text.text = u.unitName;
+        }
+    }
     public void OpenResult(bool _on)
     {
         if (resultUI == null) return;
 
         OnOpenUI?.Invoke(_on);
 
+        inGameUI.SetActive(!_on);
         resultUI.SetActive(_on);
-        for (int i = 0; i < planets.Count; i++)
+    }
+
+    public void OpenDetail(bool _on)
+    {
+        if (detailUI == null) return;
+
+        OnOpenUI?.Invoke(_on);
+
+        detailUI.SetActive(_on);
+        for (int i = 0; i < detailPlanets.Count; i++)
         {
             var u = EntityManager.Instance.GetDatas()[i];
 
-            planets[i].go.name = u.unitName;
-            planets[i].image.sprite = u.unitImage;
-            planets[i].tmp.text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
+            detailPlanets[i].go.name = u.unitName;
+            detailPlanets[i].image.sprite = u.unitImage;
+            detailPlanets[i].text.text = EntityManager.Instance.GetCount(u.unitID).ToString("×00");
         }
-
     }
     #endregion
 
@@ -271,6 +307,7 @@ public class UIManager : MonoBehaviour
         scoreText.text = _score.ToString("0000");
         settingScoreText.text = _score.ToString("0000");
         resultScoreText.text = _score.ToString("0000");
+        detailScoreText.text = _score.ToString("0000");
     }
 
     private void UpdateVolume(SoundType _type, float _volume)
@@ -381,6 +418,10 @@ public class UIManager : MonoBehaviour
 
     public void OnClickReplay() => OpenConfirm(true, "다시", GameManager.Instance.Replay);
     public void OnClickQuit() => OpenConfirm(true, "종료", GameManager.Instance.Quit);
+
+    public void OnClickReplayByPass() => OpenConfirm(true, "다시", GameManager.Instance.Replay, true);
+    public void OnClickQuitByPass() => OpenConfirm(true, "종료", GameManager.Instance.Quit, true);
+    public void OnClickDetail() => OpenDetail(true);
 
     public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
     public void OnClickCancel() => OpenConfirm(false);

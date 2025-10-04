@@ -32,6 +32,8 @@ public class AutoCamera : MonoBehaviour
         if (!_force && cw == lw && ch == lh) return;
         lw = cw; lh = ch;
 
+        if (ch == 0) return;
+
         float currentAspect = (float)lw / lh;
         float refAspect = res.x / res.y;
 
@@ -40,9 +42,12 @@ public class AutoCamera : MonoBehaviour
         cam.orthographicSize = size;
 
         float delta = size - baseSize;
-        if (Mathf.Abs(delta - SizeDelta) > 1e-5f) SizeDelta = delta;
-
-        EntityManager.Instance.SetEntity();
-        ActManager.Instance.SetReady(EntityManager.Instance.GetSpawnPos());
+        bool sizeChanged = Mathf.Abs(delta - SizeDelta) > 1e-5f;
+        if (sizeChanged)
+        {
+            SizeDelta = delta;
+            EntityManager.Instance.SetEntity();
+            ActManager.Instance.SetReady(EntityManager.Instance.GetSpawnPos());
+        }
     }
 }

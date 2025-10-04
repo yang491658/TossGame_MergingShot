@@ -16,26 +16,25 @@ public class AutoUICanvas : MonoBehaviour
 
     private void OnRectTransformDimensionsChange()
     {
+        if (scaler == null) Init();
         Apply(false);
     }
 
     private void Init()
     {
-        if (scaler == null) scaler = GetComponent<CanvasScaler>();
-        if (scaler != null)
-        {
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = res;
-        }
+        scaler = GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.referenceResolution = res;
     }
 
     private void Apply(bool _force)
     {
-        if (scaler == null) Init();
         if (scaler == null) return;
 
         float w = Screen.width;
         float h = Screen.height;
+        if (h == 0) return;
         if (!_force && Mathf.Approximately(w, lastW) && Mathf.Approximately(h, lastH)) return;
         lastW = w; lastH = h;
 

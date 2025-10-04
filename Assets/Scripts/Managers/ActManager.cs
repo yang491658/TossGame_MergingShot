@@ -329,6 +329,8 @@ public class ActManager : MonoBehaviour
             rb.angularVelocity = 0f;
         }
     }
+
+    public void SetTimeLimit(float _limit) => timeLimit = _limit;
     #endregion
 
     #region GET
@@ -350,7 +352,7 @@ public class ActManager : MonoBehaviour
 
             hovered = unit;
             var sr = hovered.GetSR();
-            if (sr != null) sr.color = Color.red;
+            if (sr != null) sr.color = Color.blue;
         }
         else
         {

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections;
 using UnityEngine;
 
 public class TestManager : MonoBehaviour
@@ -9,6 +10,10 @@ public class TestManager : MonoBehaviour
     [SerializeField][Range(0f, 45f)] float angleRange = 30f;
     [SerializeField][Range(0f, 20f)] float shotPower = 15f;
 
+    [Header("Game Test")]
+    [SerializeField][Min(1f)] private float regameTime = 3f;
+    private Coroutine playRoutine;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -18,6 +23,13 @@ public class TestManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        if (!SoundManager.Instance.IsBGMMuted()) SoundManager.Instance.ToggleBGM();
+        if (!SoundManager.Instance.IsSFXMuted()) SoundManager.Instance.ToggleSFX();
+        ActManager.Instance.SetTimeLimit(0.01f);
     }
 
     private void Update()
@@ -34,6 +46,10 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
             GameManager.Instance.GameOver();
+
+        if (GameManager.Instance.IsGameOver && playRoutine == null)
+            if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) <= 0)
+                playRoutine = StartCoroutine(TestPlay());
         #endregion
 
         #region 사운드 테스트
@@ -79,12 +95,11 @@ public class TestManager : MonoBehaviour
         #endregion
     }
 
-    public void TestPlay()
+    private IEnumerator TestPlay()
     {
-        if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) > 0)
-            GameManager.Instance.GameOver();
-        else
-            GameManager.Instance.Replay();
+        yield return new WaitForSecondsRealtime(regameTime);
+        GameManager.Instance.Replay();
+        playRoutine = null;
     }
 }
 #endif

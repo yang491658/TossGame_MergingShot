@@ -38,11 +38,8 @@ public class UnitSystem : MonoBehaviour
         if (!isFired || isMerging || !inHole) return;
         if (collision.CompareTag("Hole"))
         {
-#if UNITY_EDITOR
-            TestManager.Instance.TestPlay();
-#else
+            sr.color = Color.red;
             GameManager.Instance.GameOver();
-#endif
         }
     }
 
