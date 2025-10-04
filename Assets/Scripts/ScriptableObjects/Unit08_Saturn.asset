@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: 8
   unitName: Saturn
-  unitImage: {fileID: 21300000, guid: 6df05bfe3e17f6a4db81ba6d93f07147, type: 3}
-  unitMass: 1.8
+  unitImage: {fileID: 21300000, guid: 6130c4c5f74f02843b36c9a4914bb3cf, type: 3}
+  unitScale: 2.9
+  unitMass: 8
+  unitScore: 36

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8f66374e057a4454da5287d80bdae369
+guid: 7d525062fd489604ca0e6ed33cc5381d
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 512
+  spritePixelsToUnits: 900
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -142,10 +142,10 @@ TextureImporter:
       name: 09.Jupiter_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 23
-        width: 499
-        height: 465
+        x: 83
+        y: 48
+        width: 883
+        height: 881
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

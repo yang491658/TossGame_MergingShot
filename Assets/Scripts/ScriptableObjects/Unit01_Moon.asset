@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Unit01_Moon
   m_EditorClassIdentifier: 
   unitID: 1
-  unitName: 01.Moon
-  unitImage: {fileID: 21300000, guid: 848e4e23cfe39e74ca5b5ffb6a1b92c0, type: 3}
-  unitMass: 1.1
+  unitName: Moon
+  unitImage: {fileID: 21300000, guid: 46c186be6846c3740aedadffa707bfa2, type: 3}
+  unitScale: 0.8
+  unitMass: 1
+  unitScore: 1

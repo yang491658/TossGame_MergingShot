@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: 9
   unitName: Jupiter
-  unitImage: {fileID: 21300000, guid: 8f66374e057a4454da5287d80bdae369, type: 3}
-  unitMass: 1.9
+  unitImage: {fileID: 21300000, guid: 7d525062fd489604ca0e6ed33cc5381d, type: 3}
+  unitScale: 3.2
+  unitMass: 9
+  unitScore: 45

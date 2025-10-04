@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6df05bfe3e17f6a4db81ba6d93f07147
+guid: 6130c4c5f74f02843b36c9a4914bb3cf
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 512
+  spritePixelsToUnits: 900
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -142,10 +142,10 @@ TextureImporter:
       name: 08.Saturn_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 23
-        width: 512
-        height: 465
+        x: 3
+        y: 48
+        width: 1019
+        height: 971
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

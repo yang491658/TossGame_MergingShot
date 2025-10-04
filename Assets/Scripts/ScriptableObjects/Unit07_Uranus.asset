@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: 7
   unitName: Uranus
-  unitImage: {fileID: 21300000, guid: 7f90d6d11b927134ba9bb085c8952ba6, type: 3}
-  unitMass: 1.7
+  unitImage: {fileID: 21300000, guid: 84be9859d16d80744ae62d9fe8fb6ae3, type: 3}
+  unitScale: 2.6000001
+  unitMass: 7
+  unitScore: 28

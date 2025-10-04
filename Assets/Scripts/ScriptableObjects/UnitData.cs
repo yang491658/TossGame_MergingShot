@@ -20,7 +20,7 @@ public class UnitData : ScriptableObject
             unitName = Regex.Replace(rawName, @"^\d+\.", "");
         }
 
-        unitScale = 0.5f + (float)unitID * 0.3f;
+        unitScale = 0.5f + (float)unitID * 0.5f;
         unitMass = unitID;
 
         unitScore = unitID * (unitID + 1) / 2;

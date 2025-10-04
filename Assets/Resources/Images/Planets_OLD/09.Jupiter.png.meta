@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 84be9859d16d80744ae62d9fe8fb6ae3
+guid: 8f66374e057a4454da5287d80bdae369
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6859582980820244657
-    second: 07.Uranus_0
+      213: 767839490054428536
+    second: 09.Jupiter_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 900
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 07.Uranus_0
+      name: 09.Jupiter_0
       rect:
         serializedVersion: 2
-        x: 134
-        y: 57
-        width: 753
-        height: 850
+        x: 7
+        y: 23
+        width: 499
+        height: 465
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b81b1f9062223f50800000000000000
-      internalID: 6859582980820244657
+      spriteID: 8771631b2f9e7aa00800000000000000
+      internalID: 767839490054428536
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      07.Uranus_0: 6859582980820244657
+      09.Jupiter_0: 767839490054428536
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
