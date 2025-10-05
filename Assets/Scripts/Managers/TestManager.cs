@@ -11,7 +11,8 @@ public class TestManager : MonoBehaviour
     [SerializeField][Range(0f, 20f)] float shotPower = 15f;
 
     [Header("Game Test")]
-    [SerializeField][Min(1f)] private float regameTime = 3f;
+    [SerializeField] private bool isTesting = false;
+    [SerializeField][Min(1f)] private float regameTime = 5f;
     private Coroutine playRoutine;
 
     private void Awake()
@@ -25,15 +26,9 @@ public class TestManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
-    {
-        if (!SoundManager.Instance.IsBGMMuted()) SoundManager.Instance.ToggleBGM();
-        if (!SoundManager.Instance.IsSFXMuted()) SoundManager.Instance.ToggleSFX();
-        ActManager.Instance.SetTimeLimit(0.01f);
-    }
-
     private void Update()
     {
+
         #region 게임 테스트
         if (Input.GetKeyDown(KeyCode.P))
             GameManager.Instance.Pause(!GameManager.Instance.IsPaused);
@@ -93,12 +88,26 @@ public class TestManager : MonoBehaviour
             EntityManager.Instance.DespawnAll();
         }
         #endregion
+
+        #region 액트 테스트
+        if (Input.GetKeyDown(KeyCode.T))
+            if (!isTesting)
+            {
+                ActManager.Instance.SetTimeLimit(0.01f);
+                isTesting = true;
+            }
+            else
+            {
+                ActManager.Instance.SetTimeLimit(10f);
+                isTesting = false;
+            }
+        #endregion
     }
 
     private IEnumerator TestPlay()
     {
         yield return new WaitForSecondsRealtime(regameTime);
-        GameManager.Instance.Replay();
+        if (GameManager.Instance.IsGameOver) GameManager.Instance.Replay();
         playRoutine = null;
     }
 }

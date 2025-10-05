@@ -142,10 +142,10 @@ TextureImporter:
       name: 08.Saturn_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 48
-        width: 1019
-        height: 971
+        x: 11
+        y: 10
+        width: 1013
+        height: 1004
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

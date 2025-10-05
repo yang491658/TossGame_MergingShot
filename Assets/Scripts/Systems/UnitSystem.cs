@@ -13,6 +13,8 @@ public class UnitSystem : MonoBehaviour
     public bool isMerging { get; private set; } = false;
     public bool inHole { get; private set; } = false;
 
+    [SerializeField] private GameObject xMark;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -20,6 +22,9 @@ public class UnitSystem : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         col.isTrigger = true;
+
+        xMark = transform.GetChild(0).gameObject;
+        xMark.SetActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -38,7 +43,9 @@ public class UnitSystem : MonoBehaviour
         if (!isFired || isMerging || !inHole) return;
         if (collision.CompareTag("Hole"))
         {
-            sr.color = Color.red;
+            sr.color = new Color32(100, 100, 100, 255);
+            xMark.transform.rotation = Quaternion.identity;
+            xMark.SetActive(true);
             GameManager.Instance.GameOver();
         }
     }

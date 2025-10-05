@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: 2831154870296872603
     second: 02.Mercury_0
-  - first:
-      213: -471905028795780454
-    second: 02.Mercury_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -145,10 +142,10 @@ TextureImporter:
       name: 02.Mercury_0
       rect:
         serializedVersion: 2
-        x: 95
-        y: 88
+        x: 99
+        y: 99
         width: 826
-        height: 844
+        height: 829
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,28 +156,6 @@ TextureImporter:
       bones: []
       spriteID: b96892cba584a4720800000000000000
       internalID: 2831154870296872603
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 02.Mercury_1
-      rect:
-        serializedVersion: 2
-        x: 95
-        y: 520
-        width: 6
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a9238e660e47379f0800000000000000
-      internalID: -471905028795780454
       vertices: []
       indices: 
       edges: []
@@ -200,7 +175,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       02.Mercury_0: 2831154870296872603
-      02.Mercury_1: -471905028795780454
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

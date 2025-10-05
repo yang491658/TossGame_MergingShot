@@ -142,10 +142,10 @@ TextureImporter:
       name: 03.Mars_0
       rect:
         serializedVersion: 2
-        x: 95
-        y: 88
-        width: 829
-        height: 841
+        x: 99
+        y: 99
+        width: 826
+        height: 826
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

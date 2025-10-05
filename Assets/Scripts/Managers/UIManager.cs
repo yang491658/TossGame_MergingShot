@@ -280,6 +280,10 @@ public class UIManager : MonoBehaviour
         OnOpenUI?.Invoke(_on);
 
         inGameUI.SetActive(!_on);
+        settingUI.SetActive(!_on);
+        confirmUI.SetActive(!_on);
+        helpUI.SetActive(!_on);
+
         resultUI.SetActive(_on);
     }
 

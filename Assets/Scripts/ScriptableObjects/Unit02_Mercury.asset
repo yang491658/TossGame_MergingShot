@@ -15,6 +15,6 @@ MonoBehaviour:
   unitID: 2
   unitName: Mercury
   unitImage: {fileID: 21300000, guid: 7f80d2d52b92c164da018fa1dacbc809, type: 3}
-  unitScale: 1.1
+  unitScale: 1.5
   unitMass: 2
   unitScore: 3

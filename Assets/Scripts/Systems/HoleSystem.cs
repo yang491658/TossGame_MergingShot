@@ -24,7 +24,7 @@ public class HoleSystem : MonoBehaviour
     [Header("Motor")]
     [SerializeField] private float motorSpeed = 30f;
     [SerializeField][Range(0f, 1f)] private float motorCoef = 0.1f;
-    [SerializeField][Range(180f, 3600f)] private float motorMax = 360f;
+    [SerializeField][Range(180f, 3600f)] private float motorMax = 720f;
     private HingeJoint2D hinge;
 
     private readonly Dictionary<Rigidbody2D, int> sleepCount = new Dictionary<Rigidbody2D, int>(64);
@@ -40,6 +40,7 @@ public class HoleSystem : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (hinge == null || !hinge.enabled) return;
         ApplyGravity();
         CleanBuffer();
     }

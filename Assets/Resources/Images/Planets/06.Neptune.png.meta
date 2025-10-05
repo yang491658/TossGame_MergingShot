@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c3b3ce144e2f9c14f98cae46835b33ad
+guid: c82a5b7f2512f004683136d53068fabf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8441266595195107411
-    second: 04.Venus_0
+      213: 3056492034226089977
+    second: 06.Neptune_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 04.Venus_0
+      name: 06.Neptune_0
       rect:
         serializedVersion: 2
         x: 99
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: da7460361c89ada80800000000000000
-      internalID: -8441266595195107411
+      spriteID: 9ff6bd6af47da6a20800000000000000
+      internalID: 3056492034226089977
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      04.Venus_0: -8441266595195107411
+      06.Neptune_0: 3056492034226089977
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
