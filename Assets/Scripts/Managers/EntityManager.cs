@@ -94,7 +94,7 @@ public class EntityManager : MonoBehaviour
         if (_id == 0)
         {
             int score = GameManager.Instance.GetTotalScore();
-            int n = (score <= 10) ? 3 : (score <= 100 ? 4 : 5);
+            int n = (score <= 100) ? 3 : (score <= 500 ? 4 : 5);
 
             respawnID = Random.Range(1, n + 1);
             OnChangeNext?.Invoke(FindByID(respawnID).unitImage);
@@ -154,7 +154,7 @@ public class EntityManager : MonoBehaviour
 
             yield return null;
         }
-        ActManager.Instance.SetReady(Spawn());
+        HandleManager.Instance.SetReady(Spawn());
         respawnRoutine = null;
     }
 

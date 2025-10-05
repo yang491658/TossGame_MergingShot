@@ -197,7 +197,7 @@ public class UIManager : MonoBehaviour
         sfxSlider.value = SoundManager.Instance.GetSFXVolume();
         sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSFXVolume);
 
-        ActManager.Instance.OnChangeTimer += UpdateTimer;
+        HandleManager.Instance.OnChangeTimer += UpdateTimer;
 
         EntityManager.Instance.OnChangeNext += UpdateNext;
 
@@ -212,7 +212,7 @@ public class UIManager : MonoBehaviour
         bgmSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetBGMVolume);
         sfxSlider.onValueChanged.RemoveListener(SoundManager.Instance.SetSFXVolume);
 
-        ActManager.Instance.OnChangeTimer -= UpdateTimer;
+        HandleManager.Instance.OnChangeTimer -= UpdateTimer;
 
         EntityManager.Instance.OnChangeNext -= UpdateNext;
 
@@ -354,7 +354,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateTimer(float _timer, float _max)
     {
-        bool isReady = ActManager.Instance.GetReady() != null;
+        bool isReady = HandleManager.Instance.GetReady() != null;
         bool showSlider = isReady && _max >= 3f;
         timerSlider.gameObject.SetActive(showSlider);
         if (!showSlider)

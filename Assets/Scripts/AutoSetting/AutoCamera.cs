@@ -47,7 +47,7 @@ public class AutoCamera : MonoBehaviour
         {
             SizeDelta = delta;
             EntityManager.Instance.SetEntity();
-            ActManager.Instance.SetReady(EntityManager.Instance.GetSpawnPos());
+            HandleManager.Instance.SetReady(EntityManager.Instance.GetSpawnPos());
         }
     }
 }

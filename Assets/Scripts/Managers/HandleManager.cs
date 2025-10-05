@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-public class ActManager : MonoBehaviour
+public class HandleManager : MonoBehaviour
 {
-    public static ActManager Instance { get; private set; }
+    public static HandleManager Instance { get; private set; }
 
     private Camera cam => Camera.main;
     private LayerMask unitLayer => LayerMask.GetMask("Unit");

@@ -11,9 +11,12 @@ public class TestManager : MonoBehaviour
     [SerializeField][Range(0f, 20f)] float shotPower = 15f;
 
     [Header("Game Test")]
+    [SerializeField] private int testCount = 1;
     [SerializeField] private bool isTesting = false;
     [SerializeField][Min(1f)] private float regameTime = 5f;
     private Coroutine playRoutine;
+    [Header("ADs Test")]
+    private bool onBanner = false;
 
     private void Awake()
     {
@@ -44,7 +47,7 @@ public class TestManager : MonoBehaviour
 
         if (GameManager.Instance.IsGameOver && playRoutine == null)
             if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) <= 0)
-                playRoutine = StartCoroutine(TestPlay());
+                playRoutine = StartCoroutine(AutoReplay());
         #endregion
 
         #region 사운드 테스트
@@ -68,7 +71,7 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            UnitSystem unit = ActManager.Instance.GetReady();
+            UnitSystem unit = HandleManager.Instance.GetReady();
             float angle = Random.Range(-angleRange, angleRange);
             Vector2 dir = Quaternion.Euler(0, 0, angle) * Vector2.up;
             if (unit != null)
@@ -90,24 +93,44 @@ public class TestManager : MonoBehaviour
         #endregion
 
         #region 액트 테스트
-        if (Input.GetKeyDown(KeyCode.T))
-            if (!isTesting)
-            {
-                ActManager.Instance.SetTimeLimit(0.01f);
-                isTesting = true;
-            }
-            else
-            {
-                ActManager.Instance.SetTimeLimit(10f);
-                isTesting = false;
-            }
+        if (Input.GetKeyDown(KeyCode.T)) AutoPlay();
+        #endregion
+
+        #region 광고 테스트
+        if (Input.GetKeyDown(KeyCode.C))
+            ADManager.Instance.ShowInterAD();
+        if (Input.GetKeyDown(KeyCode.V))
+            ADManager.Instance.ShowReward();
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ADManager.Instance.CreateBanner(!onBanner);
+            onBanner = !onBanner;
+        }
         #endregion
     }
 
-    private IEnumerator TestPlay()
+    private void AutoPlay()
+    {
+        if (!isTesting)
+        {
+            HandleManager.Instance.SetTimeLimit(0.01f);
+            isTesting = true;
+        }
+        else
+        {
+            HandleManager.Instance.SetTimeLimit(10f);
+            isTesting = false;
+        }
+    }
+
+    private IEnumerator AutoReplay()
     {
         yield return new WaitForSecondsRealtime(regameTime);
-        if (GameManager.Instance.IsGameOver) GameManager.Instance.Replay();
+        if (GameManager.Instance.IsGameOver)
+        {
+            testCount++;
+            GameManager.Instance.Replay();
+        }
         playRoutine = null;
     }
 }
