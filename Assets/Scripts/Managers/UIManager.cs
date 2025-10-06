@@ -243,8 +243,6 @@ public class UIManager : MonoBehaviour
     {
         if (confirmUI == null) return;
 
-        OnOpenUI?.Invoke(_on);
-
         if (!_pass)
         {
             confirmUI.SetActive(_on);
@@ -290,8 +288,6 @@ public class UIManager : MonoBehaviour
     public void OpenDetail(bool _on)
     {
         if (detailUI == null) return;
-
-        OnOpenUI?.Invoke(_on);
 
         detailUI.SetActive(_on);
         for (int i = 0; i < detailPlanets.Count; i++)
@@ -426,8 +422,9 @@ public class UIManager : MonoBehaviour
     public void OnClickReplayByPass() => OpenConfirm(true, "다시", GameManager.Instance.Replay, true);
     public void OnClickQuitByPass() => OpenConfirm(true, "종료", GameManager.Instance.Quit, true);
     public void OnClickDetail() => OpenDetail(true);
+    public void OnClickBack() => OpenDetail(false);
 
-    public void OnClickOkay() => StartCoroutine(PlayClickThen(confirmAction));
+    public void OnClickOkay() => confirmAction?.Invoke();
     public void OnClickCancel() => OpenConfirm(false);
     #endregion
 

@@ -362,11 +362,10 @@ public class HandleManager : MonoBehaviour
 
     private void ClearHover()
     {
-        if (hovered != null)
-        {
-            var sr = hovered.GetSR();
-            if (sr != null) sr.color = Color.white;
-        }
+        if (hovered == null) return;
+
+        var sr = hovered.GetSR();
+        if (sr != null) sr.color = Color.white;
         hovered = null;
     }
 

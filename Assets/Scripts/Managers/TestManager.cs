@@ -12,7 +12,8 @@ public class TestManager : MonoBehaviour
 
     [Header("Game Test")]
     [SerializeField] private int testCount = 1;
-    [SerializeField] private bool isTesting = false;
+    [SerializeField] private bool isAutoPlay = false;
+    [SerializeField] private bool isAutoReplay = false;
     [SerializeField][Min(1f)] private float regameTime = 5f;
     private Coroutine playRoutine;
     [Header("ADs Test")]
@@ -45,9 +46,12 @@ public class TestManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
             GameManager.Instance.GameOver();
 
-        if (GameManager.Instance.IsGameOver && playRoutine == null)
-            if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) <= 0)
-                playRoutine = StartCoroutine(AutoReplay());
+        if (Input.GetKeyDown(KeyCode.A))
+            isAutoReplay = !isAutoReplay;
+
+        if (isAutoReplay && GameManager.Instance.IsGameOver && playRoutine == null)
+
+            playRoutine = StartCoroutine(AutoReplay());
         #endregion
 
         #region 사운드 테스트
@@ -111,20 +115,23 @@ public class TestManager : MonoBehaviour
 
     private void AutoPlay()
     {
-        if (!isTesting)
+        if (!isAutoPlay)
         {
             HandleManager.Instance.SetTimeLimit(0.01f);
-            isTesting = true;
+            isAutoPlay = true;
         }
         else
         {
             HandleManager.Instance.SetTimeLimit(10f);
-            isTesting = false;
+            isAutoPlay = false;
         }
     }
 
     private IEnumerator AutoReplay()
     {
+        if (EntityManager.Instance.GetCount(EntityManager.Instance.GetFinal()) > 0)
+            yield return null;
+
         yield return new WaitForSecondsRealtime(regameTime);
         if (GameManager.Instance.IsGameOver)
         {

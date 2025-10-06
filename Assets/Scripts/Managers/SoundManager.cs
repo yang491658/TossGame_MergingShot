@@ -28,8 +28,8 @@ public class SoundManager : MonoBehaviour
 
     [Header("Clip")]
     [SerializeField] private SoundClip soundClips;
-    private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
-    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
+    private readonly Dictionary<string, AudioClip> bgmDict = new();
+    private readonly Dictionary<string, AudioClip> sfxDict = new();
 
 
 #if UNITY_EDITOR
@@ -96,8 +96,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            float target = prevBgmVolume > 0.2f ? prevBgmVolume : 0.2f;
-            SetBGMVolume(target);
+            SetBGMVolume(prevBgmVolume);
         }
     }
     #endregion
@@ -125,8 +124,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            float target = prevSfxVolume > 0.2f ? prevSfxVolume : 0.2f;
-            SetSFXVolume(target);
+            SetSFXVolume(prevSfxVolume);
         }
     }
 
