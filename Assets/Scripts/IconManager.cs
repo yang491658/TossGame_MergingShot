@@ -41,11 +41,14 @@ public class IconManager : MonoBehaviour
     }
 #endif
 
+    private void Start()
+    {
+        GenerateUnits();
+    }
+
     private void Update()
     {
         ApplyHole();
-
-        GenerateUnits();
         ApplyUnits();
     }
 
@@ -60,10 +63,8 @@ public class IconManager : MonoBehaviour
         if (units == null || unitDatas == null || unitsGenerated) return;
         unitsGenerated = true;
 
-#if UNITY_EDITOR
         for (int i = units.childCount - 1; i >= 0; i--)
             DestroyImmediate(units.GetChild(i).gameObject);
-#endif
 
         for (int i = 0; i < unitDatas.Length; i++)
         {
