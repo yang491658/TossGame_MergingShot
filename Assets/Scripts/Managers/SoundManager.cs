@@ -128,17 +128,17 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    public void Button() => PlaySFX("Button");
+
+    public void Shoot() => PlaySFX("Shoot");
+    public void Merge(int _id = 0) => PlaySFX(_id != EntityManager.Instance.GetFinal() ? "Merge" : "Flame");
+    public void Count() => PlaySFX("Count");
+
     public void GameOver()
     {
         PlaySFX("GameOver");
         PlayBGM("Result");
     }
-
-    public void Button() => PlaySFX("Button");
-    public void Count() => PlaySFX("Count");
-
-    public void Shoot() => PlaySFX("Shoot");
-    public void Merge(int _id = 0) => PlaySFX(_id != EntityManager.Instance.GetFinal() ? "Merge" : "Flame");
     #endregion
 
     #region SET
@@ -149,7 +149,6 @@ public class SoundManager : MonoBehaviour
 
         bgmSource.playOnAwake = false;
         sfxSource.playOnAwake = false;
-
         bgmSource.loop = true;
 
         SetBGMVolume(bgmVolume);

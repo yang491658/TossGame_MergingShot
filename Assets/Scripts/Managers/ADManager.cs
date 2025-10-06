@@ -1,9 +1,12 @@
-using GoogleMobileAds.Api;
 using UnityEngine;
+using System.Collections;
+using GoogleMobileAds.Api;
 
 public class ADManager : MonoBehaviour
 {
     public static ADManager Instance { get; private set; }
+
+   [SerializeField][Min(0)] private float delay = 0.5f;
 
     private string bannerId;
     private BannerView banner;
@@ -117,7 +120,11 @@ public class ADManager : MonoBehaviour
     }
 
     public void ShowInterAD(System.Action _onClosed = null)
+        => StartCoroutine(ShowInterCoroutine(_onClosed));
+    private IEnumerator ShowInterCoroutine(System.Action _onClosed)
     {
+        yield return new WaitForSecondsRealtime(delay);
+
         if (interAD != null && interAD.CanShowAd())
         {
             OnCloseInterAD = _onClosed;
@@ -165,11 +172,15 @@ public class ADManager : MonoBehaviour
     }
 
     public void ShowReward(System.Action _onClosed = null)
+        => StartCoroutine(ShowRewardCoroutine(_onClosed));
+    private IEnumerator ShowRewardCoroutine(System.Action _onClosed)
     {
+        yield return new WaitForSecondsRealtime(delay);
+
         if (reward != null && reward.CanShowAd())
         {
             OnCloseReward = _onClosed;
-            reward.Show(_reward => OnReward(_reward));
+            reward.Show(_ => OnReward(_));
         }
         else
         {
