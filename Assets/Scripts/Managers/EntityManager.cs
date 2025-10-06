@@ -43,7 +43,6 @@ public class EntityManager : MonoBehaviour
     {
         if (spawnPos == null)
             spawnPos = transform.Find("SpawnPos");
-
         if (spawnCol == null)
             spawnCol = spawnPos.GetComponent<Collider2D>();
 

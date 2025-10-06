@@ -137,7 +137,7 @@ public class SoundManager : MonoBehaviour
     public void GameOver()
     {
         PlaySFX("GameOver");
-        PlayBGM("Result");
+        PlayBGM("GameOver");
     }
     #endregion
 
