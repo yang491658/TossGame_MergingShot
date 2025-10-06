@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Manager
-  - Space
-  - Hole
   - Unit
+  - Manager
+  - Hole
+  - Space
   layers:
   - Default
   - TransparentFX
@@ -43,19 +43,19 @@ TagManager:
   - 
   m_SortingLayers:
   - name: Background
-    uniqueID: 634554981
+    uniqueID: 1233135089
     locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
   - name: Hole
-    uniqueID: 628446281
+    uniqueID: 2604112093
     locked: 0
   - name: Unit
-    uniqueID: 1544743547
+    uniqueID: 281649717
     locked: 0
   - name: UI
-    uniqueID: 3733354841
+    uniqueID: 1020039893
     locked: 0
   m_RenderingLayers:
   - Default
