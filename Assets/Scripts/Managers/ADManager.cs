@@ -14,7 +14,11 @@ public class ADManager : MonoBehaviour
     private RewardedAd reward;
     private System.Action OnCloseReward;
 
-#if UNITY_ANDROID // TODO 테스트용 ID
+#if UNITY_EDITOR
+    private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
+    private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
+#elif UNITY_ANDROID
     private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
     private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
