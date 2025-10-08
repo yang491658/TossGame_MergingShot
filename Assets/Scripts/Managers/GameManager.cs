@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     public void Replay()
     {
-        ADManager.Instance.ShowInterAD(() =>
+        ADManager.Instance.ShowReward(() =>
         {
             EntityManager.Instance.CancelRespawn();
             EntityManager.Instance.DespawnAll();
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
 
     public void Quit()
     {
-        ADManager.Instance.ShowInterAD(() =>
+        ADManager.Instance.ShowReward(() =>
         {
             Time.timeScale = 1f;
 #if UNITY_EDITOR

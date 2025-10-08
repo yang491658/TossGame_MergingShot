@@ -18,17 +18,19 @@ public class ADManager : MonoBehaviour
     private System.Action OnCloseReward;
 
 #if UNITY_EDITOR
-    private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    //private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
-    private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
+    //private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
+    private const string REWARDED_ID = "ca-app-pub-5275088611290339/5129842326";
 #elif UNITY_ANDROID
-    private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
-    private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
+    private const string REWARDED_ID = "ca-app-pub-5275088611290339/5129842326";
 #elif UNITY_IPHONE
-    private const string BANNER_ID = "ca-app-pub-3940256099942544/2934735716";
+    private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/4411468910";
-    private const string REWARDED_ID = "ca-app-pub-3940256099942544/1712485313";
+    private const string REWARDED_ID = "ca-app-pub-5275088611290339/5129842326";
 #endif
 
     private void Awake()
@@ -48,6 +50,7 @@ public class ADManager : MonoBehaviour
         MobileAds.Initialize(_ => { });
 
         bannerId = BANNER_ID;
+        CreateBanner(true);
         LoadInterAD();
         LoadReward();
     }
@@ -75,7 +78,7 @@ public class ADManager : MonoBehaviour
         reward = null;
     }
 
-    #region 배너
+    #region 배너 광고
     public void CreateBanner(bool _show)
     {
         if (_show)
@@ -83,7 +86,7 @@ public class ADManager : MonoBehaviour
             if (banner == null)
             {
                 var size = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
-                banner = new BannerView(bannerId, size, AdPosition.Bottom);
+                banner = new BannerView(bannerId, size, AdPosition.Top);
                 banner.LoadAd(new AdRequest());
                 RegisterBanner();
             }
