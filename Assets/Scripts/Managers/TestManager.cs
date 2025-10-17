@@ -16,6 +16,7 @@ public class TestManager : MonoBehaviour
     [SerializeField] private bool isAutoReplay = false;
     [SerializeField][Min(1f)] private float regameTime = 5f;
     private Coroutine playRoutine;
+
     [Header("ADs Test")]
     private bool onBanner = false;
 
