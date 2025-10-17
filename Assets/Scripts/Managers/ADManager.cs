@@ -18,11 +18,9 @@ public class ADManager : MonoBehaviour
     private System.Action OnCloseReward;
 
 #if UNITY_EDITOR
-    //private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
-    private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
+    private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
-    //private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
-    private const string REWARDED_ID = "ca-app-pub-5275088611290339/5129842326";
+    private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
 #elif UNITY_ANDROID
     private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
@@ -31,6 +29,10 @@ public class ADManager : MonoBehaviour
     private const string BANNER_ID = "ca-app-pub-5275088611290339/8532657443";
     private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/4411468910";
     private const string REWARDED_ID = "ca-app-pub-5275088611290339/5129842326";
+#else
+    private const string BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    private const string INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
+    private const string REWARDED_ID = "ca-app-pub-3940256099942544/5224354917";
 #endif
 
     private void Awake()

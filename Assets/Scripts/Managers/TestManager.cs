@@ -102,12 +102,12 @@ public class TestManager : MonoBehaviour
 
         #region ±¤°í Å×½ºÆ®
         if (Input.GetKeyDown(KeyCode.C))
-            ADManager.Instance.ShowInterAD();
+            ADManager.Instance?.ShowInterAD();
         if (Input.GetKeyDown(KeyCode.V))
-            ADManager.Instance.ShowReward();
+            ADManager.Instance?.ShowReward();
         if (Input.GetKeyDown(KeyCode.B))
         {
-            ADManager.Instance.CreateBanner(!onBanner);
+            ADManager.Instance?.CreateBanner(!onBanner);
             onBanner = !onBanner;
         }
         #endregion

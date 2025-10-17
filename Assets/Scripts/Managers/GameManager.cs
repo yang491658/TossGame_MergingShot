@@ -75,25 +75,42 @@ public class GameManager : MonoBehaviour
 
     public void Replay()
     {
-        ADManager.Instance.ShowReward(() =>
+        if (ADManager.Instance != null)
+            ADManager.Instance.ShowReward(() =>
+            {
+                EntityManager.Instance.CancelRespawn();
+                EntityManager.Instance.DespawnAll();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            });
+        else
         {
             EntityManager.Instance.CancelRespawn();
             EntityManager.Instance.DespawnAll();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        });
+        }
     }
 
     public void Quit()
     {
-        ADManager.Instance.ShowReward(() =>
+        if (ADManager.Instance != null)
+            ADManager.Instance?.ShowReward(() =>
+            {
+                Time.timeScale = 1f;
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+            });
+        else
         {
             Time.timeScale = 1f;
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
-        });
+        }
     }
 
     public void GameOver()
