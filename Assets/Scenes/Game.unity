@@ -14199,12 +14199,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b12a867e1a8ca24487d8ec4c01c6c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleRange: 30
-  shotPower: 15
   testCount: 1
   isAutoPlay: 0
   isAutoReplay: 0
   regameTime: 5
+  bgmPause: 0
+  angleRange: 30
+  shotPower: 15
 --- !u!222 &2448983739317490046
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14812,7 +14813,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &6930885077548651669
 MonoBehaviour:
   m_ObjectHideFlags: 0

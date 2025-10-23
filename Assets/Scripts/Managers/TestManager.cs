@@ -6,16 +6,19 @@ public class TestManager : MonoBehaviour
 {
     public static TestManager Instance { get; private set; }
 
-    [Header("Spawn Test")]
-    [SerializeField][Range(0f, 45f)] float angleRange = 30f;
-    [SerializeField][Range(0f, 20f)] float shotPower = 15f;
-
     [Header("Game Test")]
     [SerializeField] private int testCount = 1;
     [SerializeField] private bool isAutoPlay = false;
     [SerializeField] private bool isAutoReplay = false;
     [SerializeField][Min(1f)] private float regameTime = 5f;
     private Coroutine playRoutine;
+
+    [Header("Sound Test")]
+    [SerializeField] private bool bgmPause = false;
+
+    [Header("Spawn Test")]
+    [SerializeField][Range(0f, 45f)] float angleRange = 30f;
+    [SerializeField][Range(0f, 20f)] float shotPower = 15f;
 
     [Header("ADs Test")]
     private bool onBanner = false;
@@ -56,6 +59,11 @@ public class TestManager : MonoBehaviour
         #endregion
 
         #region 사운드 테스트
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            bgmPause = !bgmPause;
+            SoundManager.Instance.Pause(bgmPause);
+        }
         if (Input.GetKeyDown(KeyCode.M))
             SoundManager.Instance.ToggleBGM();
         if (Input.GetKeyDown(KeyCode.N))

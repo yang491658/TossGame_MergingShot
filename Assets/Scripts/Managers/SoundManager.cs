@@ -70,6 +70,9 @@ public class SoundManager : MonoBehaviour
             btn.onClick.AddListener(Button);
     }
 
+    public void Pause(bool _on) => AudioListener.pause = _on;
+    public void Pause(string _on) => AudioListener.pause = _on == "true";
+
     #region πË∞Ê¿Ω
     public void PlayBGM(AudioClip _clip)
     {
