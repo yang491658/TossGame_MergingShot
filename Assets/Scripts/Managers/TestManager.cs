@@ -172,9 +172,9 @@ public class TestManager : MonoBehaviour
         if (Input.GetKey(KeyCode.RightShift))
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
-                ChangeGameSpeed(gameSpeed.value == gameSpeed.maxValue ? GameManager.Instance.GetMaxSpeed() : gameSpeed.maxValue);
+                ChangeGameSpeed(gameSpeed.value == gameSpeed.maxValue ? 3f : gameSpeed.maxValue);
             else if (Input.GetKeyDown(KeyCode.DownArrow))
-                ChangeGameSpeed(gameSpeed.value == gameSpeed.minValue ? GameManager.Instance.GetMaxSpeed() : gameSpeed.minValue);
+                ChangeGameSpeed(gameSpeed.value == gameSpeed.minValue ? 3f : gameSpeed.minValue);
         }
         else
         {
@@ -270,7 +270,7 @@ public class TestManager : MonoBehaviour
 
         _config.slider.value = _config.value;
     }
-    private void ChangeGameSpeed(float _value) => ApplySlider(ref gameSpeed, _value, _v => GameManager.Instance?.SetSpeed(_v, true));
+    private void ChangeGameSpeed(float _value) => ApplySlider(ref gameSpeed, _value, _v => GameManager.Instance?.SetSpeed(_v));
     private void ChangeTimeLimit(float _value) => ApplySlider(ref timeLimit, _value, v => HandleManager.Instance?.SetTimeLimit(v));
     private void ChangeAngleRange(float _value) => ApplySlider(ref angleRange, _value);
     private void ChangeShotPower(float _value) => ApplySlider(ref shotPower, _value);
