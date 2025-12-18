@@ -14390,7 +14390,7 @@ MonoBehaviour:
   maxScore: 0
   averageScore: 0
   isAuto: 0
-  autoReplay: 1
+  autoReplay: 0
   bgmPause: 0
   testUI: {fileID: 1980595263}
   gameSpeed:
@@ -20319,16 +20319,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitBase: {fileID: 5722785425875581763, guid: fcc642ab4c73d1e4c8356c67e1abceb5, type: 3}
   unitDatas:
+  - {fileID: 11400000, guid: 267841f8d898c004aa89d222257e33a9, type: 2}
+  - {fileID: 11400000, guid: 59a0b606ec220b54cb5b79eb2dba6833, type: 2}
+  - {fileID: 11400000, guid: 63f911e7d978ed542bbaa8faf96c1923, type: 2}
+  - {fileID: 11400000, guid: 80f05febcd401704aa58ac66c010dc0e, type: 2}
+  - {fileID: 11400000, guid: 2659f78393922fa4ea633f61199dfd6b, type: 2}
+  - {fileID: 11400000, guid: c09a8e87fe959394db2d2863d2950bd1, type: 2}
   - {fileID: 11400000, guid: 6e7275413d93dca418f0fb2c8dd77a5e, type: 2}
   - {fileID: 11400000, guid: b7a211e59a8167b42b7b5b57859b5ffe, type: 2}
-  - {fileID: 11400000, guid: 63f911e7d978ed542bbaa8faf96c1923, type: 2}
-  - {fileID: 11400000, guid: 2659f78393922fa4ea633f61199dfd6b, type: 2}
-  - {fileID: 11400000, guid: 59a0b606ec220b54cb5b79eb2dba6833, type: 2}
   - {fileID: 11400000, guid: 03ffc36031ba02346a3f1c9842f9956f, type: 2}
   - {fileID: 11400000, guid: ecef71d565e5775448c2431b1d33d7ea, type: 2}
-  - {fileID: 11400000, guid: c09a8e87fe959394db2d2863d2950bd1, type: 2}
-  - {fileID: 11400000, guid: 267841f8d898c004aa89d222257e33a9, type: 2}
-  - {fileID: 11400000, guid: 80f05febcd401704aa58ac66c010dc0e, type: 2}
   spawnPos: {fileID: 376691772}
   spawnCol: {fileID: 376691773}
   respawnID: 1

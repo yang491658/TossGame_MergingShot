@@ -567,7 +567,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region SET
-    public void SetCountdown(bool _skip) => countSkip = _skip;
+    public void SetSkipCountdown(bool _skip) => countSkip = _skip;
     public void SetMargin(float _margin)
     {
         var ig = inGameUI.GetComponent<RectTransform>();
@@ -578,6 +578,7 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+#if TEST_Manager
     #region GET
     public bool GetOnSetting() => settingUI.activeSelf;
     public bool GetOnConfirm() => confirmUI.activeSelf;
@@ -585,4 +586,5 @@ public class UIManager : MonoBehaviour
     public bool GetOnResult() => resultUI.activeSelf;
     public bool GetOnDetail() => detailUI.activeSelf;
     #endregion
+#endif
 }
