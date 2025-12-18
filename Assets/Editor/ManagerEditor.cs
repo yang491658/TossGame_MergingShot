@@ -129,7 +129,6 @@ public static class ManagerEditor
         SetActive<TestManager>(_on, "테스트 켜기", "테스트 끄기");
 #endif
         SetBtnActive("TestBtn", _on, "테스트 버튼 켜기", "테스트 버튼 끄기");
-        SetTestDefine(BuildTargetGroup.Android, _on);
     }
 
     private static void SetQuitActive(bool _on)
@@ -194,6 +193,7 @@ public static class ManagerEditor
         SetActive<UIManager>(true, "UI 켜기", "UI 끄기");
         SetActive<ADManager>(false, "광고 켜기", "광고 끄기");
 
+        SetTestDefine(BuildTargetGroup.Android, true);
         SetTestActive(true);
         SetQuitActive(true);
 
@@ -207,7 +207,7 @@ public static class ManagerEditor
         SetActive<UIManager>(true, "UI 켜기", "UI 끄기");
         SetActive<ADManager>(true, "광고 켜기", "광고 끄기");
 
-
+        SetTestDefine(BuildTargetGroup.Android, false);
         SetTestActive(false);
         SetQuitActive(true);
 
@@ -221,6 +221,8 @@ public static class ManagerEditor
         SetActive<UIManager>(true, "UI 켜기", "UI 끄기");
         SetActive<ADManager>(false, "광고 켜기", "광고 끄기");
 
+        SetTestDefine(BuildTargetGroup.Android, false);
+        SetTestDefine(BuildTargetGroup.WebGL, false);
         SetTestActive(false);
         SetQuitActive(false);
 
