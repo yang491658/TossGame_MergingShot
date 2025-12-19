@@ -34,7 +34,7 @@ public class TestManager : MonoBehaviour
     [SerializeField][Min(0)] private int maxScore = 0;
     private int totalScore = 0;
     [SerializeField][Min(0)] private int averageScore = 0;
-    [SerializeField] private bool isAuto = false;
+    public bool IsAuto { private set; get; } = false;
     [SerializeField][Min(0f)] private float autoReplay = 0f;
     private Coroutine autoRoutine;
 
@@ -163,8 +163,8 @@ public class TestManager : MonoBehaviour
 
         #region 테스트 매니저
         if (Input.GetKeyDown(KeyCode.BackQuote)) OnClickTest();
-        if (Input.GetKeyDown(KeyCode.O)) AutoPlay(!isAuto);
-        if (isAuto)
+        if (Input.GetKeyDown(KeyCode.O)) AutoPlay(!IsAuto);
+        if (IsAuto)
         {
             if (GameManager.Instance.IsGameOver)
             {
@@ -180,14 +180,9 @@ public class TestManager : MonoBehaviour
     }
 
     #region 테스트
-    private void AutoPlay(bool _on = true)
+    public void AutoPlay(bool _on = true)
     {
-        isAuto = _on;
-
-        if (_on)
-        {
-            GameManager.Instance.Replay();
-        }
+        IsAuto = _on;
     }
 
     private IEnumerator AutoReplay()
@@ -206,7 +201,6 @@ public class TestManager : MonoBehaviour
 
             GameManager.Instance?.Replay();
 
-            AutoPlay();
             UpdateTestUI();
         }
         autoRoutine = null;
