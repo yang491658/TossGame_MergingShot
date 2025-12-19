@@ -163,7 +163,7 @@ public class TestManager : MonoBehaviour
 
         #region 테스트 매니저
         if (Input.GetKeyDown(KeyCode.BackQuote)) OnClickTest();
-        if (Input.GetKeyDown(KeyCode.O)) AutoPlay();
+        if (Input.GetKeyDown(KeyCode.O)) AutoPlay(!isAuto);
         if (isAuto)
         {
             if (GameManager.Instance.IsGameOver)
@@ -180,9 +180,9 @@ public class TestManager : MonoBehaviour
     }
 
     #region 테스트
-    private void AutoPlay()
+    private void AutoPlay(bool _on = true)
     {
-        isAuto = !isAuto;
+        isAuto = _on;
     }
 
     private IEnumerator AutoReplay()
@@ -199,9 +199,10 @@ public class TestManager : MonoBehaviour
             maxScore = Mathf.Max(score, maxScore);
             averageScore = totalScore / ++testCount;
 
-            UpdateTestUI();
-
             GameManager.Instance?.Replay();
+
+            AutoPlay();
+            UpdateTestUI();
         }
         autoRoutine = null;
     }
