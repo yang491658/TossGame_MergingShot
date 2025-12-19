@@ -183,6 +183,11 @@ public class TestManager : MonoBehaviour
     private void AutoPlay(bool _on = true)
     {
         isAuto = _on;
+
+        if (_on)
+        {
+            GameManager.Instance.Replay();
+        }
     }
 
     private IEnumerator AutoReplay()
