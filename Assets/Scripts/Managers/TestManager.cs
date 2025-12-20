@@ -34,6 +34,10 @@ public class TestManager : MonoBehaviour
     [SerializeField][Min(0)] private int maxScore = 0;
     private int totalScore = 0;
     [SerializeField][Min(0)] private int averageScore = 0;
+
+    private float totalPlay = 0f;
+    [SerializeField][Min(0f)] private float averagePlay = 0f;
+
     public bool IsAuto { private set; get; } = false;
     [SerializeField][Min(0f)] private float autoReplay = 0f;
     private Coroutine autoRoutine;
@@ -49,6 +53,7 @@ public class TestManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI testCountNum;
     [SerializeField] private TextMeshProUGUI maxScoreNum;
     [SerializeField] private TextMeshProUGUI averageScoreNum;
+    [SerializeField] private TextMeshProUGUI averagePlayNum;
     [Space]
     [SerializeField] private SliderConfig timeLimit = new SliderConfig(10, 1, 10, "시간제한 : {0}");
     [SerializeField] private SliderConfig angleRange = new SliderConfig(30, 0, 45, "각도범위 : {0}");
@@ -71,6 +76,8 @@ public class TestManager : MonoBehaviour
             maxScoreNum = GameObject.Find("TestUI/MaxScore/TestNum")?.GetComponent<TextMeshProUGUI>();
         if (averageScoreNum == null)
             averageScoreNum = GameObject.Find("TestUI/AverageScore/TestNum")?.GetComponent<TextMeshProUGUI>();
+        if (averagePlayNum == null)
+            averagePlayNum = GameObject.Find("TestUI/AveragePlay/TestNum")?.GetComponent<TextMeshProUGUI>();
 
         if (timeLimit.TMP == null)
             timeLimit.TMP = GameObject.Find("TestUI/TimeLimit/TestText")?.GetComponent<TextMeshProUGUI>();
@@ -194,10 +201,13 @@ public class TestManager : MonoBehaviour
         if (GameManager.Instance.IsGameOver)
         {
             int score = GameManager.Instance.GetScore();
-
             totalScore += score;
             maxScore = Mathf.Max(score, maxScore);
             averageScore = totalScore / ++testCount;
+
+            float playTime = UIManager.Instance.GetPlayTime();
+            totalPlay += playTime;
+            averagePlay = totalPlay / testCount;
 
             GameManager.Instance?.Replay();
 
@@ -275,6 +285,7 @@ public class TestManager : MonoBehaviour
         testCountNum.text = testCount.ToString();
         maxScoreNum.text = maxScore.ToString();
         averageScoreNum.text = averageScore.ToString();
+        averagePlayNum.text = (averagePlay / 60).ToString("00") + ":" + (averagePlay % 60).ToString("00");
 
         UpdateSliderUI(gameSpeed);
         UpdateSliderUI(timeLimit);
@@ -293,6 +304,8 @@ public class TestManager : MonoBehaviour
         maxScore = 0;
         totalScore = 0;
         averageScore = 0;
+        totalPlay = 0f;
+        averagePlay = 0f;
 
         UpdateTestUI();
     }
