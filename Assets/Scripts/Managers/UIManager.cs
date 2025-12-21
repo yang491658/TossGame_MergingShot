@@ -163,7 +163,7 @@ public class UIManager : MonoBehaviour
                 detailPlanets.Add(new PlanetSlot(child.gameObject));
     }
 
-    private void LoadSprite(List<Sprite> _list, string _sprite)
+    private static void LoadSprite(List<Sprite> _list, string _sprite)
     {
         if (string.IsNullOrEmpty(_sprite)) return;
         string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { "Assets/Imports/Dark UI/Icons" });
