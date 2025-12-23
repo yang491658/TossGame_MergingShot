@@ -53,7 +53,7 @@ public class HandleManager : MonoBehaviour
     [SerializeField][Range(0f, 90f)] private float angleLimit = 45f;
     public event System.Action<float, float> OnChangeTimer;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
     [Header("Mark")]
     private float markDuration = 1f;
     private float markRadius = 0.5f;
@@ -121,7 +121,7 @@ public class HandleManager : MonoBehaviour
             if (launchTimer >= timeLimit) AutoFire();
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
         HandleMouse();
         DrawDebug();
 #else
@@ -129,7 +129,7 @@ public class HandleManager : MonoBehaviour
 #endif
     }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
     private void HandleMouse()
     {
         HoverOn(Input.mousePosition);
@@ -436,7 +436,7 @@ public class HandleManager : MonoBehaviour
         ShowAim(false);
     }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
     private void OnRightClick(Vector3 _pos)
     {
         AddClick(_pos, Color.yellow);
