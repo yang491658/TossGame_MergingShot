@@ -8036,7 +8036,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.3183594, y: 1.5625, z: 1.4404297}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -14704,10 +14704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562ef4e4cbc3dab4983af7901a53b242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testCount: 0
-  maxScore: 0
-  averageScore: 0
-  averagePlay: 0
+  testResults: []
   autoReplay: 0
   bgmPause: 0
   testUI: {fileID: 0}
