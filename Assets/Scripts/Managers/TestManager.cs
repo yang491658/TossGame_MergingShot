@@ -45,6 +45,7 @@ public class TestManager : MonoBehaviour
 
     [Header("Game Test")]
     [SerializeField] private List<TestResult> testResults = new List<TestResult>();
+    [SerializeField][Min(0f)] private float playTime = 0f;
     [Space]
     [SerializeField][Min(0f)] private float autoReplay = 0f;
     public bool IsAuto { private set; get; } = false;
@@ -201,7 +202,10 @@ public class TestManager : MonoBehaviour
         IsAuto = _on;
     }
 
-    private void AutoPlay() { }
+    private void AutoPlay()
+    {
+        playTime += Time.deltaTime;
+    }
 
     private IEnumerator AutoReplay()
     {
@@ -210,9 +214,9 @@ public class TestManager : MonoBehaviour
         if (GameManager.Instance.IsGameOver)
         {
             int score = GameManager.Instance.GetScore();
-            float playTime = UIManager.Instance.GetPlayTime();
 
             testResults.Add(new TestResult(score, playTime));
+            playTime = 0f;
 
             GameManager.Instance?.Replay();
 
@@ -353,6 +357,7 @@ public class TestManager : MonoBehaviour
     public void OnClickReset()
     {
         testResults.Clear();
+        playTime = 0f;
 
         UpdateTestUI();
     }
