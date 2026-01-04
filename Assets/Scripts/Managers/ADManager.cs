@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ADManager : MonoBehaviour
 {
-     public static ADManager Instance { private set; get; }
+    public static ADManager Instance { private set; get; }
 
     [SerializeField][Min(0f)] private float delay = 0.5f;
 
@@ -109,6 +109,7 @@ public class ADManager : MonoBehaviour
     private void RegisterBanner()
     {
         if (banner == null) return;
+
         banner.OnBannerAdLoaded += () =>
         {
             UpdateBannerHeight();
