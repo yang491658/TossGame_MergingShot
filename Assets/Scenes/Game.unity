@@ -597,6 +597,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -927,6 +928,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1143,6 +1145,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1400,6 +1403,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1698,6 +1702,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1907,6 +1912,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2148,6 +2154,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2498,6 +2505,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2972,11 +2980,11 @@ MonoBehaviour:
   ready: {fileID: 0}
   hovered: {fileID: 0}
   selected: {fileID: 0}
-  dotPrefab: {fileID: 0}
+  dotPrefab: {fileID: 3516649201042495188, guid: 121d97549fc34c24b8a39134c9ebb4b8, type: 3}
   dotCount: 12
   dotSpacing: 0.5
-  line: {fileID: 0}
-  ring: {fileID: 0}
+  line: {fileID: 1083594259}
+  ring: {fileID: 245368645}
   ringSegments: 64
   ringRadius: 0.5
   powerCoef: 3
@@ -3195,6 +3203,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3331,6 +3340,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3785,6 +3795,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4246,6 +4257,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4457,6 +4469,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4910,6 +4923,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5038,6 +5052,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5324,6 +5339,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5468,6 +5484,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5729,6 +5746,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6476,6 +6494,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7260,6 +7279,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7396,6 +7416,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7576,6 +7597,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7903,6 +7925,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8036,7 +8059,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.3183594, y: 1.5625, z: 1.4404297}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -8470,6 +8493,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8541,8 +8565,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 633.63, y: -84.02357}
-  m_SizeDelta: {x: 392.74, y: 0}
+  m_AnchoredPosition: {x: 633.18, y: -84.02357}
+  m_SizeDelta: {x: 393.64, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &756581466
 GameObject:
@@ -8945,6 +8969,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9577,6 +9602,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9922,6 +9948,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10066,6 +10093,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10477,6 +10505,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10621,6 +10650,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10964,6 +10994,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11138,6 +11169,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12129,8 +12161,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 268.63, y: -84.02357}
-  m_SizeDelta: {x: 237.25998, y: 0}
+  m_AnchoredPosition: {x: 268.18, y: -84.02357}
+  m_SizeDelta: {x: 236.36, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1116077497
 MonoBehaviour:
@@ -12206,6 +12238,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12350,6 +12383,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13194,6 +13228,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13330,6 +13365,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13558,6 +13594,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14349,6 +14386,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14708,35 +14746,35 @@ MonoBehaviour:
   playTime: 0
   autoReplay: 0
   bgmPause: 0
-  testUI: {fileID: 0}
+  testUI: {fileID: 1980595263}
   gameSpeed:
-    TMP: {fileID: 0}
-    slider: {fileID: 0}
+    TMP: {fileID: 497451606}
+    slider: {fileID: 292766868}
     value: 1
     minValue: 1
     maxValue: 10
     format: "\uBC30\uC18D \xD7 {0}"
-  testCountNum: {fileID: 0}
-  score10Num: {fileID: 0}
-  averageScoreNum: {fileID: 0}
-  averagePlayNum: {fileID: 0}
+  testCountNum: {fileID: 1034333783}
+  score10Num: {fileID: 961735986}
+  averageScoreNum: {fileID: 1592973012}
+  averagePlayNum: {fileID: 1210138046}
   timeLimit:
-    TMP: {fileID: 0}
-    slider: {fileID: 0}
+    TMP: {fileID: 991437198}
+    slider: {fileID: 1596723229}
     value: 10
     minValue: 1
     maxValue: 10
     format: "\uC2DC\uAC04\uC81C\uD55C : {0}"
   angleRange:
-    TMP: {fileID: 0}
-    slider: {fileID: 0}
+    TMP: {fileID: 1507762912}
+    slider: {fileID: 1225979013}
     value: 30
     minValue: 0
     maxValue: 45
     format: "\uAC01\uB3C4\uBC94\uC704 : {0}"
   shotPower:
-    TMP: {fileID: 0}
-    slider: {fileID: 0}
+    TMP: {fileID: 552032832}
+    slider: {fileID: 756581468}
     value: 15
     minValue: 0
     maxValue: 20
@@ -14852,6 +14890,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15352,6 +15391,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15555,6 +15595,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15691,6 +15732,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16122,6 +16164,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16250,6 +16293,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16471,6 +16515,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16580,6 +16625,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16871,6 +16917,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16991,8 +17038,16 @@ MonoBehaviour:
   bgmVol: 1
   sfxVol: 1
   soundClips:
-    bgmClips: []
-    sfxClips: []
+    bgmClips:
+    - {fileID: 8300000, guid: d76ecd11a0b575847ba2a1c53dea9f05, type: 3}
+    - {fileID: 8300000, guid: 49731314153f00046b85f50fdc038198, type: 3}
+    sfxClips:
+    - {fileID: 8300000, guid: 2bd74fec26584e646adfcee5d63449bd, type: 3}
+    - {fileID: 8300000, guid: ffcc6ce9ee1f55f4e89730ade1ea221f, type: 3}
+    - {fileID: 8300000, guid: f75a2a59a65eab24ab063675eab31a9b, type: 3}
+    - {fileID: 8300000, guid: ceebd236cb9506b488ca55c45d0c9580, type: 3}
+    - {fileID: 8300000, guid: 75528555a92e1d2478ef7784373716c3, type: 3}
+    - {fileID: 8300000, guid: 2afbf12f4ad973b4fba0bc22f36be213, type: 3}
 --- !u!4 &1640530186
 Transform:
   m_ObjectHideFlags: 0
@@ -17273,6 +17328,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17343,38 +17399,103 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4f4d91872bc35d4eac4704e3f89e2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countText: {fileID: 0}
+  countText: {fileID: 1755781624}
   countStart: 3
   countDuration: 1
   countScale: 10
   countSkip: 1
-  inGameUI: {fileID: 0}
-  playTimeText: {fileID: 0}
-  scoreNum: {fileID: 0}
-  nextImage: {fileID: 0}
-  timerSlider: {fileID: 0}
-  timerImage: {fileID: 0}
-  timerTitle: {fileID: 0}
+  inGameUI: {fileID: 1253565292}
+  playTimeText: {fileID: 710739542}
+  scoreNum: {fileID: 1875816873}
+  nextImage: {fileID: 1074937608}
+  timerSlider: {fileID: 78102612}
+  timerImage: {fileID: 1964672692}
+  timerTitle: {fileID: 170107426}
   shakeSpeed: 50
   shakeAmount: 8
   textSize: {x: 0, y: 120}
-  settingUI: {fileID: 0}
-  settingScoreNum: {fileID: 0}
-  bgmSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
-  bgmIcon: {fileID: 0}
-  sfxIcon: {fileID: 0}
-  bgmIcons: []
-  sfxIcons: []
-  confirmUI: {fileID: 0}
-  confirmTitle: {fileID: 0}
-  helpUI: {fileID: 0}
-  helpPlanets: []
-  resultUI: {fileID: 0}
-  resultScoreNum: {fileID: 0}
-  detailUI: {fileID: 0}
-  detailScoreNum: {fileID: 0}
-  detailPlanets: []
+  settingUI: {fileID: 1468590165}
+  settingScoreNum: {fileID: 1470813587}
+  bgmSlider: {fileID: 1089476387}
+  sfxSlider: {fileID: 1851139906}
+  bgmIcon: {fileID: 2087015793}
+  sfxIcon: {fileID: 971843929}
+  bgmIcons:
+  - {fileID: 21300000, guid: 06a16cb520d0f2449a999572cae2cf97, type: 3}
+  - {fileID: 21300000, guid: cabad5b87dec1fd4e8749fa9f8936e63, type: 3}
+  sfxIcons:
+  - {fileID: 21300000, guid: fd30afab859581246b9ba7593ee3c10c, type: 3}
+  - {fileID: 21300000, guid: 2896697aee29fec4eae8809b364feeb0, type: 3}
+  - {fileID: 21300000, guid: d7f4f52e0d03f214b8b9ff47d92ab909, type: 3}
+  confirmUI: {fileID: 293421054}
+  confirmTitle: {fileID: 1592445440}
+  helpUI: {fileID: 1740126310}
+  helpPlanets:
+  - go: {fileID: 1459186555}
+    image: {fileID: 545526335}
+    text: {fileID: 140166323}
+  - go: {fileID: 1098970722}
+    image: {fileID: 120201765}
+    text: {fileID: 420841110}
+  - go: {fileID: 1588920535}
+    image: {fileID: 1887113641}
+    text: {fileID: 137423345}
+  - go: {fileID: 1258254827}
+    image: {fileID: 391196184}
+    text: {fileID: 1559670327}
+  - go: {fileID: 875854658}
+    image: {fileID: 1139243671}
+    text: {fileID: 77822909}
+  - go: {fileID: 538437540}
+    image: {fileID: 2052466523}
+    text: {fileID: 1780392465}
+  - go: {fileID: 1890360917}
+    image: {fileID: 1897317051}
+    text: {fileID: 1011374195}
+  - go: {fileID: 310216982}
+    image: {fileID: 1201334360}
+    text: {fileID: 2117903868}
+  - go: {fileID: 1535764443}
+    image: {fileID: 1176598098}
+    text: {fileID: 1122445770}
+  - go: {fileID: 915201272}
+    image: {fileID: 183926057}
+    text: {fileID: 810618527}
+  resultUI: {fileID: 1426519722}
+  resultScoreNum: {fileID: 754750644}
+  detailUI: {fileID: 713135634}
+  detailScoreNum: {fileID: 893604153}
+  detailPlanets:
+  - go: {fileID: 153807548}
+    image: {fileID: 1440151018}
+    text: {fileID: 1817984195}
+  - go: {fileID: 811489233}
+    image: {fileID: 66300112}
+    text: {fileID: 1979997528}
+  - go: {fileID: 1710350779}
+    image: {fileID: 9855234}
+    text: {fileID: 235889075}
+  - go: {fileID: 613871125}
+    image: {fileID: 2136164925}
+    text: {fileID: 253769464}
+  - go: {fileID: 880007198}
+    image: {fileID: 1391537635}
+    text: {fileID: 1521829593}
+  - go: {fileID: 1726718070}
+    image: {fileID: 741956524}
+    text: {fileID: 1588251854}
+  - go: {fileID: 891369572}
+    image: {fileID: 40443439}
+    text: {fileID: 235904480}
+  - go: {fileID: 1752199694}
+    image: {fileID: 1047605727}
+    text: {fileID: 1840003292}
+  - go: {fileID: 1082442677}
+    image: {fileID: 164357008}
+    text: {fileID: 702499386}
+  - go: {fileID: 16100889}
+    image: {fileID: 905944887}
+    text: {fileID: 87334919}
 --- !u!4 &1675311306
 Transform:
   m_ObjectHideFlags: 0
@@ -17486,6 +17607,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17622,6 +17744,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18033,6 +18156,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18381,6 +18505,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18517,6 +18642,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18661,6 +18787,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18797,6 +18924,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19000,6 +19128,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19136,6 +19265,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19362,6 +19492,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19506,6 +19637,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20047,6 +20179,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20384,6 +20517,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20562,10 +20696,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8757234db11563c478a55d79795ecf2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBase: {fileID: 0}
-  unitDatas: []
-  spawnPos: {fileID: 0}
-  spawnCol: {fileID: 0}
+  unitBase: {fileID: 5722785425875581763, guid: fcc642ab4c73d1e4c8356c67e1abceb5, type: 3}
+  unitDatas:
+  - {fileID: 11400000, guid: 267841f8d898c004aa89d222257e33a9, type: 2}
+  - {fileID: 11400000, guid: 59a0b606ec220b54cb5b79eb2dba6833, type: 2}
+  - {fileID: 11400000, guid: 63f911e7d978ed542bbaa8faf96c1923, type: 2}
+  - {fileID: 11400000, guid: 80f05febcd401704aa58ac66c010dc0e, type: 2}
+  - {fileID: 11400000, guid: 2659f78393922fa4ea633f61199dfd6b, type: 2}
+  - {fileID: 11400000, guid: c09a8e87fe959394db2d2863d2950bd1, type: 2}
+  - {fileID: 11400000, guid: 6e7275413d93dca418f0fb2c8dd77a5e, type: 2}
+  - {fileID: 11400000, guid: b7a211e59a8167b42b7b5b57859b5ffe, type: 2}
+  - {fileID: 11400000, guid: 03ffc36031ba02346a3f1c9842f9956f, type: 2}
+  - {fileID: 11400000, guid: ecef71d565e5775448c2431b1d33d7ea, type: 2}
+  spawnPos: {fileID: 376691772}
+  spawnCol: {fileID: 376691773}
   respawnID: 1
   respawnDelay: 3
   inGame: {fileID: 0}
@@ -20963,6 +21107,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
